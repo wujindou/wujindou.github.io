@@ -94,19 +94,19 @@
 </header>
     <div class="article-content">
         
-        <h2 id="Github使用问题">Github使用问题</h2><p>好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。<br>直接图示吧：</p>
+        <h2 id="Github使用问题">Github使用问题</h2><p> 好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。<br>直接图示吧：</p>
 <ol>
-<li>生成public key ,然后添加到ssh key中<br><img src="./1429236487575.png" alt="Alt text"></li>
-<li>测试<br><img src="./1429236515744.png" alt="Alt text"><br>问题出来了：网上找到了<a href="http://stackoverflow.com/questions/7144811/git-ssh-error-connect-to-host-bad-file-number" target="_blank" rel="external">参考</a><br><img src="./1429236571491.png" alt="Alt text"></li>
+<li>生成public key ,然后添加到ssh key中<br><img src="/jacman/images/20150417/1429236487575.png" alt="图片"></li>
+<li>测试<br><img src="/jacman/images/20150417/1429236515744.png" alt="Alt text"><br>问题出来了：网上找到了<a href="http://stackoverflow.com/questions/7144811/git-ssh-error-connect-to-host-bad-file-number" target="_blank" rel="external">参考</a><br><img src="/jacman/images/20150417/1429236571491.png" alt="Alt text"></li>
 <li><p>建立config文件添加以下内容：</p>
 <p> Host github.com<br> User git<br> Hostname ssh.github.com<br> PreferredAuthentications publickey<br> IdentityFile C:\Users\wujindou.ssh\id_rsa<br> Port 443</p>
 </li>
 <li><p>查看config设置,简单的设置下,user.name,user.email </p>
-<p> <img src="./1429236671134.png" alt="Alt text"><br> <img src="./1429236711991.png" alt="Alt text"></p>
+<p> <img src="/jacman/images/20150417/1429236671134.png" alt="Alt text"><br> <img src="/jacman/images/20150417/1429236711991.png" alt="Alt text"></p>
 </li>
-<li>再项目中添加deploy key授权发布权限<br><img src="./1429236767833.png" alt="Alt text"></li>
+<li>再项目中添加deploy key授权发布权限<br><img src="/jacman/images/20150417/1429236767833.png" alt="Alt text"></li>
 </ol>
-<p>done！！！！<br>        <img src="./1429236830303.png" alt="Alt text"></p>
+<p>done！！！！<br>        <img src="/jacman/images/20150417/1429236830303.png" alt="Alt text"></p>
 
         
         
