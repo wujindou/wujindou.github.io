@@ -4,44 +4,37 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Sqoop配置 | Jackie&#39;s Blog</title>
+    <title>MySQL触发器学习 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="首先从官网下载对应的sqoop版本。
-配置 tar -zxvf 下载包
-复制mysql-connector-5.x.jar到sqoop的lib目录下
-mysql授权 
-
-create database workflow;
-grant all on workflow.* to sqoop_user@&apos;localhost&apos; identified by &apos;123456&apos;;
-flush privilges">
+    <meta name="description" content="MySQL触发器学习mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：触发器：修改 分隔符delimiter $…create trigger triggerName 
+before /after 
+insert/update/delete 
+on tableName #待监视表
+for each row #监视每一行变化
+begi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Sqoop配置">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-sqoop/index.html">
+<meta property="og:title" content="MySQL触发器学习">
+<meta property="og:url" content="http://yoursite.com/2015/04/17/mysql-learn/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="首先从官网下载对应的sqoop版本。
-配置 tar -zxvf 下载包
-复制mysql-connector-5.x.jar到sqoop的lib目录下
-mysql授权 
-
-create database workflow;
-grant all on workflow.* to sqoop_user@&apos;localhost&apos; identified by &apos;123456&apos;;
-flush privilges">
-<meta property="og:image" content="/images/hadoop/sqoop.png">
+<meta property="og:description" content="MySQL触发器学习mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：触发器：修改 分隔符delimiter $…create trigger triggerName 
+before /after 
+insert/update/delete 
+on tableName #待监视表
+for each row #监视每一行变化
+begi">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Sqoop配置">
-<meta name="twitter:description" content="首先从官网下载对应的sqoop版本。
-配置 tar -zxvf 下载包
-复制mysql-connector-5.x.jar到sqoop的lib目录下
-mysql授权 
-
-create database workflow;
-grant all on workflow.* to sqoop_user@&apos;localhost&apos; identified by &apos;123456&apos;;
-flush privilges">
+<meta name="twitter:title" content="MySQL触发器学习">
+<meta name="twitter:description" content="MySQL触发器学习mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：触发器：修改 分隔符delimiter $…create trigger triggerName 
+before /after 
+insert/update/delete 
+on tableName #待监视表
+for each row #监视每一行变化
+begi">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -101,14 +94,14 @@ flush privilges">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/big-data-sqoop/" title="Sqoop配置" itemprop="url">Sqoop配置</a>
+      <a href="/2015/04/17/mysql-learn/" title="MySQL触发器学习" itemprop="url">MySQL触发器学习</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T08:17:28.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    <time datetime="2015-04-17T12:39:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
     
   </p>
 </header>
@@ -117,53 +110,25 @@ flush privilges">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL触发器学习"><span class="toc-number">1.</span> <span class="toc-text">MySQL触发器学习</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#进行相关的触发事件的操作的处理"><span class="toc-number">2.</span> <span class="toc-text">进行相关的触发事件的操作的处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#insert_使用new取得插入新行元素"><span class="toc-number">3.</span> <span class="toc-text">insert 使用new取得插入新行元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#delete_使用old取得待删除行元素"><span class="toc-number">4.</span> <span class="toc-text">delete 使用old取得待删除行元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看触发器："><span class="toc-number">5.</span> <span class="toc-text">查看触发器：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除触发器"><span class="toc-number">6.</span> <span class="toc-text">删除触发器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL存储过程学习"><span class="toc-number"></span> <span class="toc-text">MySQL存储过程学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。"><span class="toc-number">1.</span> <span class="toc-text">存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建："><span class="toc-number">2.</span> <span class="toc-text">创建：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引入变量"><span class="toc-number">3.</span> <span class="toc-text">引入变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#变量运算"><span class="toc-number">4.</span> <span class="toc-text">变量运算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#if_age_>70_then"><span class="toc-number">5.</span> <span class="toc-text">if age >70 then</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程传递参数语法：[in/out/inout]_参数名_参数类型"><span class="toc-number">6.</span> <span class="toc-text">存储过程传递参数语法：[in/out/inout] 参数名 参数类型</span></a></li></ol>
 		
 		</div>
 		
-		<ul>
-<li>首先从<a href="http://apache.dataguru.cn/sqoop/1.4.4/" target="_blank" rel="external">官网</a>下载对应的sqoop版本。</li>
-<li>配置 tar -zxvf 下载包</li>
-<li>复制mysql-connector-5.x.jar到sqoop的lib目录下</li>
-<li>mysql授权 </li>
-</ul>
-<pre><code><span class="operator"><span class="keyword">create</span> <span class="keyword">database</span> workflow;</span>
-<span class="operator"><span class="keyword">grant</span> <span class="keyword">all</span> <span class="keyword">on</span> workflow.* <span class="keyword">to</span> sqoop_user@<span class="string">'localhost'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'123456'</span>;</span>
-<span class="operator"><span class="keyword">flush</span> privilges;</span>
-</code></pre><ul>
-<li>测试： </li>
-</ul>
-<pre><code><span class="comment">bin/sqoop</span> <span class="comment">list</span><span class="literal">-</span><span class="comment">tables</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">connect</span> <span class="comment">jdbc:mysql://localhost:3306/workflow</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">username</span> <span class="comment">sqoop_user</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">password</span> <span class="comment">123456</span>
-</code></pre><p>如果成功会显示workflow中的所有表：<br><img src="/images/hadoop/sqoop.png" alt="Alt text"><br>本想把hive中的数据表导入到mysql中但是发现通过load的数据，而且自定义了inputformat所以格式上有很大不同于是<br>－　创建了另一个临时表</p>
-<pre><code> <span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> kpilog2 (
-remote_addr <span class="keyword">STRING</span>, 
-remote_user <span class="keyword">STRING</span>,
-time_local <span class="keyword">STRING</span>,
-request <span class="keyword">STRING</span>,
-<span class="keyword">status</span> <span class="built_in">INT</span>,
-<span class="keyword">size</span> <span class="built_in">INT</span>,
-referer <span class="keyword">STRING</span>,
-http_user_agent <span class="keyword">STRING</span>);</span>
-</code></pre><p>－　插入数据</p>
-<pre><code><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> kpilog2 <span class="keyword">select</span> *<span class="keyword">from</span> kpilog1;</span>
-</code></pre><ul>
-<li>创建hive_to_mysql的数据表（mysql中)</li>
-</ul>
-<pre><code>    <span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`hive_to_mysql`</span> (
-  <span class="string">`remote_addr`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
-  <span class="string">`remote_user`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
-  <span class="string">`time_local`</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
-  <span class="string">`request`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
-  <span class="string">`status`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
-  <span class="string">`size`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
-  <span class="string">`referer`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
-  <span class="string">`http_user_agent`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>
-) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span>
-</code></pre><ul>
-<li>执行导入</li>
-</ul>
-<pre><code><span class="string">.</span><span class="comment">/bin/sqoop</span> <span class="comment">export</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">connect</span> <span class="comment">jdbc:mysql://localhost:3306/workflow</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">username</span> <span class="comment">sqoop_user</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">password</span> <span class="comment">123456</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">table</span> <span class="comment">hive_to_mysql</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">export</span><span class="literal">-</span><span class="comment">dir</span> <span class="comment">/user/hive/warehouse/kpilog2</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">input</span><span class="literal">-</span><span class="comment">fields</span><span class="literal">-</span><span class="comment">terminated</span><span class="literal">-</span><span class="comment">by</span> <span class="comment">'\001'</span>
-</code></pre><p>参考文章：<br>1.<a href="http://shiyanjun.cn/archives/624.html" target="_blank" rel="external">Sqoop-1.4.4工具import和export使用详解</a>;</p>
+		<h4 id="MySQL触发器学习">MySQL触发器学习</h4><p>mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：<br>触发器：<br>修改 分隔符<br>delimiter $…<br>create trigger triggerName </p>
+<p>before /after </p>
+<p>insert/update/delete </p>
+<p>on tableName #待监视表</p>
+<p>for each row #监视每一行变化</p>
+<p>begin </p>
+<h4 id="进行相关的触发事件的操作的处理">进行相关的触发事件的操作的处理</h4><p>declare rnum<br>set rnum </p>
+<h4 id="insert_使用new取得插入新行元素">insert 使用new取得插入新行元素</h4><h4 id="delete_使用old取得待删除行元素">delete 使用old取得待删除行元素</h4><p>end $</p>
+<h4 id="查看触发器：">查看触发器：</h4><p>show triggers;</p>
+<h4 id="删除触发器">删除触发器</h4><h3 id="MySQL存储过程学习">MySQL存储过程学习</h3><h4 id="存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。">存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。</h4><h4 id="创建：">创建：</h4><p>create procedure name()</p>
+<p>begin </p>
+<h4 id="引入变量">引入变量</h4><p>declare age int default 80;</p>
+<h4 id="变量运算">变量运算</h4><p>select age from dual;<br>set age := age+20;<br>select concat(‘20年后年龄’,age) from dual </p>
+<h4 id="if_age_&gt;70_then">if age &gt;70 then</h4><p>select ‘古稀之年’<br>end$</p>
+<h4 id="存储过程传递参数语法：[in/out/inout]_参数名_参数类型">存储过程传递参数语法：[in/out/inout] 参数名 参数类型</h4><p>create procedure p2(width int , height int )<br>begin </p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -172,7 +137,7 @@ http_user_agent <span class="keyword">STRING</span>);</span>
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/大数据/">大数据</a>
+  <span></span> <a href="/tags/数据库/">数据库</a>
   </div>
 
 </div>
@@ -181,7 +146,7 @@ http_user_agent <span class="keyword">STRING</span>);</span>
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/big-data-sqoop/" data-title="Sqoop配置 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/17/mysql-learn/" data-title="MySQL触发器学习 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -194,19 +159,11 @@ http_user_agent <span class="keyword">STRING</span>);</span>
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/17/big-data-hadoop-cluster/" title="Hadoop完全分布式集群安装">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Hadoop完全分布式集群安装</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/17/big-data-hive-nginx/"  title="Hive分析Nginx文档">
+<a href="/2015/04/17/php-learn/"  title="php单引号与双引号区别">
  <strong>下一篇：</strong><br/> 
- <span>Hive分析Nginx文档
+ <span>php单引号与双引号区别
 </span>
 </a>
 </div>
@@ -215,7 +172,7 @@ http_user_agent <span class="keyword">STRING</span>);</span>
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/big-data-sqoop/" data-title="Sqoop配置" data-url="http://yoursite.com/2015/04/17/big-data-sqoop/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/17/mysql-learn/" data-title="MySQL触发器学习" data-url="http://yoursite.com/2015/04/17/mysql-learn/"></div>
 </section>
 
 
@@ -225,7 +182,7 @@ http_user_agent <span class="keyword">STRING</span>);</span>
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL触发器学习"><span class="toc-number">1.</span> <span class="toc-text">MySQL触发器学习</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#进行相关的触发事件的操作的处理"><span class="toc-number">2.</span> <span class="toc-text">进行相关的触发事件的操作的处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#insert_使用new取得插入新行元素"><span class="toc-number">3.</span> <span class="toc-text">insert 使用new取得插入新行元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#delete_使用old取得待删除行元素"><span class="toc-number">4.</span> <span class="toc-text">delete 使用old取得待删除行元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看触发器："><span class="toc-number">5.</span> <span class="toc-text">查看触发器：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除触发器"><span class="toc-number">6.</span> <span class="toc-text">删除触发器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL存储过程学习"><span class="toc-number"></span> <span class="toc-text">MySQL存储过程学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。"><span class="toc-number">1.</span> <span class="toc-text">存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建："><span class="toc-number">2.</span> <span class="toc-text">创建：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引入变量"><span class="toc-number">3.</span> <span class="toc-text">引入变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#变量运算"><span class="toc-number">4.</span> <span class="toc-text">变量运算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#if_age_>70_then"><span class="toc-number">5.</span> <span class="toc-text">if age >70 then</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程传递参数语法：[in/out/inout]_参数名_参数类型"><span class="toc-number">6.</span> <span class="toc-text">存储过程传递参数语法：[in/out/inout] 参数名 参数类型</span></a></li></ol>
  
   </div>
 

@@ -81,6 +81,78 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/17/mysql-learn/" title="MySQL触发器学习" itemprop="url">MySQL触发器学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T12:39:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h4 id="MySQL触发器学习">MySQL触发器学习</h4><p>mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：<br>触发器：<br>修改 分隔符<br>delimiter $…<br>create trigger triggerName </p>
+<p>before /after </p>
+<p>insert/update/delete </p>
+<p>on tableName #待监视表</p>
+<p>for each row #监视每一行变化</p>
+<p>begin </p>
+<h4 id="进行相关的触发事件的操作的处理">进行相关的触发事件的操作的处理</h4><p>declare rnum<br>set rnum </p>
+<h4 id="insert_使用new取得插入新行元素">insert 使用new取得插入新行元素</h4><h4 id="delete_使用old取得待删除行元素">delete 使用old取得待删除行元素</h4><p>end $</p>
+<h4 id="查看触发器：">查看触发器：</h4><p>show triggers;</p>
+<h4 id="删除触发器">删除触发器</h4><h3 id="MySQL存储过程学习">MySQL存储过程学习</h3><h4 id="存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。">存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。</h4><h4 id="创建：">创建：</h4><p>create procedure name()</p>
+<p>begin </p>
+<h4 id="引入变量">引入变量</h4><p>declare age int default 80;</p>
+<h4 id="变量运算">变量运算</h4><p>select age from dual;<br>set age := age+20;<br>select concat(‘20年后年龄’,age) from dual </p>
+<h4 id="if_age_&gt;70_then">if age &gt;70 then</h4><p>select ‘古稀之年’<br>end$</p>
+<h4 id="存储过程传递参数语法：[in/out/inout]_参数名_参数类型">存储过程传递参数语法：[in/out/inout] 参数名 参数类型</h4><p>create procedure p2(width int , height int )<br>begin </p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/数据库/">数据库</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/mysql-learn/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/mysql-learn/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/17/php-learn/" title="php单引号与双引号区别" itemprop="url">php单引号与双引号区别</a>
   </h1>
   <p class="article-author">By
@@ -1251,158 +1323,6 @@ agent<span class="class">.sinks</span><span class="class">.sink1</span><span cla
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-haoop-cluster2/" title="Hadoop完全分布式集群安装" itemprop="url">Hadoop完全分布式集群安装</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:22:01.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <ul>
-<li>首先定义master 和 slave 我这里只有2台vim/etc/hosts</li>
-</ul>
-<pre><code>172.16.86.38 master
-172.16.86.39 slave01
-</code></pre><ul>
-<li>修改hostname slave01和hostname master只是临时修改</li>
-<li>打通各自的ssh和相互的ssh<br>ssh-keygen -t rsa<br>cat id_rsa.pub &gt; ./authorized_keys</li>
-</ul>
-<pre><code>#相互之间的ssh打通命令
-scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
-然后把 cat id_rsa.pub &gt;&gt;authoried_keys中，再把authorized_keys复制到其他机器
-scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
-</code></pre><ul>
-<li>以上次设置的为分布式机子为主机，需要复制一些文件到slave集群中设置。</li>
-<li>配置JDK复制master下的/usr/local/java目录到slave01，修改~/.bashrc</li>
-</ul>
-<pre><code><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
-<span class="built_in">export</span> JRE_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05/jre
-<span class="built_in">export</span> CLASSPATH=.:<span class="variable">$CLASSPATH</span>:<span class="variable">$JAVA_HOME</span>/lib:<span class="variable">$JRE_HOME</span>/lib  
-<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$JRE_HOME</span>/bin  
-</code></pre><p>执行source ~/.bashrc文件使配置生效,检查 java　-version </p>
-<ul>
-<li>参考<a href="http://going.blog.51cto.com/7876557/1365883" target="_blank" rel="external">文章</a><br>找不到jps命令问题：</li>
-</ul>
-<pre><code>vim ~/.bashrc文件
-<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/sbin:<span class="variable">$HIVE_HOME</span>/bin:<span class="variable">$JAVA_HOME</span>/bin
-</code></pre><p>最后结果：<br>salve:jps</p>
-<p><img src="/images/hadoop/cluster_1.png" alt="Alt text"></p>
-<p>master: jps </p>
-<p><img src="/images/hadoop/cluster_2.png" alt="Alt text"><br>在启动后发现最后没有发现liveNode，着实郁闷了很久最后发现，查看hadoop/logs的datanode文件日志返现，原来datanode连接不到namenode,试着使用telnet也不行，发现原来监听的是localhost的9000端口于是改回来就好了。<br>最后的配置文件</p>
-<ul>
-<li>core-site.xml </li>
-</ul>
-<pre><code>    <span class="variable">&lt;property&gt;</span>
-    <span class="variable">&lt;name&gt;</span>fs.<span class="keyword">default</span>.name<span class="variable">&lt;/name&gt;</span>
-    <span class="variable">&lt;value&gt;</span>hdfs://master:<span class="number">9000</span><span class="variable">&lt;/value&gt;</span>
-    <span class="variable">&lt;final&gt;</span>true<span class="variable">&lt;/final&gt;</span>
-<span class="variable">&lt;/property&gt;</span>
-<span class="variable">&lt;property&gt;</span>
-    <span class="variable">&lt;name&gt;</span>hadoop.tmp.dir<span class="variable">&lt;/name&gt;</span>
-    <span class="variable">&lt;value&gt;</span>/home/hadoop/hadoop_tmp<span class="variable">&lt;/value&gt;</span>
-  <span class="variable">&lt;/property&gt;</span>
-</code></pre><ul>
-<li>hdfs-site.xml</li>
-</ul>
-<pre><code>    <span class="tag">&lt;<span class="title">property</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">value</span>&gt;</span>2<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-  <span class="tag">&lt;<span class="title">property</span>&gt;</span>
-      <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.permissions<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-      <span class="tag">&lt;<span class="title">value</span>&gt;</span>false<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-  <span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-</code></pre><ul>
-<li><p>yarn-site.xml</p>
-<pre><code> <span class="tag">&lt;<span class="title">property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-<span class="tag">&lt;<span class="title">property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">value</span>&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-<span class="tag">&lt;<span class="title">property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8025<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-<span class="tag">&lt;<span class="title">property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.scheduler.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8030<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-<span class="tag">&lt;<span class="title">property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8040<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-</code></pre></li>
-<li><p>mapred-site.xml</p>
-</li>
-</ul>
-<pre><code><span class="tag">&lt;<span class="title">property</span>&gt;</span>
-<span class="tag">&lt;<span class="title">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-<span class="tag">&lt;<span class="title">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-</code></pre><ul>
-<li>差点忘了 /etc/hosts了</li>
-</ul>
-<pre><code><span class="number">127.0</span>.<span class="number">0.1</span>      localhost
-::<span class="number">1</span>     localhost6<span class="class">.localdomain6</span> localhost6
-<span class="number">172.16</span>.<span class="number">86.38</span> master 
-<span class="number">172.16</span>.<span class="number">86.39</span> slave01
-</code></pre><p>问题转移，map任务一直处于停止状态，不知道日志信息在哪里<br>解决方法：打开调试信息：</p>
-<pre><code><span class="reserved">export</span> HADOOP_ROOT_LOGGER=DEBUG,<span class="built_in">console</span>
-</code></pre><p>最后问题： 服务器时间不同步，TMD这么大的坑啊。。。。</p>
-<pre><code>ntpdate <span class="tag">time</span><span class="class">.nist</span><span class="class">.gov</span>（每台服务器运行即可）
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-haoop-cluster2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-haoop-cluster2/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -1432,6 +1352,10 @@ scp authorized_keys <span class="string">slave01:</span><span class="regexp">/ro
 		
 			
 				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
 			
 		
 			
