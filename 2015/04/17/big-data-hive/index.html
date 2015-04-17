@@ -4,37 +4,56 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>python自动化工具 | Jackie&#39;s Blog</title>
+    <title>Hive配置信息 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+    <meta name="description" content="首先修改/etc/profile加入HADOOP_HOME参数设置
+修改~/.bashrc文件加入HIVE_HOME参数 
+
+export HIVE_HOME=&quot;/usr/local/share/hive&quot;
+export PATH=$HIVE_HOME/bin:$PATH
+
+使用直接运行Hive即可以连接到数据库了….感觉so easy!
+使用
+
+show tables;
+#创建表
+create">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python自动化工具">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/python-auto-tool/index.html">
+<meta property="og:title" content="Hive配置信息">
+<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-hive/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta property="og:description" content="首先修改/etc/profile加入HADOOP_HOME参数设置
+修改~/.bashrc文件加入HIVE_HOME参数 
+
+export HIVE_HOME=&quot;/usr/local/share/hive&quot;
+export PATH=$HIVE_HOME/bin:$PATH
+
+使用直接运行Hive即可以连接到数据库了….感觉so easy!
+使用
+
+show tables;
+#创建表
+create">
+<meta property="og:image" content="/images/hadoop/hive_1.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python自动化工具">
-<meta name="twitter:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta name="twitter:title" content="Hive配置信息">
+<meta name="twitter:description" content="首先修改/etc/profile加入HADOOP_HOME参数设置
+修改~/.bashrc文件加入HIVE_HOME参数 
+
+export HIVE_HOME=&quot;/usr/local/share/hive&quot;
+export PATH=$HIVE_HOME/bin:$PATH
+
+使用直接运行Hive即可以连接到数据库了….感觉so easy!
+使用
+
+show tables;
+#创建表
+create">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -94,14 +113,14 @@ proj">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
+      <a href="/2015/04/17/big-data-hive/" title="Hive配置信息" itemprop="url">Hive配置信息</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    <time datetime="2015-04-17T07:59:50.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
     
   </p>
 </header>
@@ -114,30 +133,57 @@ proj">
 		
 		</div>
 		
-		<p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
-<p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
-<pre><code><span class="comment">#! /usr/bin/python </span>
- <span class="comment">#coding:utf-8</span>
-<span class="keyword">import</span> os,sys,re
-project_dir = <span class="string">"d:/project/aushop/application/views/show/ringsign"</span>
-php_dir =<span class="string">"d:/project/aushop/application/library/Active/RingSign"</span>
-<span class="function"><span class="keyword">def</span> <span class="title">replaceFile</span><span class="params">(infile,name)</span>:</span>
-<span class="keyword">if</span> os.path.isfile(project_dir+name+<span class="string">".phtml"</span>):
-<span class="keyword">print</span> <span class="string">u'文件已经存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(infile):
-<span class="keyword">print</span> <span class="string">u'文件不存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">try</span>:
-infile = open(infile, <span class="string">"r"</span>)
-outfile = open(project_dir+name+<span class="string">".phtml"</span>, <span class="string">"wb"</span>)
-<span class="keyword">except</span> IOError:
-<span class="keyword">print</span> <span class="string">"The file don't exist, Please double check!"</span>
-exit()
-all_the_lines = infile.readlines()
-infile.seek(<span class="number">0</span>)
-<span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
-</code></pre>  
+		<ol>
+<li>首先修改/etc/profile加入HADOOP_HOME参数设置</li>
+<li>修改~/.bashrc文件加入HIVE_HOME参数 </li>
+</ol>
+<pre><code><span class="built_in">export</span> HIVE_HOME=<span class="string">"/usr/local/share/hive"</span>
+<span class="built_in">export</span> PATH=<span class="variable">$HIVE_HOME</span>/bin:<span class="variable">$PATH</span>
+</code></pre><ol>
+<li>使用直接运行Hive即可以连接到数据库了….感觉so easy!</li>
+<li>使用</li>
+</ol>
+<pre><code><span class="operator"><span class="keyword">show</span> <span class="keyword">tables</span>;</span>
+#创建表
+<span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> test(id <span class="built_in">int</span>,name <span class="keyword">string</span>);</span>
+quit;
+#查看
+hdfs dfs -ls / #可以看到dfs中增加了/usr/hive/warehouse/test
+</code></pre><p>5.配置mysql存储元数据</p>
+<ul>
+<li>mysql的安装参考这里<a href="http://www.cnblogs.com/xiongpq/p/3384681.html" target="_blank" rel="external">mysql编译安装</a>的文章</li>
+<li>创建hive和授权</li>
+</ul>
+<pre><code>create database hive;
+grant <span class="literal">all</span> <span class="keyword">on</span> hive.* <span class="keyword">to</span> hive@'%'  identified by 'hive';
+flush privileges;
+hive-site.xml
+<span class="variable">&lt;property&gt;</span>
+  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionURL<span class="variable">&lt;/name&gt;</span>
+  <span class="variable">&lt;value&gt;</span>jdbc:mysql://localhost:<span class="number">3306</span>/hive<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;description&gt;</span>JDBC connect string <span class="keyword">for</span> a JDBC metastore<span class="variable">&lt;/description&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+
+<span class="variable">&lt;property&gt;</span>
+  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionDriverName<span class="variable">&lt;/name&gt;</span>
+  <span class="variable">&lt;value&gt;</span>com.mysql.jdbc.Driver<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;description&gt;</span>Driver class name <span class="keyword">for</span> a JDBC metastore<span class="variable">&lt;/description&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+<span class="variable">&lt;property&gt;</span>
+  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionUserName<span class="variable">&lt;/name&gt;</span>
+  <span class="variable">&lt;value&gt;</span>hive<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;description&gt;</span>username <span class="keyword">to</span> use against metastore database<span class="variable">&lt;/description&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+
+<span class="variable">&lt;property&gt;</span>
+  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionPassword<span class="variable">&lt;/name&gt;</span>
+  <span class="variable">&lt;value&gt;</span>hive<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;description&gt;</span>password <span class="keyword">to</span> use against metastore database<span class="variable">&lt;/description&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+</code></pre><ul>
+<li>由于mysql的源代码安装所以需要修改下my.cnf文件,修改/usr/local/mysql/下的my.cnf添加bind-address= 0.0.0.0之后重启mysql<br>运行创建table命令: create table test (key string);发现报错了<br><img src="/images/hadoop/hive_1.png" alt="Alt text"><br>需要修改hive字符集，alter database hive character set latin1;即可</li>
+</ul>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -145,7 +191,7 @@ infile.seek(<span class="number">0</span>)
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Python/">Python</a>
+  <span></span> <a href="/tags/大数据/">大数据</a>
   </div>
 
 </div>
@@ -154,7 +200,7 @@ infile.seek(<span class="number">0</span>)
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/python-auto-tool/" data-title="python自动化工具 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/17/big-data-hive/" data-title="Hive配置信息 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -168,18 +214,18 @@ infile.seek(<span class="number">0</span>)
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件">
+ <a href="/2015/04/17/big-data-hive-nginx/" title="Hive分析Nginx文档">
   <strong>上一篇：</strong><br/>
   <span>
-  Jquery简单封装插件</span>
+  Hive分析Nginx文档</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/04/17/my-new-post/"  title="Git重新上手">
+<a href="/2015/04/17/big-data-hadoop/"  title="Hadoop2.2安装使用">
  <strong>下一篇：</strong><br/> 
- <span>Git重新上手
+ <span>Hadoop2.2安装使用
 </span>
 </a>
 </div>
@@ -188,7 +234,7 @@ infile.seek(<span class="number">0</span>)
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/python-auto-tool/" data-title="python自动化工具" data-url="http://yoursite.com/2015/04/17/python-auto-tool/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/17/big-data-hive/" data-title="Hive配置信息" data-url="http://yoursite.com/2015/04/17/big-data-hive/"></div>
 </section>
 
 

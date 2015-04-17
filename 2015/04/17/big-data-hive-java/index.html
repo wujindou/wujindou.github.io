@@ -4,37 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>python自动化工具 | Jackie&#39;s Blog</title>
+    <title>Hive连接java | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+    <meta name="description" content="参考文章环境整合线上的环境已经可以收集日志了，所以考虑使用flume来整合把线上的日志，收集到测试环境中进行处理！编译：1    javac -classpath /root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/h">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python自动化工具">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/python-auto-tool/index.html">
+<meta property="og:title" content="Hive连接java">
+<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-hive-java/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta property="og:description" content="参考文章环境整合线上的环境已经可以收集日志了，所以考虑使用flume来整合把线上的日志，收集到测试环境中进行处理！编译：1    javac -classpath /root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/h">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python自动化工具">
-<meta name="twitter:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta name="twitter:title" content="Hive连接java">
+<meta name="twitter:description" content="参考文章环境整合线上的环境已经可以收集日志了，所以考虑使用flume来整合把线上的日志，收集到测试环境中进行处理！编译：1    javac -classpath /root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/h">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -94,14 +79,14 @@ proj">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
+      <a href="/2015/04/17/big-data-hive-java/" title="Hive连接java" itemprop="url">Hive连接java</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    <time datetime="2015-04-17T08:39:46.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
     
   </p>
 </header>
@@ -110,43 +95,25 @@ proj">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#参考文章"><span class="toc-number">1.</span> <span class="toc-text">参考文章</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#环境整合"><span class="toc-number">2.</span> <span class="toc-text">环境整合</span></a></li></ol>
 		
 		</div>
 		
-		<p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
-<p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
-<pre><code><span class="comment">#! /usr/bin/python </span>
- <span class="comment">#coding:utf-8</span>
-<span class="keyword">import</span> os,sys,re
-project_dir = <span class="string">"d:/project/aushop/application/views/show/ringsign"</span>
-php_dir =<span class="string">"d:/project/aushop/application/library/Active/RingSign"</span>
-<span class="function"><span class="keyword">def</span> <span class="title">replaceFile</span><span class="params">(infile,name)</span>:</span>
-<span class="keyword">if</span> os.path.isfile(project_dir+name+<span class="string">".phtml"</span>):
-<span class="keyword">print</span> <span class="string">u'文件已经存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(infile):
-<span class="keyword">print</span> <span class="string">u'文件不存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">try</span>:
-infile = open(infile, <span class="string">"r"</span>)
-outfile = open(project_dir+name+<span class="string">".phtml"</span>, <span class="string">"wb"</span>)
-<span class="keyword">except</span> IOError:
-<span class="keyword">print</span> <span class="string">"The file don't exist, Please double check!"</span>
-exit()
-all_the_lines = infile.readlines()
-infile.seek(<span class="number">0</span>)
-<span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
-</code></pre>  
+		<h4 id="参考文章">参考<a href="http://blog.csdn.net/wypblog/article/details/17390333" target="_blank" rel="external">文章</a></h4><h4 id="环境整合">环境整合</h4><p>线上的环境已经可以收集日志了，所以考虑使用flume来整合把线上的日志，收集到测试环境中进行处理！<br>编译：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">    javac -classpath /root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/share/hadoop/common/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/common/*:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/*:/root/hadoop/hadoop-2.2.0/share/hadoop/mapreduce/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/mapreduce/*:/root/hadoop/hadoop-2.2.0/contrib/capacity-scheduler/*.jar:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/lib/*:/root/hadoop/IP2Location.jar -d class NginxLogInputFormat.java &#10;    cd class &#10;    jar -cvf test_kpi.jar *&#10;`</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>问题一<br>sbustr StringIndexOutOfBoundsException: String index out of range: -1，执行hive查询的时候总是失败，查看job执行情况，在/tmp/root/下面类似root_20140520131818_880f8b00-3d49-4534-b1ba-783dd55c2c08.log的文件中查看定位问题是因为IP2Location.java执行时候截取字符串的问题。修改IP2Location.java中相关文件定位信息：<br>cat main_bak.log|awk ‘{print $1}’&gt;ip.txt(提取ip地址检查类方法是否正确)<br>每隔十分钟计算pv值：<br>sql语句：</li>
+</ul>
+<ol>
+<li><p>每十分钟(间隔内pv值)</p>
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">sum</span>(dis_url)  <span class="keyword">from</span> (<span class="keyword">select</span> ip,<span class="keyword">count</span>(<span class="keyword">distinct</span> url) <span class="keyword">as</span> dis_url <span class="keyword">from</span> test <span class="keyword">where</span> <span class="keyword">time</span>&gt;=<span class="number">1394070000</span> <span class="keyword">and</span> <span class="keyword">time</span>&lt;=<span class="number">1394070600</span> <span class="keyword">group</span> <span class="keyword">by</span> ip) temp;</span>
+</code></pre></li>
+<li>从零点开始到现在pv值</li>
+</ol>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Python/">Python</a>
-  </div>
 
 </div>
 
@@ -154,7 +121,7 @@ infile.seek(<span class="number">0</span>)
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/python-auto-tool/" data-title="python自动化工具 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/17/big-data-hive-java/" data-title="Hive连接java | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -168,18 +135,18 @@ infile.seek(<span class="number">0</span>)
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件">
+ <a href="/2015/04/17/big-data-hadoop-advice/" title="Hadoop线上环境整合须知：&#39;">
   <strong>上一篇：</strong><br/>
   <span>
-  Jquery简单封装插件</span>
+  Hadoop线上环境整合须知：&#39;</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/04/17/my-new-post/"  title="Git重新上手">
+<a href="/2015/04/17/big-data-ip-location/"  title="纯真数据库获取location">
  <strong>下一篇：</strong><br/> 
- <span>Git重新上手
+ <span>纯真数据库获取location
 </span>
 </a>
 </div>
@@ -188,7 +155,7 @@ infile.seek(<span class="number">0</span>)
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/python-auto-tool/" data-title="python自动化工具" data-url="http://yoursite.com/2015/04/17/python-auto-tool/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/17/big-data-hive-java/" data-title="Hive连接java" data-url="http://yoursite.com/2015/04/17/big-data-hive-java/"></div>
 </section>
 
 
@@ -198,7 +165,7 @@ infile.seek(<span class="number">0</span>)
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#参考文章"><span class="toc-number">1.</span> <span class="toc-text">参考文章</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#环境整合"><span class="toc-number">2.</span> <span class="toc-text">环境整合</span></a></li></ol>
  
   </div>
 

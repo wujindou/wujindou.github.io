@@ -4,37 +4,28 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>python自动化工具 | Jackie&#39;s Blog</title>
+    <title>Flume 1.4整合kafka消息系统 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+    <meta name="description" content="Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：简单记录下自己整合的过程吧：参考文章里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。
+
+复制插件下的lib">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python自动化工具">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/python-auto-tool/index.html">
+<meta property="og:title" content="Flume 1.4整合kafka消息系统">
+<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-flume-kafaka/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta property="og:description" content="Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：简单记录下自己整合的过程吧：参考文章里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。
+
+复制插件下的lib">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python自动化工具">
-<meta name="twitter:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta name="twitter:title" content="Flume 1.4整合kafka消息系统">
+<meta name="twitter:description" content="Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：简单记录下自己整合的过程吧：参考文章里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。
+
+复制插件下的lib">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -94,14 +85,14 @@ proj">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
+      <a href="/2015/04/17/big-data-flume-kafaka/" title="Flume 1.4整合kafka消息系统" itemprop="url">Flume 1.4整合kafka消息系统</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    <time datetime="2015-04-17T08:45:58.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
     
   </p>
 </header>
@@ -114,30 +105,13 @@ proj">
 		
 		</div>
 		
-		<p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
-<p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
-<pre><code><span class="comment">#! /usr/bin/python </span>
- <span class="comment">#coding:utf-8</span>
-<span class="keyword">import</span> os,sys,re
-project_dir = <span class="string">"d:/project/aushop/application/views/show/ringsign"</span>
-php_dir =<span class="string">"d:/project/aushop/application/library/Active/RingSign"</span>
-<span class="function"><span class="keyword">def</span> <span class="title">replaceFile</span><span class="params">(infile,name)</span>:</span>
-<span class="keyword">if</span> os.path.isfile(project_dir+name+<span class="string">".phtml"</span>):
-<span class="keyword">print</span> <span class="string">u'文件已经存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(infile):
-<span class="keyword">print</span> <span class="string">u'文件不存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">try</span>:
-infile = open(infile, <span class="string">"r"</span>)
-outfile = open(project_dir+name+<span class="string">".phtml"</span>, <span class="string">"wb"</span>)
-<span class="keyword">except</span> IOError:
-<span class="keyword">print</span> <span class="string">"The file don't exist, Please double check!"</span>
-exit()
-all_the_lines = infile.readlines()
-infile.seek(<span class="number">0</span>)
-<span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
-</code></pre>  
+		<p>Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：<br>简单记录下自己整合的过程吧：参考<a href="http://www.tuicool.com/articles/mMrQnu7" target="_blank" rel="external">文章</a>里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。</p>
+<ul>
+<li>复制插件下的lib下的所有jar文件到flume/lib下</li>
+<li>复制插件下的package下的flumeng-kafka-plugin.jar文件到flume/lib下</li>
+<li>修改插件下的flume-conf.properties文件，并复制到flume/conf下<br>启动：<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/flume-ng agent --conf conf --conf-file conf/flume-conf<span class="class">.properties</span> --name producer -Dflume<span class="class">.root</span><span class="class">.logger</span>=INFO,console</span><br><span class="line"><span class="comment">//启动zookeeper</span></span><br><span class="line">bin/zookeeper-server-start<span class="class">.sh</span> config/zookeeper<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动kafka</span></span><br><span class="line">bin/kafka-server-start<span class="class">.sh</span> config/server<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动consumer</span></span><br><span class="line">bin/kafka-console-consumer<span class="class">.sh</span> --zookeeper localhost:<span class="number">2181</span> --topic test2 --from-beginning</span><br></pre></td></tr></table></figure></li>
+</ul>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -145,7 +119,7 @@ infile.seek(<span class="number">0</span>)
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Python/">Python</a>
+  <span></span> <a href="/tags/大数据/">大数据</a>
   </div>
 
 </div>
@@ -154,7 +128,7 @@ infile.seek(<span class="number">0</span>)
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/python-auto-tool/" data-title="python自动化工具 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/17/big-data-flume-kafaka/" data-title="Flume 1.4整合kafka消息系统 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -168,18 +142,18 @@ infile.seek(<span class="number">0</span>)
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件">
+ <a href="/2015/04/17/php-yaf/" title="yaf学习笔记">
   <strong>上一篇：</strong><br/>
   <span>
-  Jquery简单封装插件</span>
+  yaf学习笔记</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/04/17/my-new-post/"  title="Git重新上手">
+<a href="/2015/04/17/big-data-hadoop-online/"  title="hadoop线上环境搭建">
  <strong>下一篇：</strong><br/> 
- <span>Git重新上手
+ <span>hadoop线上环境搭建
 </span>
 </a>
 </div>
@@ -188,7 +162,7 @@ infile.seek(<span class="number">0</span>)
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/python-auto-tool/" data-title="python自动化工具" data-url="http://yoursite.com/2015/04/17/python-auto-tool/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/17/big-data-flume-kafaka/" data-title="Flume 1.4整合kafka消息系统" data-url="http://yoursite.com/2015/04/17/big-data-flume-kafaka/"></div>
 </section>
 
 

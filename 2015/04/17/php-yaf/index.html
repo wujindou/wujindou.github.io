@@ -4,37 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>python自动化工具 | Jackie&#39;s Blog</title>
+    <title>yaf学习笔记 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+    <meta name="description" content="1.按照官网给的信息搭建环境，总是报告404错误后来修改default.confif (!-e $request_filename) {rewrite ^/(.*)  /public/index.php/$1 last;}总算可以访问了。yaf文件找不到问题： 参考官方文档有很多问题：首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample设置： index.php
+&amp;lt;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python自动化工具">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/python-auto-tool/index.html">
+<meta property="og:title" content="yaf学习笔记">
+<meta property="og:url" content="http://yoursite.com/2015/04/17/php-yaf/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta property="og:description" content="1.按照官网给的信息搭建环境，总是报告404错误后来修改default.confif (!-e $request_filename) {rewrite ^/(.*)  /public/index.php/$1 last;}总算可以访问了。yaf文件找不到问题： 参考官方文档有很多问题：首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample设置： index.php
+&amp;lt;">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python自动化工具">
-<meta name="twitter:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta name="twitter:title" content="yaf学习笔记">
+<meta name="twitter:description" content="1.按照官网给的信息搭建环境，总是报告404错误后来修改default.confif (!-e $request_filename) {rewrite ^/(.*)  /public/index.php/$1 last;}总算可以访问了。yaf文件找不到问题： 参考官方文档有很多问题：首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample设置： index.php
+&amp;lt;">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -94,14 +82,14 @@ proj">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
+      <a href="/2015/04/17/php-yaf/" title="yaf学习笔记" itemprop="url">yaf学习笔记</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    <time datetime="2015-04-17T08:48:57.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
     
   </p>
 </header>
@@ -114,30 +102,9 @@ proj">
 		
 		</div>
 		
-		<p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
-<p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
-<pre><code><span class="comment">#! /usr/bin/python </span>
- <span class="comment">#coding:utf-8</span>
-<span class="keyword">import</span> os,sys,re
-project_dir = <span class="string">"d:/project/aushop/application/views/show/ringsign"</span>
-php_dir =<span class="string">"d:/project/aushop/application/library/Active/RingSign"</span>
-<span class="function"><span class="keyword">def</span> <span class="title">replaceFile</span><span class="params">(infile,name)</span>:</span>
-<span class="keyword">if</span> os.path.isfile(project_dir+name+<span class="string">".phtml"</span>):
-<span class="keyword">print</span> <span class="string">u'文件已经存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(infile):
-<span class="keyword">print</span> <span class="string">u'文件不存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">try</span>:
-infile = open(infile, <span class="string">"r"</span>)
-outfile = open(project_dir+name+<span class="string">".phtml"</span>, <span class="string">"wb"</span>)
-<span class="keyword">except</span> IOError:
-<span class="keyword">print</span> <span class="string">"The file don't exist, Please double check!"</span>
-exit()
-all_the_lines = infile.readlines()
-infile.seek(<span class="number">0</span>)
-<span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
-</code></pre>  
+		<p>1.按照官网给的信息搭建环境，总是报告404错误后来修改<br>default.conf<br>if (!-e $request_filename) {<br>rewrite ^/(.*)  /public/index.php/$1 last;<br>}<br>总算可以访问了。yaf文件找不到问题：<br> 参考官方文档有很多问题：<br>首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample<br>设置： index.php</p>
+<p>&lt;?php<br>define(“APP<em>PATH”, realpath(dirname(<em>_FILE</em></em>) . ‘/../‘)); /<em> 指向public的上一级 </em>/<br>$app = new Yaf_Application(APP_PATH . “/application/conf/application.ini”);<br>$app-&gt;run();<br>设置：application.ini<br>application.directory=APP_PATH “/application/“</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -145,7 +112,7 @@ infile.seek(<span class="number">0</span>)
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Python/">Python</a>
+  <span></span> <a href="/tags/php/">php</a>
   </div>
 
 </div>
@@ -154,7 +121,7 @@ infile.seek(<span class="number">0</span>)
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/python-auto-tool/" data-title="python自动化工具 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/17/php-yaf/" data-title="yaf学习笔记 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -168,18 +135,18 @@ infile.seek(<span class="number">0</span>)
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件">
+ <a href="/2015/04/17/php-learn/" title="php单引号与双引号区别">
   <strong>上一篇：</strong><br/>
   <span>
-  Jquery简单封装插件</span>
+  php单引号与双引号区别</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/04/17/my-new-post/"  title="Git重新上手">
+<a href="/2015/04/17/big-data-flume-kafaka/"  title="Flume 1.4整合kafka消息系统">
  <strong>下一篇：</strong><br/> 
- <span>Git重新上手
+ <span>Flume 1.4整合kafka消息系统
 </span>
 </a>
 </div>
@@ -188,7 +155,7 @@ infile.seek(<span class="number">0</span>)
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/python-auto-tool/" data-title="python自动化工具" data-url="http://yoursite.com/2015/04/17/python-auto-tool/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/17/php-yaf/" data-title="yaf学习笔记" data-url="http://yoursite.com/2015/04/17/php-yaf/"></div>
 </section>
 
 

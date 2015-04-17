@@ -1,0 +1,609 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Flume安装配置 | Jackie&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jackie wu">
+    
+
+    
+    <meta name="description" content="参考文章
+下载Flume1.4.0wget http://mirrors.cnnic.cn/apache/flume/1.4.0/apache-flume-1.4.0-bin.tar.gz
+配置及测试参考Apache文章Flume
+新建文件example-conf.properties
+
+ # example.conf: A single-node Flume configuration
+
+# N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flume安装配置">
+<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-flume/index.html">
+<meta property="og:site_name" content="Jackie's Blog">
+<meta property="og:description" content="参考文章
+下载Flume1.4.0wget http://mirrors.cnnic.cn/apache/flume/1.4.0/apache-flume-1.4.0-bin.tar.gz
+配置及测试参考Apache文章Flume
+新建文件example-conf.properties
+
+ # example.conf: A single-node Flume configuration
+
+# N">
+<meta property="og:image" content="/images/hadoop/flume.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flume安装配置">
+<meta name="twitter:description" content="参考文章
+下载Flume1.4.0wget http://mirrors.cnnic.cn/apache/flume/1.4.0/apache-flume-1.4.0-bin.tar.gz
+配置及测试参考Apache文章Flume
+新建文件example-conf.properties
+
+ # example.conf: A single-node Flume configuration
+
+# N">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jackie&#39;s Blog" title="Jackie&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-flume/" title="Flume安装配置" itemprop="url">Flume安装配置</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:26:06.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#下载Flume1-4-0"><span class="toc-number">1.</span> <span class="toc-text">下载Flume1.4.0</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置及测试参考Apache文章Flume"><span class="toc-number">2.</span> <span class="toc-text">配置及测试参考Apache文章Flume</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#本地hdfs测试"><span class="toc-number">3.</span> <span class="toc-text">本地hdfs测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#收集目录下面的文件内容"><span class="toc-number">4.</span> <span class="toc-text">收集目录下面的文件内容</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用tail_-F"><span class="toc-number"></span> <span class="toc-text">使用tail -F</span></a>
+		
+		</div>
+		
+		<p><a href="http://f.dataguru.cn/thread-48324-1-1.html" target="_blank" rel="external">参考文章</a></p>
+<h4 id="下载Flume1-4-0">下载Flume1.4.0</h4><pre><code>wget <span class="symbol">http:</span>/<span class="regexp">/mirrors.cnnic.cn/apache</span><span class="regexp">/flume/</span><span class="number">1.4</span>.<span class="number">0</span>/apache-flume-<span class="number">1.4</span>.<span class="number">0</span>-bin.tar.gz
+</code></pre><h4 id="配置及测试参考Apache文章Flume">配置及测试参考Apache文章<a href="https://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="external">Flume</a></h4><ul>
+<li>新建文件example-conf.properties</li>
+</ul>
+<pre><code> <span class="comment"># example.conf: A single-node Flume configuration</span>
+
+<span class="comment"># Name the components on this agent</span>
+a1.<span class="variable">sources =</span> r1
+a1.<span class="variable">sinks =</span> k1
+a1.<span class="variable">channels =</span> c1
+
+<span class="comment"># Describe/configure the source</span>
+a1.sources.r1.<span class="variable">type =</span> netcat
+a1.sources.r1.<span class="variable">bind =</span> localhost
+a1.sources.r1.<span class="variable">port =</span> <span class="number">44444</span>
+
+<span class="comment"># Describe the sink</span>
+a1.sinks.k1.<span class="variable">type =</span> logger
+
+<span class="comment"># Use a channel which buffers events in memory</span>
+a1.channels.c1.<span class="variable">type =</span> memory
+a1.channels.c1.<span class="variable">capacity =</span> <span class="number">1000</span>
+a1.channels.c1.<span class="variable">transactionCapacity =</span> <span class="number">100</span> 
+
+<span class="comment"># Bind the source and sink to the channel</span>
+a1.sources.r1.<span class="variable">channels =</span> c1
+a1.sinks.k1.<span class="variable">channel =</span> c1
+</code></pre><ul>
+<li>启动</li>
+</ul>
+<pre><code>flume-ng agent --<span class="keyword">conf</span> <span class="keyword">conf</span> --<span class="keyword">conf</span>-<span class="keyword">file</span> example-<span class="keyword">conf</span>.properties --name a1                      -Dflume.root.logger=INFO,console
+</code></pre><ul>
+<li>测试 : 新建终端测试 telnet localhost 44444 在终端可以输入内容可以看到如下结果<br><img src="/images/hadoop/flume.png" alt="Alt text"><h4 id="本地hdfs测试">本地hdfs测试</h4></li>
+<li>配置文件</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = avrosrc
+agent<span class="class">.sinks</span> =hdfs-write 
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.type</span> =exec 
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.command</span> =tail -F  /root/hadoop/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> =<span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.type</span> = hdfs
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.path</span> =hdfs:<span class="comment">//172.16.86.38:9000/flume/webdata</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.rollInterval</span> = <span class="number">30</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.channel</span>=memoryChannel
+</code></pre><ul>
+<li>问题</li>
+</ul>
+<pre><code><span class="number">14</span>/<span class="number">05</span>/<span class="number">06</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">28</span> <span class="type">ERROR</span> hdfs.<span class="type">HDFSEventSink</span>: process failed
+java.lang.<span class="type">VerifyError</span>: class org.apache.hadoop.hdfs.protocol.proto.<span class="type">ClientNamenodeProtocolProtos</span>$<span class="type">RecoverLeaseRequestProto</span> overrides final <span class="keyword">method</span> getUnknownFields.()<span class="type">Lcom</span>/google/protobuf/<span class="type">UnknownFieldSet</span>;
+
+<span class="type">Exception</span> <span class="keyword">in</span> thread <span class="string">"SinkRunner-PollingRunner-DefaultSinkProcessor"</span> java.lang.<span class="type">VerifyError</span>: class org.apache.hadoop.hdfs.protocol.proto.<span class="type">ClientNamenodeProtocolProtos</span>$<span class="type">RecoverLeaseRequestProto</span> overrides final <span class="keyword">method</span> getUnknownFields.()<span class="type">Lcom</span>/google/protobuf/<span class="type">UnknownFieldSet</span>;
+</code></pre><p> 解决方法：mv {protobuf-java-2.4.1.jar,guava-10.0.1.jar} ~/<br>－ master  example-conf.properties</p>
+<pre><code>    agent<span class="class">.sources</span> = avrosrc
+agent<span class="class">.sinks</span> =hdfs-write 
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.type</span> =avro
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.bind</span> =master
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.port</span> =<span class="number">23004</span>
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.channels</span>=memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> =<span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.type</span> = hdfs
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.path</span> =hdfs:<span class="comment">//172.16.86.38:9000/flume/webdata</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.rollInterval</span> = <span class="number">0</span>   
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.channel</span>=memoryChannel
+</code></pre><ul>
+<li>slave01 example-conf.properties</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = baksrc
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =avro-forward-sink 
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.type</span> = exec
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.command</span> =tail -F /root/hadoo/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.checkperiodic</span> = <span class="number">1000</span>
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.channels</span> =memoryChannel 
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> = <span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.hostname</span> = master
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.channel</span> = memoryChannel
+</code></pre><ul>
+<li><p>master:<br>flume-ng agent —conf conf —conf-file example-conf.properties —name agent -Dflume.root.logger=DEBUG,console</p>
+</li>
+<li><p>slave:<br>flume-ng avro-client -c conf  -H master -p 23004  -F /root/hadoop/test/data.txt -Dflume.root.logger=DEBUG,console<br>竟然成功了。。接下来研究如何使用配置文件或者使用tail -f </p>
+<h4 id="收集目录下面的文件内容">收集目录下面的文件内容</h4></li>
+<li>master</li>
+</ul>
+<pre><code>agent.<span class="variable">sources =</span> source1
+agent.<span class="variable">channels =</span> memoryChannel
+agent.<span class="variable">sinks =</span> sink1
+agent.sources.source1.<span class="variable">type =</span> avro
+agent.sources.source1.<span class="variable">bind =</span> master 
+agent.sources.source1.<span class="variable">port =</span> <span class="number">23004</span>
+agent.sources.source1.<span class="variable">channels =</span> memoryChannel
+<span class="comment"># Each channel's type is defined.</span>
+agent.channels.memoryChannel.<span class="variable">type =</span> memory
+agent.channels.memoryChannel.<span class="variable">capacity =</span> <span class="number">100</span> 
+agent.channels.memoryChannel.<span class="variable">keep-alive =</span> <span class="number">100</span> 
+agent.sinks.sink1.<span class="variable">type=</span>hdfs
+agent.sinks.sink1.hdfs.<span class="variable">path=</span>hdfs://master:<span class="number">9000</span>/hmbbs/%y-%m-%d/%H%M%S
+agent.sinks.sink1.hdfs.<span class="variable">fileType=</span>DataStream
+agent.sinks.sink1.hdfs.<span class="variable">writeFormat=</span>TEXT
+agent.sinks.sink1.hdfs.<span class="variable">round=</span><span class="constant">true</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundValue=</span><span class="number">5</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundUnit=</span>minute
+<span class="comment">#agent.sinks.sink1.hdfs.rollInterval=1</span>
+agent.sinks.sink1.hdfs.<span class="variable">useLocalTimeStamp=</span><span class="constant">true</span>
+agent.sinks.sink1.<span class="variable">channel =</span> memoryChannel
+agent.sinks.sink1.hdfs.<span class="variable">filePrefix=</span>events-
+</code></pre><ul>
+<li>slave 文件</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = source1
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =sink1
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> = spooldir
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.spoolDir</span>=/root/hmbbs
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
+</code></pre><h3 id="使用tail_-F">使用tail -F</h3><p>修改下 /root/hadoop/test/目录和文件的权限 chmod 777 /root/hadoop/test 和 chmod 777 /root/hadoop/test/data.txt</p>
+<ul>
+<li>master</li>
+</ul>
+<pre><code>agent.<span class="variable">sources =</span> source1
+agent.<span class="variable">channels =</span> memoryChannel
+agent.<span class="variable">sinks =</span> sink1
+agent.sources.source1.<span class="variable">type =</span> avro
+agent.sources.source1.<span class="variable">bind =</span> master 
+agent.sources.source1.<span class="variable">port =</span> <span class="number">23004</span>
+agent.sources.source1.<span class="variable">channels =</span> memoryChannel
+<span class="comment"># Each channel's type is defined.</span>
+agent.channels.memoryChannel.<span class="variable">type =</span> memory
+agent.channels.memoryChannel.<span class="variable">capacity =</span> <span class="number">100</span> 
+agent.channels.memoryChannel.<span class="variable">keep-alive =</span> <span class="number">100</span> 
+agent.sinks.sink1.<span class="variable">type=</span>hdfs
+agent.sinks.sink1.hdfs.<span class="variable">path=</span>hdfs://master:<span class="number">9000</span>/hmbbs/%y-%m-%d/%H%M%S
+agent.sinks.sink1.hdfs.<span class="variable">fileType=</span>DataStream
+agent.sinks.sink1.hdfs.<span class="variable">writeFormat=</span>TEXT
+agent.sinks.sink1.hdfs.<span class="variable">round=</span><span class="constant">true</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundValue=</span><span class="number">5</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundUnit=</span>minute
+<span class="comment">#agent.sinks.sink1.hdfs.rollInterval=1</span>
+agent.sinks.sink1.hdfs.<span class="variable">useLocalTimeStamp=</span><span class="constant">true</span>
+agent.sinks.sink1.<span class="variable">channel =</span> memoryChannel
+agent.sinks.sink1.hdfs.<span class="variable">filePrefix=</span>events-
+</code></pre><ul>
+<li>slave01</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = source1
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =sink1
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> =exec 
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.command</span>=tail -F /root/hadoop/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/04/17/big-data-flume/" data-title="Flume安装配置 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/04/17/big-data-log/" title="日志收集系统环境整合">
+  <strong>上一篇：</strong><br/>
+  <span>
+  日志收集系统环境整合</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/04/17/big-data-haoop-cluster2/"  title="Hadoop完全分布式集群安装">
+ <strong>下一篇：</strong><br/> 
+ <span>Hadoop完全分布式集群安装
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/04/17/big-data-flume/" data-title="Flume安装配置" data-url="http://yoursite.com/2015/04/17/big-data-flume/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#下载Flume1-4-0"><span class="toc-number">1.</span> <span class="toc-text">下载Flume1.4.0</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置及测试参考Apache文章Flume"><span class="toc-number">2.</span> <span class="toc-text">配置及测试参考Apache文章Flume</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#本地hdfs测试"><span class="toc-number">3.</span> <span class="toc-text">本地hdfs测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#收集目录下面的文件内容"><span class="toc-number">4.</span> <span class="toc-text">收集目录下面的文件内容</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用tail_-F"><span class="toc-number"></span> <span class="toc-text">使用tail -F</span></a>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/大数据/" title="大数据">大数据<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://wujindou.github.io" target="_blank" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wujindou"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

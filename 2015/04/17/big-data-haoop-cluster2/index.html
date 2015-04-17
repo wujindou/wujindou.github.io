@@ -1,0 +1,528 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Hadoop完全分布式集群安装 | Jackie&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jackie wu">
+    
+
+    
+    <meta name="description" content="首先定义master 和 slave 我这里只有2台vim/etc/hosts
+
+172.16.86.38 master
+172.16.86.39 slave01
+
+修改hostname slave01和hostname master只是临时修改
+打通各自的ssh和相互的sshssh-keygen -t rsacat id_rsa.pub &amp;gt; ./authorized_keys
+
+#相互之间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop完全分布式集群安装">
+<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-haoop-cluster2/index.html">
+<meta property="og:site_name" content="Jackie's Blog">
+<meta property="og:description" content="首先定义master 和 slave 我这里只有2台vim/etc/hosts
+
+172.16.86.38 master
+172.16.86.39 slave01
+
+修改hostname slave01和hostname master只是临时修改
+打通各自的ssh和相互的sshssh-keygen -t rsacat id_rsa.pub &amp;gt; ./authorized_keys
+
+#相互之间">
+<meta property="og:image" content="/images/hadoop/cluster_1.png">
+<meta property="og:image" content="/images/hadoop/cluster_2.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hadoop完全分布式集群安装">
+<meta name="twitter:description" content="首先定义master 和 slave 我这里只有2台vim/etc/hosts
+
+172.16.86.38 master
+172.16.86.39 slave01
+
+修改hostname slave01和hostname master只是临时修改
+打通各自的ssh和相互的sshssh-keygen -t rsacat id_rsa.pub &amp;gt; ./authorized_keys
+
+#相互之间">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jackie&#39;s Blog" title="Jackie&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-haoop-cluster2/" title="Hadoop完全分布式集群安装" itemprop="url">Hadoop完全分布式集群安装</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:22:01.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			
+		
+		</div>
+		
+		<ul>
+<li>首先定义master 和 slave 我这里只有2台vim/etc/hosts</li>
+</ul>
+<pre><code>172.16.86.38 master
+172.16.86.39 slave01
+</code></pre><ul>
+<li>修改hostname slave01和hostname master只是临时修改</li>
+<li>打通各自的ssh和相互的ssh<br>ssh-keygen -t rsa<br>cat id_rsa.pub &gt; ./authorized_keys</li>
+</ul>
+<pre><code>#相互之间的ssh打通命令
+scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
+然后把 cat id_rsa.pub &gt;&gt;authoried_keys中，再把authorized_keys复制到其他机器
+scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
+</code></pre><ul>
+<li>以上次设置的为分布式机子为主机，需要复制一些文件到slave集群中设置。</li>
+<li>配置JDK复制master下的/usr/local/java目录到slave01，修改~/.bashrc</li>
+</ul>
+<pre><code><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
+<span class="built_in">export</span> JRE_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05/jre
+<span class="built_in">export</span> CLASSPATH=.:<span class="variable">$CLASSPATH</span>:<span class="variable">$JAVA_HOME</span>/lib:<span class="variable">$JRE_HOME</span>/lib  
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$JRE_HOME</span>/bin  
+</code></pre><p>执行source ~/.bashrc文件使配置生效,检查 java　-version </p>
+<ul>
+<li>参考<a href="http://going.blog.51cto.com/7876557/1365883" target="_blank" rel="external">文章</a><br>找不到jps命令问题：</li>
+</ul>
+<pre><code>vim ~/.bashrc文件
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/sbin:<span class="variable">$HIVE_HOME</span>/bin:<span class="variable">$JAVA_HOME</span>/bin
+</code></pre><p>最后结果：<br>salve:jps</p>
+<p><img src="/images/hadoop/cluster_1.png" alt="Alt text"></p>
+<p>master: jps </p>
+<p><img src="/images/hadoop/cluster_2.png" alt="Alt text"><br>在启动后发现最后没有发现liveNode，着实郁闷了很久最后发现，查看hadoop/logs的datanode文件日志返现，原来datanode连接不到namenode,试着使用telnet也不行，发现原来监听的是localhost的9000端口于是改回来就好了。<br>最后的配置文件</p>
+<ul>
+<li>core-site.xml </li>
+</ul>
+<pre><code>    <span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>fs.<span class="keyword">default</span>.name<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>hdfs://master:<span class="number">9000</span><span class="variable">&lt;/value&gt;</span>
+    <span class="variable">&lt;final&gt;</span>true<span class="variable">&lt;/final&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+<span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>hadoop.tmp.dir<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>/home/hadoop/hadoop_tmp<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;/property&gt;</span>
+</code></pre><ul>
+<li>hdfs-site.xml</li>
+</ul>
+<pre><code>    <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">value</span>&gt;</span>2<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.permissions<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">value</span>&gt;</span>false<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre><ul>
+<li><p>yarn-site.xml</p>
+<pre><code> <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8025<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.scheduler.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8030<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8040<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre></li>
+<li><p>mapred-site.xml</p>
+</li>
+</ul>
+<pre><code><span class="tag">&lt;<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+<span class="tag">&lt;<span class="title">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre><ul>
+<li>差点忘了 /etc/hosts了</li>
+</ul>
+<pre><code><span class="number">127.0</span>.<span class="number">0.1</span>      localhost
+::<span class="number">1</span>     localhost6<span class="class">.localdomain6</span> localhost6
+<span class="number">172.16</span>.<span class="number">86.38</span> master 
+<span class="number">172.16</span>.<span class="number">86.39</span> slave01
+</code></pre><p>问题转移，map任务一直处于停止状态，不知道日志信息在哪里<br>解决方法：打开调试信息：</p>
+<pre><code><span class="reserved">export</span> HADOOP_ROOT_LOGGER=DEBUG,<span class="built_in">console</span>
+</code></pre><p>最后问题： 服务器时间不同步，TMD这么大的坑啊。。。。</p>
+<pre><code>ntpdate <span class="tag">time</span><span class="class">.nist</span><span class="class">.gov</span>（每台服务器运行即可）
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/04/17/big-data-haoop-cluster2/" data-title="Hadoop完全分布式集群安装 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/04/17/big-data-flume/" title="Flume安装配置">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Flume安装配置</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/04/17/big-data-hadoop-cluster/"  title="Hadoop完全分布式集群安装">
+ <strong>下一篇：</strong><br/> 
+ <span>Hadoop完全分布式集群安装
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/04/17/big-data-haoop-cluster2/" data-title="Hadoop完全分布式集群安装" data-url="http://yoursite.com/2015/04/17/big-data-haoop-cluster2/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/大数据/" title="大数据">大数据<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://wujindou.github.io" target="_blank" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wujindou"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

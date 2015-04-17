@@ -4,37 +4,47 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>python自动化工具 | Jackie&#39;s Blog</title>
+    <title>Hadoop2.2安装使用 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+    <meta name="description" content="配置ssh
+生成ssh-key 在
+ssh-keygen -t rsa -P &quot;&quot;
+cd ~/.ssh
+cat id_rsa.pub&amp;gt;&amp;gt; authorized_keys
+Jdk环境配置Linux开发环境，可以删除系统原来的jdk,查找下载安装最新版本的jdk
+
+rpm -qa |grep jdk ,rpm -qa | grep gcj,
+删除执行：rpm -e —nodeps xxx">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python自动化工具">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/python-auto-tool/index.html">
+<meta property="og:title" content="Hadoop2.2安装使用">
+<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-hadoop/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta property="og:description" content="配置ssh
+生成ssh-key 在
+ssh-keygen -t rsa -P &quot;&quot;
+cd ~/.ssh
+cat id_rsa.pub&amp;gt;&amp;gt; authorized_keys
+Jdk环境配置Linux开发环境，可以删除系统原来的jdk,查找下载安装最新版本的jdk
+
+rpm -qa |grep jdk ,rpm -qa | grep gcj,
+删除执行：rpm -e —nodeps xxx">
+<meta property="og:image" content="/images/hadoop/hadoop_1.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python自动化工具">
-<meta name="twitter:description" content="公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成
-模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！
-#! /usr/bin/python 
- #coding:utf-8
-import os,sys,re
-proj">
+<meta name="twitter:title" content="Hadoop2.2安装使用">
+<meta name="twitter:description" content="配置ssh
+生成ssh-key 在
+ssh-keygen -t rsa -P &quot;&quot;
+cd ~/.ssh
+cat id_rsa.pub&amp;gt;&amp;gt; authorized_keys
+Jdk环境配置Linux开发环境，可以删除系统原来的jdk,查找下载安装最新版本的jdk
+
+rpm -qa |grep jdk ,rpm -qa | grep gcj,
+删除执行：rpm -e —nodeps xxx">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -94,14 +104,14 @@ proj">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
+      <a href="/2015/04/17/big-data-hadoop/" title="Hadoop2.2安装使用" itemprop="url">Hadoop2.2安装使用</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    <time datetime="2015-04-17T07:53:44.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
     
   </p>
 </header>
@@ -110,34 +120,97 @@ proj">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置ssh"><span class="toc-number">1.</span> <span class="toc-text">配置ssh</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jdk环境配置"><span class="toc-number">2.</span> <span class="toc-text">Jdk环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hadoop环境配置"><span class="toc-number">3.</span> <span class="toc-text">Hadoop环境配置</span></a></li></ol>
 		
 		</div>
 		
-		<p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
-<p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
-<pre><code><span class="comment">#! /usr/bin/python </span>
- <span class="comment">#coding:utf-8</span>
-<span class="keyword">import</span> os,sys,re
-project_dir = <span class="string">"d:/project/aushop/application/views/show/ringsign"</span>
-php_dir =<span class="string">"d:/project/aushop/application/library/Active/RingSign"</span>
-<span class="function"><span class="keyword">def</span> <span class="title">replaceFile</span><span class="params">(infile,name)</span>:</span>
-<span class="keyword">if</span> os.path.isfile(project_dir+name+<span class="string">".phtml"</span>):
-<span class="keyword">print</span> <span class="string">u'文件已经存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(infile):
-<span class="keyword">print</span> <span class="string">u'文件不存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">try</span>:
-infile = open(infile, <span class="string">"r"</span>)
-outfile = open(project_dir+name+<span class="string">".phtml"</span>, <span class="string">"wb"</span>)
-<span class="keyword">except</span> IOError:
-<span class="keyword">print</span> <span class="string">"The file don't exist, Please double check!"</span>
-exit()
-all_the_lines = infile.readlines()
-infile.seek(<span class="number">0</span>)
-<span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
-</code></pre>  
+		<h3 id="配置ssh">配置ssh</h3><ul>
+<li><p>生成ssh-key 在</p>
+<pre><code>ssh-keygen -t rsa -P <span class="string">""</span>
+<span class="keyword">cd</span> ~/.ssh
+<span class="keyword">cat</span> id_rsa.pub&gt;&gt; authorized_keys
+</code></pre><h3 id="Jdk环境配置">Jdk环境配置</h3><p>Linux开发环境，可以删除系统原来的jdk,查找下载安装最新版本的jdk</p>
+<ul>
+<li>rpm -qa |grep jdk ,rpm -qa | grep gcj,</li>
+<li>删除执行：rpm -e —nodeps xxx</li>
+<li>下载最新版本的JDK.gz解压后放到/usr/local/java目录下</li>
+<li><p>修改配置/etc/profile文件</p>
+<pre><code>JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
+CLASSPATH=.:<span class="variable">$JAVA_HOME</span>/lib/tools.jar
+ PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin
+<span class="built_in">export</span> JAVA_HOME CLASSPATH PATH
+</code></pre></li>
+<li>配置生效后执行java -version 看是否和安装的java版本匹配<h3 id="Hadoop环境配置">Hadoop环境配置</h3></li>
+<li>配置~/.bashrc文件</li>
+</ul>
+</li>
+</ul>
+<pre><code><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
+<span class="built_in">export</span> HADOOP_INSTALL=~/hadoop/hadoop-<span class="number">2.2</span>.<span class="number">0</span>
+<span class="built_in">export</span> HADOOP_MAPRED_HOME=<span class="variable">$HADOOP_INSTALL</span>
+<span class="built_in">export</span> HADOOP_COMMON_HOME=<span class="variable">$HADOOP_INSTALL</span>
+<span class="built_in">export</span> HADOOP_HDFS_HOME=<span class="variable">$HADOOP_INSTALL</span>
+<span class="built_in">export</span> YARN_HOME=<span class="variable">$HADOOP_INSTALL</span>
+<span class="built_in">export</span> HADOOP_COMMON_LIB_NATIVE_DIR=<span class="variable">$HADOOP_INSTALL</span>/lib/native
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/sbin
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/bin
+</code></pre><ul>
+<li>配置core-site.xml </li>
+</ul>
+<pre><code><span class="variable">&lt;configuration&gt;</span>
+   <span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>fs.<span class="keyword">default</span>.name<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>hdfs://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9000</span><span class="variable">&lt;/value&gt;</span>
+    <span class="variable">&lt;final&gt;</span>true<span class="variable">&lt;/final&gt;</span>
+    <span class="variable">&lt;/property&gt;</span>
+    <span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>hadoop.tmp.dir<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>/home/hadoop/hadoop_tmp<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;/property&gt;</span>
+<span class="variable">&lt;/configuration&gt;</span>
+</code></pre><ul>
+<li>配置mapred.xml文件</li>
+</ul>
+<pre><code><span class="tag">&lt;<span class="title">configuration</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span>
+</code></pre><ul>
+<li>配置hdfs-site.xml文件</li>
+</ul>
+<pre><code><span class="tag">&lt;<span class="title">configuration</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+       <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>1<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span>
+</code></pre><ul>
+<li>配置Yarn-site.xml文件（默认就行了）</li>
+<li>启动</li>
+</ul>
+<pre><code>bin/hdfs namenode -format
+显示 ：SHUTDOWN_MSG: Shutting down NameNode at xxx表示成功
+启动namenode:
+sbin/hadoop-daemon<span class="class">.sh</span> start namenode
+sbin/hadoop-daemon<span class="class">.sh</span> start datanode
+启动Manage管理
+sbin/yarn-daemon<span class="class">.sh</span> start resourcemanager
+sbin/yarn-daemon<span class="class">.sh</span> start nodemanager
+测试：jps 通过：ip:<span class="number">50070</span>查看
+测试hdfs:
+mkdir <span class="tag">input</span>
+cd <span class="tag">input</span>
+echo <span class="string">"hello world"</span> &gt; test1<span class="class">.txt</span>
+echo <span class="string">"hello hadoop"</span> &gt; test2<span class="class">.txt</span>
+cd ..
+把input目录中的文件拷贝到dnfs上，并保存在<span class="keyword">in</span>目录中
+bin/hadoop dfs -put input/ /<span class="keyword">in</span>
+bin/hadoop dfs -ls /<span class="keyword">in</span>
+</code></pre><p>一个奇葩的问题<br>测试过程中有个问题让我很是头疼：<br><img src="/images/hadoop/hadoop_1.png" alt="Alt text"><br>最后发现竟然是hostname的问题，无奈不适用localhost之后问题就解决了,还有如果出现了Safe mode的话就使用： bin/hadoop dfsadmin -safemode leave 关闭就可以了。</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -145,7 +218,7 @@ infile.seek(<span class="number">0</span>)
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Python/">Python</a>
+  <span></span> <a href="/tags/大数据/">大数据</a>
   </div>
 
 </div>
@@ -154,7 +227,7 @@ infile.seek(<span class="number">0</span>)
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/python-auto-tool/" data-title="python自动化工具 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/17/big-data-hadoop/" data-title="Hadoop2.2安装使用 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -168,18 +241,18 @@ infile.seek(<span class="number">0</span>)
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件">
+ <a href="/2015/04/17/big-data-hive/" title="Hive配置信息">
   <strong>上一篇：</strong><br/>
   <span>
-  Jquery简单封装插件</span>
+  Hive配置信息</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/04/17/my-new-post/"  title="Git重新上手">
+<a href="/2015/04/17/jquery-tool/"  title="Jquery简单封装插件">
  <strong>下一篇：</strong><br/> 
- <span>Git重新上手
+ <span>Jquery简单封装插件
 </span>
 </a>
 </div>
@@ -188,7 +261,7 @@ infile.seek(<span class="number">0</span>)
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/python-auto-tool/" data-title="python自动化工具" data-url="http://yoursite.com/2015/04/17/python-auto-tool/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/17/big-data-hadoop/" data-title="Hadoop2.2安装使用" data-url="http://yoursite.com/2015/04/17/big-data-hadoop/"></div>
 </section>
 
 
@@ -198,7 +271,7 @@ infile.seek(<span class="number">0</span>)
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置ssh"><span class="toc-number">1.</span> <span class="toc-text">配置ssh</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jdk环境配置"><span class="toc-number">2.</span> <span class="toc-text">Jdk环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hadoop环境配置"><span class="toc-number">3.</span> <span class="toc-text">Hadoop环境配置</span></a></li></ol>
  
   </div>
 

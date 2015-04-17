@@ -81,80 +81,32 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件" itemprop="url">Jquery简单封装插件</a>
+      <a href="/2015/04/17/php-learn/" title="php单引号与双引号区别" itemprop="url">php单引号与双引号区别</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T07:13:17.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    <time datetime="2015-04-17T11:42:20.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>由于开发过程是需要使用fancybox，但是已有的结构需要每次都把html代码如下copy到需要添加文档，然后需要每次复制函数。重复早轮子，<br>于是考虑通过jquery进行简单的封装以避免重复的造轮子工作。<br>新建fancybox-widget.js </p>
-<pre><code>$(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
-        <span class="keyword">var</span> tbox =$(
-        <span class="string">'&lt;div id="show-message" style = "display:none"&gt;&lt;div class = "cb50" &gt;&lt;/div&gt;&lt;p class = "t_center ml_25 mr_25 f14 f_red"&gt;&lt;/p&gt;&lt;div class = "cb20" &gt;&lt;/div&gt;&lt;a href = "javascript:$.fancybox.close();" class = "f14 f_white fc t_center" style = "width:100px; height:30px; line-height:30px; display:block; background:#eb2f7b; border-radius:4px;" &gt; 确认 &lt;/a&gt; &lt;/div &gt;&lt;/div&gt;'</span>);
-    $(<span class="string">'body'</span>).prepend(tbox);
+        <p>在php中经常会输出字符串和变量的情况，但是很多时候使用单引号还是双引号会有些疑问：php中单引号的变量不会被解析，但是双引号中的变量,如果使用heredoc 会被解析：</p>
+<pre><code><span class="php"><span class="preprocessor">&lt;?php</span> 
+    <span class="class"><span class="keyword">class</span> <span class="title">Boo</span></span>{
+    <span class="keyword">public</span> <span class="variable">$name</span> = <span class="string">'zhang3'</span>;
+}
 
-    });
-    jQuery.showbox = <span class="function"><span class="keyword">function</span><span class="params">(data,that )</span></span>{
+<span class="variable">$a</span> = <span class="string">'wwww'</span>;
+<span class="keyword">echo</span> <span class="string">'$ a'</span>;<span class="comment">//输出 $a</span>
+<span class="keyword">echo</span> <span class="string">"$a"</span>;<span class="comment">//输出 wwww</span>
+<span class="variable">$boo</span> = <span class="keyword">new</span> Boo();
+<span class="keyword">echo</span> <span class="string">"{$boo-&gt;name}"</span>;<span class="comment">//输出zhang3</span></span>
+</code></pre><p>php如果输出很长字符串可以使用heredoc，其也会象双引号一样对变量进行解析</p>
 
-    <span class="keyword">if</span> (data &amp;&amp; data.code == <span class="number">1</span>) {
-    $(<span class="string">"#show-message p"</span>).removeClass(<span class="string">'f_red'</span>);
-    $(<span class="string">"#show-message p"</span>).addClass(<span class="string">'f_green'</span>);
-    } <span class="keyword">else</span> {
-    $(<span class="string">"#show-message p"</span>).removeClass(<span class="string">'f_green'</span>);
-    $(<span class="string">"#show-message p"</span>).addClass(<span class="string">'f_red'</span>);
-    }
-    $(<span class="string">"#show-message p"</span>).html(data.message);
-    <span class="keyword">if</span> (data &amp;&amp; data.code == <span class="number">1</span>) {
-    $.fancybox.open({
-    <span class="string">'href'</span>: <span class="string">"#show-message"</span>,
-    <span class="string">'scrolling'</span>: <span class="string">'no'</span>,
-    <span class="string">'modal'</span>: <span class="literal">true</span>,
-    <span class="string">'closeBtn'</span>: <span class="literal">true</span>,
-    <span class="string">'afterClose'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
-    <span class="built_in">window</span>.location.reload();
-    <span class="keyword">return</span>;
-    },
-    <span class="string">'autoSize'</span>: <span class="literal">false</span>,
-    <span class="string">'fitToView'</span>: <span class="literal">false</span>,
-    <span class="string">'width'</span>: <span class="number">300</span>,
-    <span class="string">'height'</span>: <span class="number">200</span>,
-    <span class="string">'padding'</span>: <span class="number">0</span>
-    });
-
-    } <span class="keyword">else</span> {
-    $.fancybox.open({
-    <span class="string">'href'</span>: <span class="string">"#show-message"</span>,
-    <span class="string">'scrolling'</span>: <span class="string">'no'</span>,
-    <span class="string">'modal'</span>: <span class="literal">true</span>,
-    <span class="string">'closeBtn'</span>: <span class="literal">true</span>,
-    <span class="string">'afterClose'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
-    <span class="keyword">if</span> (that) {
-    $(that).attr(<span class="string">"data-tag"</span>, <span class="string">'0'</span>);
-    }
-    <span class="keyword">return</span>;
-    },
-    <span class="string">'autoSize'</span>: <span class="literal">false</span>,
-    <span class="string">'fitToView'</span>: <span class="literal">false</span>,
-    <span class="string">'width'</span>: <span class="number">300</span>,
-    <span class="string">'height'</span>: <span class="number">200</span>,
-    <span class="string">'padding'</span>: <span class="number">0</span>
-    });
-    }
-    }
-    在需要使用该插件的页面通过引入该js文件，然后调用也非常的简单： 
-    $(<span class="string">'#show'</span>).click(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
-    <span class="keyword">var</span> data = { code: <span class="number">1</span>, message: <span class="string">'hello'</span> };
-    $.showbox(data);
-
-    });
-</code></pre>
         
         
         <p class="article-more-link">
@@ -167,7 +119,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/js学习笔记/">js学习笔记</a>
+  <span></span> <a href="/tags/php/">php</a>
   </div>
 
 </div>
@@ -178,7 +130,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/04/17/jquery-tool/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/jquery-tool/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/04/17/php-learn/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/php-learn/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -198,43 +150,22 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
+      <a href="/2015/04/17/php-yaf/" title="yaf学习笔记" itemprop="url">yaf学习笔记</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    <time datetime="2015-04-17T08:48:57.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
-<p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
-<pre><code><span class="comment">#! /usr/bin/python </span>
- <span class="comment">#coding:utf-8</span>
-<span class="keyword">import</span> os,sys,re
-project_dir = <span class="string">"d:/project/aushop/application/views/show/ringsign"</span>
-php_dir =<span class="string">"d:/project/aushop/application/library/Active/RingSign"</span>
-<span class="function"><span class="keyword">def</span> <span class="title">replaceFile</span><span class="params">(infile,name)</span>:</span>
-<span class="keyword">if</span> os.path.isfile(project_dir+name+<span class="string">".phtml"</span>):
-<span class="keyword">print</span> <span class="string">u'文件已经存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(infile):
-<span class="keyword">print</span> <span class="string">u'文件不存在'</span>
-sys.exit(<span class="number">1</span>)
-<span class="keyword">try</span>:
-infile = open(infile, <span class="string">"r"</span>)
-outfile = open(project_dir+name+<span class="string">".phtml"</span>, <span class="string">"wb"</span>)
-<span class="keyword">except</span> IOError:
-<span class="keyword">print</span> <span class="string">"The file don't exist, Please double check!"</span>
-exit()
-all_the_lines = infile.readlines()
-infile.seek(<span class="number">0</span>)
-<span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
-</code></pre>
+        <p>1.按照官网给的信息搭建环境，总是报告404错误后来修改<br>default.conf<br>if (!-e $request_filename) {<br>rewrite ^/(.*)  /public/index.php/$1 last;<br>}<br>总算可以访问了。yaf文件找不到问题：<br> 参考官方文档有很多问题：<br>首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample<br>设置： index.php</p>
+<p>&lt;?php<br>define(“APP<em>PATH”, realpath(dirname(<em>_FILE</em></em>) . ‘/../‘)); /<em> 指向public的上一级 </em>/<br>$app = new Yaf_Application(APP_PATH . “/application/conf/application.ini”);<br>$app-&gt;run();<br>设置：application.ini<br>application.directory=APP_PATH “/application/“</p>
+
         
         
         <p class="article-more-link">
@@ -247,7 +178,7 @@ infile.seek(<span class="number">0</span>)
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Python/">Python</a>
+  <span></span> <a href="/tags/php/">php</a>
   </div>
 
 </div>
@@ -258,7 +189,7 @@ infile.seek(<span class="number">0</span>)
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/04/17/python-auto-tool/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/python-auto-tool/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/04/17/php-yaf/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/php-yaf/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -278,32 +209,223 @@ infile.seek(<span class="number">0</span>)
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/my-new-post/" title="Git重新上手" itemprop="url">Git重新上手</a>
+      <a href="/2015/04/17/big-data-flume-kafaka/" title="Flume 1.4整合kafka消息系统" itemprop="url">Flume 1.4整合kafka消息系统</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T05:36:10.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    <time datetime="2015-04-17T08:45:58.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p> 好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。<br>直接图示吧：</p>
+        <p>Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：<br>简单记录下自己整合的过程吧：参考<a href="http://www.tuicool.com/articles/mMrQnu7" target="_blank" rel="external">文章</a>里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。</p>
+<ul>
+<li>复制插件下的lib下的所有jar文件到flume/lib下</li>
+<li>复制插件下的package下的flumeng-kafka-plugin.jar文件到flume/lib下</li>
+<li>修改插件下的flume-conf.properties文件，并复制到flume/conf下<br>启动：<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/flume-ng agent --conf conf --conf-file conf/flume-conf<span class="class">.properties</span> --name producer -Dflume<span class="class">.root</span><span class="class">.logger</span>=INFO,console</span><br><span class="line"><span class="comment">//启动zookeeper</span></span><br><span class="line">bin/zookeeper-server-start<span class="class">.sh</span> config/zookeeper<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动kafka</span></span><br><span class="line">bin/kafka-server-start<span class="class">.sh</span> config/server<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动consumer</span></span><br><span class="line">bin/kafka-console-consumer<span class="class">.sh</span> --zookeeper localhost:<span class="number">2181</span> --topic test2 --from-beginning</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-flume-kafaka/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-flume-kafaka/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-hadoop-online/" title="hadoop线上环境搭建" itemprop="url">hadoop线上环境搭建</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:43:29.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。</p>
+<ul>
+<li>调整系统时间</li>
+<li>安装新版jdk</li>
+<li>打通master和slave的ssh连接。</li>
+<li>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)</li>
+<li>启动测试访问，线上环境注意防火墙是否关闭。</li>
+<li>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja</li>
+<li>计划任务<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#load&#25968;&#25454;&#35745;&#21010;&#20219;&#21153;&#65306;2,12,22,32,42,52 *  * * *  /root/hadoop/exec_jar.sh  &#62; /root/hadoop/test/test.txt  2&#62;&#38;1&#10;//exec_jar.sh&#10;#!/bin/sh&#10;JAVA_HOME=/usr/local/java/jdk1.8.0_05&#10;CLASSPATH=.:$JAVA_HOME/lib/tools.jar&#10;PATH=$PATH:$JAVA_HOME/bin&#10;export PATH&#10;java -jar load_file1.jar &#62; /root/hadoop/test/test.txt  2&#62;&#38;1&#10;#mv&#26085;&#24535;&#25991;&#20214;&#31227;&#21160;&#20219;&#21153;:&#10;#0,10,20,30,40,50 * * * * /root/hadoop/mv_file.sh&#10;#!/bin/sh&#10;cp  /root/hadoop/access.log /root/hadoop/access_bak.log&#10;mv  /root/hadoop/access_bak.log /root/hmbbs/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其中jar文件是使用java来load数据进hive数据表的,代码参考如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.ResultSet;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"><span class="keyword">import</span> java.sql.Statement;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Calendar;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HiveServer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String driverName =  <span class="string">"org.apache.hadoop.hive.jdbc.HiveDriver"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> SQLException</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class.forName(driverName);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            System.exit(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        java.sql.Connection con =  DriverManager.getConnection( <span class="string">"jdbc:hive://172.16.86.38:10002/default"</span>, <span class="string">"root"</span>, <span class="string">""</span>);</span><br><span class="line">        Statement stmt = con.createStatement();</span><br><span class="line">        Calendar cal = Calendar.getInstance();</span><br><span class="line">        Date d = <span class="keyword">new</span> Date();</span><br><span class="line">        SimpleDateFormat df=<span class="keyword">new</span> SimpleDateFormat(<span class="string">"yy-MM-dd HHmm"</span>);</span><br><span class="line">        String time=df.format(d);</span><br><span class="line">        String arr[]=time.split(<span class="string">" "</span>);</span><br><span class="line">        String date = arr[<span class="number">0</span>];</span><br><span class="line">        String time_now = arr[<span class="number">1</span>];</span><br><span class="line">        System.out.println(time_now);</span><br><span class="line">        String temp = time_now.substring(<span class="number">3</span>,<span class="number">4</span>);</span><br><span class="line">        <span class="keyword">int</span> m = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(Integer.parseInt(temp)&gt;<span class="number">5</span>)&#123;</span><br><span class="line">        	m = <span class="number">5</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">        String sql =<span class="string">"LOAD DATA inpath '"</span>+<span class="string">"hdfs://master:9000/hmbbs/"</span>+date+<span class="string">"/"</span>+time_now.substring(<span class="number">0</span>,<span class="number">3</span>)+m+<span class="string">"00"</span>+<span class="string">"' into table test "</span>;</span><br><span class="line">        ResultSet res = stmt.executeQuery(sql);</span><br><span class="line">       <span class="keyword">while</span> (res.next()) &#123;       </span><br><span class="line">      &#125;	</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下一步来安装flume文件同步<br>flume的配置稍微有点坑爹，注意复制的时候不要漏了什么字母或者符号了，而且需要配置protobuf2.5也就是删除  rm -f lib/protobuf-java-2.4.1.jar lib/guava-10.0.1.jar(<strong>注意只删除master上的不要删除slave上的</strong>),设置监听目录的权限为777可能也么关系保险起见吧。<br>之后检查配置文件：<br>flume-ng agent -n agent -c conf -f example-conf.properties -Dflume.root.logger=DEBUG,console<br>刚开始一直停顿在:log4j….上解决方法修改/etc/profile加入如下内容：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JAVA_HOME=/usr/local/java/jdk1.8.0_05&#10;export HADOOP_HOME=~/hadoop/hadoop-2.2.0&#10;CLASSPATH=.:$JAVA_HOME/lib/tools.jar&#10;PATH=$PATH:$JAVA_HOME/bin:/usr/local/mysql/bin&#10;export PATH&#10;export JAVA_HOME CLASSPATH PATH</span><br></pre></td></tr></table></figure></p>
+<p>当两边都看到这样的画面的时候表示基本成功了！<br><img src="/images/hadoop/hadoop_online.png" alt="Alt text"><br>下面修改日志收集脚本，需要重新启动nginx.log日志文件<br>在测试的时候发现job老是执行不成功，后来才发现datenode的ResourceManager没有启动成功，无奈重启！<br>start-dfs.sh和star-yarn.sh,<br>鉴于flume的性能问题，所以考虑使用脚本来同步复制文件。<br>问题：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Execution log at: /tmp/root/root_20140526202626_cc12ee2f-<span class="number">81</span>ab-<span class="number">47f</span>2-<span class="number">9</span>d9a-d4f4d1f4b137.log</span><br><span class="line">java.io.FileNotFoundException: File does not exist: hdfs:<span class="comment">//master:9000/root/hadoop/hive/lib/test_kpi.jar</span></span><br></pre></td></tr></table></figure></p>
+<p>问题原因hadoop2.2采用依赖jar，所以应该吧jar文件放到hdfs上去解决方法：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> ./bin/hdfs dfs -mkdir -p /root/hadoop/hive/lib/&#10;./bin/hdfs dfs  -copyFromLocal /root/hadoop/hive/lib/test_kpi.jar /root/hadoop/hive/lib/&#10;./bin/hdfs dfs  -copyFromLocal /root/hadoop/hive/lib/IP2Location.jar /root/hadoop/hive/lib/</span><br></pre></td></tr></table></figure></p>
+<p>原来的由于输入文件数量太少，所以mapreduce使用本地模式来执行，所以当线上环境的时候，老是提示NginxInputFormat.java和IPSeeker找不到，几次尝试发现只有通过绝对路径加进去才可以。。。坑爹到家了<br>```java<br>    String sql1=”add jar /root/hadoop/hadoop-2.2.0/lib/test_kpi.jar”;<br>            String sql2=”add jar /root/hadoop/hadoop-2.2.0/lib/IP2Location.jar”;<br>            String sql=”select sum(dis_url),count(ip),sum(dis_domain) from (select ip,count(distinct url) as dis_url,count(distinct request_domain) as dis_domain from nginx_log where time&gt;=”+start_time+” and time&lt;=”+end_time+”  group by ip) temp”;<br>            //System.out.println(sql1);<br>            System.out.println(sql);<br>            stmt.execute(sql1);<br>            stmt.execute(sql2);</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-hadoop-online/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-online/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-hadoop-advice/" title="Hadoop线上环境整合须知：&#39;" itemprop="url">Hadoop线上环境整合须知：&#39;</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:41:22.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>﻿由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。<br>调整系统时间<br>安装新版jdk<br>打通master和slave的ssh连接。<br>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)<br>启动测试访问，线上环境注意防火墙是否关闭。<br>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja<br>load数据计划任务：2,12,22,32,42,52 <em>  </em> <em> </em>  /root/hadoop/exec_jar.sh  &gt; /root/hadoop/test/test.txt  2&gt;&amp;1<br>mv日志文件移动任务</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-hadoop-advice/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-advice/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-hive-java/" title="Hive连接java" itemprop="url">Hive连接java</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:39:46.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h4 id="参考文章">参考<a href="http://blog.csdn.net/wypblog/article/details/17390333" target="_blank" rel="external">文章</a></h4><h4 id="环境整合">环境整合</h4><p>线上的环境已经可以收集日志了，所以考虑使用flume来整合把线上的日志，收集到测试环境中进行处理！<br>编译：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">    javac -classpath /root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/share/hadoop/common/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/common/*:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/*:/root/hadoop/hadoop-2.2.0/share/hadoop/mapreduce/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/mapreduce/*:/root/hadoop/hadoop-2.2.0/contrib/capacity-scheduler/*.jar:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/lib/*:/root/hadoop/IP2Location.jar -d class NginxLogInputFormat.java &#10;    cd class &#10;    jar -cvf test_kpi.jar *&#10;`</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>问题一<br>sbustr StringIndexOutOfBoundsException: String index out of range: -1，执行hive查询的时候总是失败，查看job执行情况，在/tmp/root/下面类似root_20140520131818_880f8b00-3d49-4534-b1ba-783dd55c2c08.log的文件中查看定位问题是因为IP2Location.java执行时候截取字符串的问题。修改IP2Location.java中相关文件定位信息：<br>cat main_bak.log|awk ‘{print $1}’&gt;ip.txt(提取ip地址检查类方法是否正确)<br>每隔十分钟计算pv值：<br>sql语句：</li>
+</ul>
 <ol>
-<li>生成public key ,然后添加到ssh key中<br><img src="images/20150417/1429236487575.png" alt="图片"></li>
-<li>测试<br><img src="images/20150417/1429236515744.png" alt="Alt text"><br>问题出来了：网上找到了<a href="http://stackoverflow.com/questions/7144811/git-ssh-error-connect-to-host-bad-file-number" target="_blank" rel="external">参考</a><br><img src="images/20150417/1429236571491.png" alt="Alt text"></li>
-<li><p>建立config文件添加以下内容：</p>
-<p> Host github.com<br> User git<br> Hostname ssh.github.com<br> PreferredAuthentications publickey<br> IdentityFile C:\Users\wujindou.ssh\id_rsa<br> Port 443</p>
-</li>
-<li><p>查看config设置,简单的设置下,user.name,user.email </p>
-<p> <img src="images/20150417/1429236671134.png" alt="Alt text"><br> <img src="images/20150417/1429236711991.png" alt="Alt text"></p>
-</li>
-<li>再项目中添加deploy key授权发布权限<br><img src="images/20150417/1429236767833.png" alt="Alt text"></li>
+<li><p>每十分钟(间隔内pv值)</p>
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">sum</span>(dis_url)  <span class="keyword">from</span> (<span class="keyword">select</span> ip,<span class="keyword">count</span>(<span class="keyword">distinct</span> url) <span class="keyword">as</span> dis_url <span class="keyword">from</span> test <span class="keyword">where</span> <span class="keyword">time</span>&gt;=<span class="number">1394070000</span> <span class="keyword">and</span> <span class="keyword">time</span>&lt;=<span class="number">1394070600</span> <span class="keyword">group</span> <span class="keyword">by</span> ip) temp;</span>
+</code></pre></li>
+<li>从零点开始到现在pv值</li>
 </ol>
-<p>done！！！！<br>        <img src="images/20150417/1429236830303.png" alt="Alt text"></p>
 
         
         
@@ -315,11 +437,6 @@ infile.seek(<span class="number">0</span>)
 <div class="article-catetags">
 
 
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/git使用/">git使用</a>
-  </div>
-
 </div>
 
 
@@ -328,7 +445,7 @@ infile.seek(<span class="number">0</span>)
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/04/17/my-new-post/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/my-new-post/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/04/17/big-data-hive-java/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hive-java/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -342,6 +459,954 @@ infile.seek(<span class="number">0</span>)
 
 
 
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-ip-location/" title="纯真数据库获取location" itemprop="url">纯真数据库获取location</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:38:17.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>参考<a href="http://www.blogjava.net/libin2722/articles/338316.html" target="_blank" rel="external">文章</a><br>写好后打包成jar文件放在hive的lib中配置classpath包含jar所在的文件，可以本地中调试引入jar文件是否成功！之后其他的还是按照hive的NginxLogInputFormat的写jar文件方法！</p>
+<ul>
+<li><p>KPI.java</p>
+<pre><code><span class="preprocessor"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.text.ParseException;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.text.SimpleDateFormat;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.util.Date;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.util.Locale;</span>
+
+<span class="preprocessor"><span class="keyword">import</span> com.eastmoney.IP2Location.IPLocation;</span>
+<span class="preprocessor"><span class="keyword">import</span> com.eastmoney.IP2Location.IPSeeker;</span>
+</code></pre></li>
+</ul>
+<pre><code><span class="keyword">public</span>   class KPI {
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> true_flag = <span class="number">1</span>;
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> false_flag = <span class="number">0</span>;
+    <span class="keyword">private</span> <span class="keyword">String</span> ip;
+    <span class="keyword">private</span> IPLocation ip1  = <span class="keyword">null</span>;
+    <span class="keyword">private</span> Referer referer = <span class="keyword">null</span>;
+    <span class="comment">/*浏览器属性*/</span>
+    <span class="keyword">private</span> <span class="keyword">String</span> system_name;
+    <span class="keyword">private</span> <span class="keyword">String</span> browser_name;
+    <span class="keyword">private</span> <span class="keyword">String</span> browser_version;
+    <span class="keyword">private</span> <span class="keyword">String</span> browser_language;
+    <span class="keyword">private</span> <span class="keyword">String</span> flash_version;
+    <span class="keyword">private</span> <span class="built_in">int</span> set_home_page;
+    <span class="keyword">private</span> <span class="built_in">int</span> disable_javascript;
+    <span class="comment">/*页面加载*/</span>
+    <span class="keyword">private</span> <span class="built_in">int</span> page_load_time;
+    <span class="keyword">private</span> <span class="keyword">String</span> cookie_id;
+    <span class="keyword">private</span> <span class="keyword">String</span> screen_color;
+    <span class="keyword">private</span> <span class="keyword">String</span> screen_resolution;
+    <span class="keyword">private</span> <span class="built_in">int</span> scroll_height;
+    <span class="keyword">private</span> <span class="keyword">String</span> session_id;
+    <span class="keyword">private</span> <span class="built_in">int</span> time_zone;
+    <span class="keyword">private</span> <span class="keyword">String</span> login_user_id;
+    <span class="keyword">private</span> <span class="keyword">String</span> url ;
+    <span class="keyword">private</span> <span class="keyword">String</span> mouse_x;
+    <span class="keyword">private</span> <span class="keyword">String</span> mouse_y;
+    <span class="keyword">private</span> <span class="built_in">int</span> time;
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> getTrue_flag() {
+        <span class="keyword">return</span> true_flag;
+    }
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setTrue_flag(<span class="built_in">int</span> true_flag) {
+        KPI.true_flag = true_flag;
+    }
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> getFalse_flag() {
+        <span class="keyword">return</span> false_flag;
+    }
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setFalse_flag(<span class="built_in">int</span> false_flag) {
+        KPI.false_flag = false_flag;
+    }
+    <span class="keyword">public</span> IPLocation getIp1() {
+        <span class="keyword">return</span> ip1;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setIp1(IPLocation ip1) {
+        <span class="keyword">this</span>.ip1 = ip1;
+    }
+    <span class="keyword">public</span> Referer getReferer() {
+        <span class="keyword">return</span> referer;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setReferer(Referer referer) {
+        <span class="keyword">this</span>.referer = referer;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getBrowser_name() {
+        <span class="keyword">return</span> browser_name;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setBrowser_name(<span class="keyword">String</span> browser_name) {
+        <span class="keyword">this</span>.browser_name = browser_name;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getBrowser_version() {
+        <span class="keyword">return</span> browser_version;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setBrowser_version(<span class="keyword">String</span> browser_version) {
+        <span class="keyword">this</span>.browser_version = browser_version;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getBrowser_language() {
+        <span class="keyword">return</span> browser_language;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setBrowser_language(<span class="keyword">String</span> browser_language) {
+        <span class="keyword">this</span>.browser_language = browser_language;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getFlash_version() {
+        <span class="keyword">return</span> flash_version;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setFlash_version(<span class="keyword">String</span> flash_version) {
+        <span class="keyword">this</span>.flash_version = flash_version;
+    }
+    <span class="keyword">public</span> <span class="built_in">int</span> getSet_home_page() {
+        <span class="keyword">return</span> set_home_page;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setSet_home_page(<span class="built_in">int</span> set_home_page) {
+        <span class="keyword">this</span>.set_home_page = set_home_page;
+    }
+    <span class="keyword">public</span> <span class="built_in">int</span> getDisable_javascript() {
+        <span class="keyword">return</span> disable_javascript;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setDisable_javascript(<span class="built_in">int</span> disable_javascript) {
+        <span class="keyword">this</span>.disable_javascript = disable_javascript;
+    }
+    <span class="keyword">public</span> <span class="built_in">int</span> getPage_load_time() {
+        <span class="keyword">return</span> page_load_time;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setPage_load_time(<span class="built_in">int</span> page_load_time) {
+        <span class="keyword">this</span>.page_load_time = page_load_time;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getCookie_id() {
+        <span class="keyword">return</span> cookie_id;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setCookie_id(<span class="keyword">String</span> cookie_id) {
+        <span class="keyword">this</span>.cookie_id = cookie_id;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getScreen_color() {
+        <span class="keyword">return</span> screen_color;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setScreen_color(<span class="keyword">String</span> screen_color) {
+        <span class="keyword">this</span>.screen_color = screen_color;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getScreen_resolution() {
+        <span class="keyword">return</span> screen_resolution;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setScreen_resolution(<span class="keyword">String</span> screen_resolution) {
+        <span class="keyword">this</span>.screen_resolution = screen_resolution;
+    }
+    <span class="keyword">public</span> <span class="built_in">int</span> getScroll_height() {
+        <span class="keyword">return</span> scroll_height;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setScroll_height(<span class="built_in">int</span> scroll_height) {
+        <span class="keyword">this</span>.scroll_height = scroll_height;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getSession_id() {
+        <span class="keyword">return</span> session_id;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setSession_id(<span class="keyword">String</span> session_id) {
+        <span class="keyword">this</span>.session_id = session_id;
+    }
+    <span class="keyword">public</span> <span class="built_in">int</span> getTime_zone() {
+        <span class="keyword">return</span> time_zone;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setTime_zone(<span class="built_in">int</span> time_zone) {
+        <span class="keyword">this</span>.time_zone = time_zone;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getLogin_user_id() {
+        <span class="keyword">return</span> login_user_id;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setLogin_user_id(<span class="keyword">String</span> login_user_id) {
+        <span class="keyword">this</span>.login_user_id = login_user_id;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getUrl() {
+        <span class="keyword">return</span> url;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setUrl(<span class="keyword">String</span> url) {
+        <span class="keyword">this</span>.url = url;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getMouse_x() {
+        <span class="keyword">return</span> mouse_x;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setMouse_x(<span class="keyword">String</span> mouse_x) {
+        <span class="keyword">this</span>.mouse_x = mouse_x;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getMouse_y() {
+        <span class="keyword">return</span> mouse_y;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setMouse_y(<span class="keyword">String</span> mouse_y) {
+        <span class="keyword">this</span>.mouse_y = mouse_y;
+    }
+    <span class="keyword">public</span> <span class="built_in">int</span> getTime() {
+        <span class="keyword">return</span> time;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setTime(<span class="built_in">int</span> time) {
+        <span class="keyword">this</span>.time = time;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getIp(){
+        <span class="keyword">return</span> <span class="keyword">this</span>.ip;
+    }
+    <span class="keyword">public</span> KPI(<span class="keyword">String</span> <span class="built_in">str</span>[]) <span class="keyword">throws</span> UnsupportedEncodingException, ParseException{
+         <span class="keyword">String</span> ip     = <span class="built_in">str</span>[<span class="number">0</span>];
+         <span class="keyword">String</span> params = <span class="built_in">str</span>[<span class="number">6</span>];
+         <span class="keyword">String</span> s_time = <span class="built_in">str</span>[<span class="number">3</span>];
+         <span class="keyword">String</span> arr[] = <span class="keyword">null</span>;
+        <span class="keyword">try</span> {
+            arr = java.net.URLDecoder.decode(params,<span class="string">"utf-8"</span>).<span class="built_in">split</span>(<span class="string">"&amp;"</span>);
+        } <span class="keyword">catch</span> (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        KPI kpi=<span class="keyword">null</span>;
+        <span class="keyword">this</span>.ip = ip;
+        IPSeeker ipseeker=<span class="keyword">new</span> IPSeeker(<span class="string">"qqwry.dat"</span>,<span class="string">"d:/project"</span>);  
+        <span class="keyword">this</span>.ip1     =ipseeker.getIPLocation(ip);
+        url = arr[<span class="number">1</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        cookie_id=arr[<span class="number">3</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        session_id  = arr[<span class="number">4</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        screen_resolution=arr[<span class="number">5</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        screen_color=arr[<span class="number">6</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        disable_javascript=Integer.parseInt(arr[<span class="number">8</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>]);
+        time_zone=Integer.parseInt(arr[<span class="number">9</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>]);
+        flash_version=arr[<span class="number">10</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        system_name = arr[<span class="number">11</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        browser_name= arr[<span class="number">12</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        <span class="keyword">if</span>(arr[<span class="number">13</span>].<span class="built_in">split</span>(<span class="string">"="</span>).length&gt;<span class="number">1</span>){
+            page_load_time = Integer.parseInt(arr[<span class="number">13</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>]);
+        }
+        <span class="keyword">if</span>(arr[<span class="number">14</span>].<span class="built_in">split</span>(<span class="string">"="</span>).length&gt;<span class="number">1</span>){
+            login_user_id = arr[<span class="number">14</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+        }
+        scroll_height =Integer.parseInt(arr[<span class="number">14</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>]);
+         SimpleDateFormat df = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"dd/MMM/yyyy:HH:mm:ss"</span>, Locale.US);
+        Date d = df.parse(s_time.substring(<span class="number">1</span>));
+        time = (<span class="built_in">int</span>) (d.getTime()/<span class="number">1000</span>);
+        arr[<span class="number">2</span>]= arr[<span class="number">2</span>].length()!=<span class="number">5</span>?arr[<span class="number">2</span>]:<span class="keyword">null</span>;
+        <span class="keyword">this</span>.referer =<span class="keyword">new</span> Referer(arr[<span class="number">2</span>]); 
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getSystem_name() {
+        <span class="keyword">return</span> system_name;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setSystem_name(<span class="keyword">String</span> system_name) {
+        <span class="keyword">this</span>.system_name = system_name;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> toString(){
+           StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+              sb.<span class="built_in">append</span>(<span class="keyword">this</span>.getCookie_id());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getSession_id());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span> + <span class="keyword">this</span>.getScreen_resolution());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getScreen_color());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getBrowser_language());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getDisable_javascript());    
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getTime_zone());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getFlash_version());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getBrowser_name());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getIp());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getPage_load_time());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getScroll_height());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getSystem_name());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getSet_home_page());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getArea());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getCity());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getCountry());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getIsp());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getProvince());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getReferer_url());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getHost());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getPath());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getPort());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getProtocol());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getKey_word());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getQuery());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getTime());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getMouse_x());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getMouse_y());
+              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getUrl());
+              <span class="keyword">return</span> sb.toString();
+    }
+
+}
+</code></pre><ul>
+<li><p>Referer.java</p>
+<pre><code><span class="preprocessor"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.net.MalformedURLException;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.net.URL;</span>
+</code></pre></li>
+</ul>
+<pre><code><span class="keyword">public</span> class Referer {
+    <span class="keyword">private</span> <span class="keyword">String</span> referer_url;
+    <span class="keyword">private</span> <span class="keyword">String</span> host;
+    <span class="keyword">private</span> <span class="keyword">String</span> path;
+    <span class="keyword">private</span> <span class="keyword">String</span> protocol;
+    <span class="keyword">private</span> <span class="built_in">int</span>    port;
+    <span class="keyword">private</span> <span class="keyword">String</span> key_word;
+    <span class="keyword">private</span> <span class="keyword">String</span> query;
+    <span class="keyword">private</span> URL url;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> local_site =<span class="string">"eastmoney.com"</span>;
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span>[][] search_engines ={
+        {<span class="string">"Google"</span>, <span class="string">"google.com"</span>,<span class="string">"q="</span> },
+        {<span class="string">"Bing"</span>,<span class="string">"bing.com"</span>,<span class="string">"q="</span> },
+        {<span class="string">"Yahoo"</span>,<span class="string">"search.yahoo"</span>,<span class="string">"p"</span> },
+        {<span class="string">"AOL"</span>, <span class="string">"search.aol"</span>, <span class="string">"q="</span> },
+        {<span class="string">"Ask"</span>,  <span class="string">"ask.com"</span>,  <span class="string">"q="</span> },
+        {<span class="string">"Baidu"</span>, <span class="string">"baidu.com"</span>, <span class="string">"wd="</span>},
+        {<span class="string">"360"</span>, <span class="string">"so.com"</span>, <span class="string">"q="</span>},
+        {<span class="string">"Soso"</span>,<span class="string">"soso.com"</span>,<span class="string">"query="</span>}
+    };
+    <span class="keyword">public</span> <span class="keyword">String</span> getPath() {
+        <span class="keyword">return</span> path;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setPath(<span class="keyword">String</span> path) {
+        <span class="keyword">this</span>.path = path;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getProtocol() {
+        <span class="keyword">return</span> protocol;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setProtocol(<span class="keyword">String</span> protocol) {
+        <span class="keyword">this</span>.protocol = protocol;
+    }
+    <span class="keyword">public</span> <span class="built_in">int</span> getPort() {
+        <span class="keyword">return</span> port;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setPort(<span class="built_in">int</span> port) {
+        <span class="keyword">this</span>.port = port;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getQuery() {
+        <span class="keyword">return</span> query;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setQuery(<span class="keyword">String</span> query) {
+        <span class="keyword">this</span>.query = query;
+    }
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">String</span> getLocalSite() {
+        <span class="keyword">return</span> local_site;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getHost(){
+        <span class="keyword">return</span> host;
+    }
+
+
+    <span class="keyword">public</span> <span class="keyword">String</span> getReferer_url() {
+        <span class="keyword">return</span> referer_url;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setReferer_url(<span class="keyword">String</span> referer_url) {
+        <span class="keyword">this</span>.referer_url = referer_url;
+    }
+    <span class="keyword">public</span> <span class="keyword">String</span> getKey_word() {
+        <span class="keyword">return</span> key_word;
+    }
+    <span class="keyword">public</span> <span class="keyword">void</span> setKey_word(<span class="keyword">String</span> key_word) {
+        <span class="keyword">this</span>.key_word = key_word;
+    }
+    <span class="keyword">public</span> Referer(<span class="keyword">String</span> referer_url) <span class="keyword">throws</span> UnsupportedEncodingException{
+        <span class="keyword">if</span>(referer_url!=<span class="keyword">null</span>){
+                <span class="keyword">this</span>.referer_url = referer_url;
+            <span class="keyword">try</span> {
+                <span class="keyword">this</span>.url = <span class="keyword">new</span> URL(referer_url);
+            } <span class="keyword">catch</span> (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            <span class="keyword">if</span>(<span class="keyword">this</span>.url.getHost().contains(local_site)){
+                <span class="keyword">this</span>.protocol = <span class="keyword">this</span>.url.getProtocol();
+                <span class="keyword">this</span>.host     = <span class="keyword">this</span>.url.getHost();
+                <span class="keyword">this</span>.path     = <span class="keyword">this</span>.host+<span class="keyword">this</span>.url.getPath();
+            }
+            <span class="built_in">int</span> i = <span class="number">0</span>;
+            <span class="keyword">String</span> domain = <span class="keyword">this</span>.url.getHost();
+             domain = domain.substring(domain.indexOf(<span class="string">"."</span>)+<span class="number">1</span>,domain.length());
+            <span class="keyword">while</span>(i&lt;=<span class="number">7</span> &amp;&amp; !domain.equals(search_engines[i][<span class="number">1</span>])){
+                    i++;
+            }
+            <span class="keyword">if</span>(i&lt;=<span class="number">7</span>){
+                <span class="keyword">if</span>(<span class="keyword">this</span>.url.getPort() == -<span class="number">1</span>){
+                    <span class="keyword">this</span>.port = <span class="number">80</span>;
+                }
+                <span class="keyword">this</span>.protocol = <span class="keyword">this</span>.url.getProtocol();
+                <span class="keyword">this</span>.host   = <span class="keyword">this</span>.url.getHost();
+                <span class="keyword">this</span>.path     = <span class="keyword">this</span>.host+<span class="keyword">this</span>.url.getPath();
+                <span class="keyword">String</span> query = java.net.URLDecoder.decode(<span class="keyword">this</span>.url.getQuery(),<span class="string">"utf-8"</span>);
+                <span class="keyword">this</span>.query = query;
+                <span class="keyword">String</span> arr[] = query.<span class="built_in">split</span>(<span class="string">"&amp;"</span>);
+                <span class="keyword">for</span>(<span class="keyword">String</span> i1:arr){
+                    <span class="keyword">if</span>(i1.contains(search_engines[i][<span class="number">2</span>])){
+                        <span class="keyword">this</span>.key_word = i1.<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-ip-location/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-ip-location/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-log/" title="日志收集系统环境整合" itemprop="url">日志收集系统环境整合</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:34:18.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>=========</p>
+<ul>
+<li>首先创建数据表：</li>
+</ul>
+<pre><code>     <span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> kpilog(
+remote_addr <span class="keyword">STRING</span>, 
+remote_user <span class="keyword">STRING</span>,
+time_local <span class="keyword">STRING</span>,
+request <span class="keyword">STRING</span>,
+<span class="keyword">status</span> <span class="built_in">INT</span>,
+<span class="keyword">size</span> <span class="built_in">INT</span>,
+referer <span class="keyword">STRING</span>,
+http_user_agent <span class="keyword">STRING</span>)<span class="keyword">ROW</span> <span class="keyword">FORMAT</span> DELIMITED <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span> STORED <span class="keyword">AS</span> INPUTFORMAT <span class="string">'com.test.NginxLogInputFormat'</span> OUTPUTFORMAT <span class="string">'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'</span>;</span>
+</code></pre><ul>
+<li>导入测试数据看下是否成功</li>
+</ul>
+<pre><code><span class="operator"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> INPATH <span class="string">'/root/hadoop/nginx.log'</span> OVERWRITE <span class="keyword">INTO</span> <span class="keyword">TABLE</span> kpilog;</span>
+</code></pre><ul>
+<li>截图,还好原来的jar文件环境都没有问题.<br>  <img src="/images/hadoop/log.png" alt="Alt text"></li>
+</ul>
+<pre><code><span class="operator"><span class="keyword">drop</span> <span class="keyword">table</span> kpilog;</span>(删除测试数据)
+</code></pre><p>首先写一个脚本把生成的日志定时清理出来到要收集的目录下面，然后flume会把文件收集到hdfs中，<br>接着定义hive命令脚本把新收集文件的信息中的内容load到数据库表中。Flume这里需要把上次改掉的salve01的文件重新改回spooldir类型的。把Nginx.log文件复制到监听的目录下面，可以看到hdfs中新增加了很多文件是因为flume会把大的文件拆分成效的文件，所以load的时候只要指定目录就行了。</p>
+<pre><code><span class="operator"><span class="keyword">load</span> <span class="keyword">data</span> inpath <span class="string">'hdfs://master:9000/hmbbs/14-05-07/112500'</span>  overwrite <span class="keyword">into</span> <span class="keyword">table</span> kpilog ;</span>
+</code></pre><p>清除数据保留表结构：</p>
+<pre><code>dfs rm -r <span class="regexp">/user/</span>hive<span class="regexp">/warehouse/</span>kpilog;
+</code></pre><p>这里还需要改点东西。就是复制的时候创建的是以日为单位，这里改到时间下。<br> master</p>
+<pre><code>agent<span class="class">.sources</span> = source1
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> = sink1
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> = avro
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.bind</span> = master 
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">100</span> 
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">100</span> 
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span>=hdfs
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.path</span>=hdfs:<span class="comment">//master:9000/hmbbs/%y-%m-%d/%H%M%S/</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.fileType</span>=DataStream
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.writeFormat</span>=TEXT
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.round</span>=true
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.roundValue</span>=<span class="number">5</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.roundUnit</span>=minute
+<span class="id">#agent</span><span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.rollInterval</span>=<span class="number">1</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.useLocalTimeStamp</span>=true
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.filePrefix</span>=events-
+</code></pre><p>slave01:</p>
+<pre><code>agent<span class="class">.sources</span> =source1
+agent<span class="class">.channels</span> =memoryChannel
+agent<span class="class">.sinks</span> =sink1
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> =spooldir
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.spoolDir</span>=/root/hmbbs
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
+</code></pre><p>文件命名： agent.sinks.sink1.hdfs.roundValue=5这句话表示使用的是5分钟的约束，即如果是51…54都会粗处到50分的时间里面56…59都会存储到55分的时间里面.</p>
+<p>master主机：load_data.sh (该脚本负责把收集的日志信息load到hive的数据库表中)</p>
+<pre><code><span class="shebang">#!/bin/sh</span>
+hive <span class="operator">-e</span> <span class="string">"load data inpath 'hdfs://master:9000/hmbbs/14-05-07/130500'  overwrite into table kpilog "</span>;
+</code></pre><p>slave01主机：mv_file.sh (脚本功能：发日志收集到flume监听的文件夹中)</p>
+<pre><code><span class="shebang">#!/bin/sh</span>
+cp  /root/hadoop/nginx.log /root/hmbbs/
+</code></pre><p>清空原来的数据来建立数据定时任务：</p>
+<p><code>注意</code><br> crontab的脚本运行的时候由于环境变量的问题有可能不能运行，所以可以通过把错误信息输出到文件中进行调试，另外flume在移动文件的过程中如果文件名字相同会出现报错的情况。使用load file后原来的文件就会被删除掉，所以注意不要多次运行同一个目录下的文件会提示找不到的。<br> 　　　　　　　<br> 最后的load脚本：</p>
+<pre><code>    #!<span class="regexp">/bin/</span>sh
+export JAVA_HOME=<span class="regexp">/usr/</span>local<span class="regexp">/java/</span>jdk1.<span class="number">8.0</span>_05
+export HADOOP_HOME=~<span class="regexp">/hadoop/</span>hadoop-<span class="number">2.2</span>.<span class="number">0</span>
+<span class="regexp">/root/</span>hadoop<span class="regexp">/hive/</span>bin<span class="regexp">/hive -e "load data inpath 'hdfs:/</span><span class="regexp">/master:9000/</span>hmbbs<span class="regexp">/14-05-07/</span><span class="number">152500</span><span class="string">'  overwrite into table kpilog " &gt; /root/hadoop/test/test.txt  2&gt;&amp;1</span>
+</code></pre><p>crontab </p>
+<pre><code>30 15 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span>  /root/hadoop/load_data.sh
+</code></pre><p>最后的资源：<a href="http://pan.baidu.com/s/1eQeNXrs" target="_blank" rel="external">nginx.jar</a>和测试的<a href="http://pan.baidu.com/s/1mgJnr2g" target="_blank" rel="external">log</a>文件，有个参考的文章也记下吧<a href="http://m.blog.csdn.net/blog/xueliang1029/24039459" target="_blank" rel="external">文章</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-log/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-log/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-flume/" title="Flume安装配置" itemprop="url">Flume安装配置</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:26:06.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="http://f.dataguru.cn/thread-48324-1-1.html" target="_blank" rel="external">参考文章</a></p>
+<h4 id="下载Flume1-4-0">下载Flume1.4.0</h4><pre><code>wget <span class="symbol">http:</span>/<span class="regexp">/mirrors.cnnic.cn/apache</span><span class="regexp">/flume/</span><span class="number">1.4</span>.<span class="number">0</span>/apache-flume-<span class="number">1.4</span>.<span class="number">0</span>-bin.tar.gz
+</code></pre><h4 id="配置及测试参考Apache文章Flume">配置及测试参考Apache文章<a href="https://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="external">Flume</a></h4><ul>
+<li>新建文件example-conf.properties</li>
+</ul>
+<pre><code> <span class="comment"># example.conf: A single-node Flume configuration</span>
+
+<span class="comment"># Name the components on this agent</span>
+a1.<span class="variable">sources =</span> r1
+a1.<span class="variable">sinks =</span> k1
+a1.<span class="variable">channels =</span> c1
+
+<span class="comment"># Describe/configure the source</span>
+a1.sources.r1.<span class="variable">type =</span> netcat
+a1.sources.r1.<span class="variable">bind =</span> localhost
+a1.sources.r1.<span class="variable">port =</span> <span class="number">44444</span>
+
+<span class="comment"># Describe the sink</span>
+a1.sinks.k1.<span class="variable">type =</span> logger
+
+<span class="comment"># Use a channel which buffers events in memory</span>
+a1.channels.c1.<span class="variable">type =</span> memory
+a1.channels.c1.<span class="variable">capacity =</span> <span class="number">1000</span>
+a1.channels.c1.<span class="variable">transactionCapacity =</span> <span class="number">100</span> 
+
+<span class="comment"># Bind the source and sink to the channel</span>
+a1.sources.r1.<span class="variable">channels =</span> c1
+a1.sinks.k1.<span class="variable">channel =</span> c1
+</code></pre><ul>
+<li>启动</li>
+</ul>
+<pre><code>flume-ng agent --<span class="keyword">conf</span> <span class="keyword">conf</span> --<span class="keyword">conf</span>-<span class="keyword">file</span> example-<span class="keyword">conf</span>.properties --name a1                      -Dflume.root.logger=INFO,console
+</code></pre><ul>
+<li>测试 : 新建终端测试 telnet localhost 44444 在终端可以输入内容可以看到如下结果<br><img src="/images/hadoop/flume.png" alt="Alt text"><h4 id="本地hdfs测试">本地hdfs测试</h4></li>
+<li>配置文件</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = avrosrc
+agent<span class="class">.sinks</span> =hdfs-write 
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.type</span> =exec 
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.command</span> =tail -F  /root/hadoop/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> =<span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.type</span> = hdfs
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.path</span> =hdfs:<span class="comment">//172.16.86.38:9000/flume/webdata</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.rollInterval</span> = <span class="number">30</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.channel</span>=memoryChannel
+</code></pre><ul>
+<li>问题</li>
+</ul>
+<pre><code><span class="number">14</span>/<span class="number">05</span>/<span class="number">06</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">28</span> <span class="type">ERROR</span> hdfs.<span class="type">HDFSEventSink</span>: process failed
+java.lang.<span class="type">VerifyError</span>: class org.apache.hadoop.hdfs.protocol.proto.<span class="type">ClientNamenodeProtocolProtos</span>$<span class="type">RecoverLeaseRequestProto</span> overrides final <span class="keyword">method</span> getUnknownFields.()<span class="type">Lcom</span>/google/protobuf/<span class="type">UnknownFieldSet</span>;
+
+<span class="type">Exception</span> <span class="keyword">in</span> thread <span class="string">"SinkRunner-PollingRunner-DefaultSinkProcessor"</span> java.lang.<span class="type">VerifyError</span>: class org.apache.hadoop.hdfs.protocol.proto.<span class="type">ClientNamenodeProtocolProtos</span>$<span class="type">RecoverLeaseRequestProto</span> overrides final <span class="keyword">method</span> getUnknownFields.()<span class="type">Lcom</span>/google/protobuf/<span class="type">UnknownFieldSet</span>;
+</code></pre><p> 解决方法：mv {protobuf-java-2.4.1.jar,guava-10.0.1.jar} ~/<br>－ master  example-conf.properties</p>
+<pre><code>    agent<span class="class">.sources</span> = avrosrc
+agent<span class="class">.sinks</span> =hdfs-write 
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.type</span> =avro
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.bind</span> =master
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.port</span> =<span class="number">23004</span>
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.channels</span>=memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> =<span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.type</span> = hdfs
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.path</span> =hdfs:<span class="comment">//172.16.86.38:9000/flume/webdata</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.rollInterval</span> = <span class="number">0</span>   
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.channel</span>=memoryChannel
+</code></pre><ul>
+<li>slave01 example-conf.properties</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = baksrc
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =avro-forward-sink 
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.type</span> = exec
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.command</span> =tail -F /root/hadoo/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.checkperiodic</span> = <span class="number">1000</span>
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.channels</span> =memoryChannel 
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> = <span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.hostname</span> = master
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.channel</span> = memoryChannel
+</code></pre><ul>
+<li><p>master:<br>flume-ng agent —conf conf —conf-file example-conf.properties —name agent -Dflume.root.logger=DEBUG,console</p>
+</li>
+<li><p>slave:<br>flume-ng avro-client -c conf  -H master -p 23004  -F /root/hadoop/test/data.txt -Dflume.root.logger=DEBUG,console<br>竟然成功了。。接下来研究如何使用配置文件或者使用tail -f </p>
+<h4 id="收集目录下面的文件内容">收集目录下面的文件内容</h4></li>
+<li>master</li>
+</ul>
+<pre><code>agent.<span class="variable">sources =</span> source1
+agent.<span class="variable">channels =</span> memoryChannel
+agent.<span class="variable">sinks =</span> sink1
+agent.sources.source1.<span class="variable">type =</span> avro
+agent.sources.source1.<span class="variable">bind =</span> master 
+agent.sources.source1.<span class="variable">port =</span> <span class="number">23004</span>
+agent.sources.source1.<span class="variable">channels =</span> memoryChannel
+<span class="comment"># Each channel's type is defined.</span>
+agent.channels.memoryChannel.<span class="variable">type =</span> memory
+agent.channels.memoryChannel.<span class="variable">capacity =</span> <span class="number">100</span> 
+agent.channels.memoryChannel.<span class="variable">keep-alive =</span> <span class="number">100</span> 
+agent.sinks.sink1.<span class="variable">type=</span>hdfs
+agent.sinks.sink1.hdfs.<span class="variable">path=</span>hdfs://master:<span class="number">9000</span>/hmbbs/%y-%m-%d/%H%M%S
+agent.sinks.sink1.hdfs.<span class="variable">fileType=</span>DataStream
+agent.sinks.sink1.hdfs.<span class="variable">writeFormat=</span>TEXT
+agent.sinks.sink1.hdfs.<span class="variable">round=</span><span class="constant">true</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundValue=</span><span class="number">5</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundUnit=</span>minute
+<span class="comment">#agent.sinks.sink1.hdfs.rollInterval=1</span>
+agent.sinks.sink1.hdfs.<span class="variable">useLocalTimeStamp=</span><span class="constant">true</span>
+agent.sinks.sink1.<span class="variable">channel =</span> memoryChannel
+agent.sinks.sink1.hdfs.<span class="variable">filePrefix=</span>events-
+</code></pre><ul>
+<li>slave 文件</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = source1
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =sink1
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> = spooldir
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.spoolDir</span>=/root/hmbbs
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
+</code></pre><h3 id="使用tail_-F">使用tail -F</h3><p>修改下 /root/hadoop/test/目录和文件的权限 chmod 777 /root/hadoop/test 和 chmod 777 /root/hadoop/test/data.txt</p>
+<ul>
+<li>master</li>
+</ul>
+<pre><code>agent.<span class="variable">sources =</span> source1
+agent.<span class="variable">channels =</span> memoryChannel
+agent.<span class="variable">sinks =</span> sink1
+agent.sources.source1.<span class="variable">type =</span> avro
+agent.sources.source1.<span class="variable">bind =</span> master 
+agent.sources.source1.<span class="variable">port =</span> <span class="number">23004</span>
+agent.sources.source1.<span class="variable">channels =</span> memoryChannel
+<span class="comment"># Each channel's type is defined.</span>
+agent.channels.memoryChannel.<span class="variable">type =</span> memory
+agent.channels.memoryChannel.<span class="variable">capacity =</span> <span class="number">100</span> 
+agent.channels.memoryChannel.<span class="variable">keep-alive =</span> <span class="number">100</span> 
+agent.sinks.sink1.<span class="variable">type=</span>hdfs
+agent.sinks.sink1.hdfs.<span class="variable">path=</span>hdfs://master:<span class="number">9000</span>/hmbbs/%y-%m-%d/%H%M%S
+agent.sinks.sink1.hdfs.<span class="variable">fileType=</span>DataStream
+agent.sinks.sink1.hdfs.<span class="variable">writeFormat=</span>TEXT
+agent.sinks.sink1.hdfs.<span class="variable">round=</span><span class="constant">true</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundValue=</span><span class="number">5</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundUnit=</span>minute
+<span class="comment">#agent.sinks.sink1.hdfs.rollInterval=1</span>
+agent.sinks.sink1.hdfs.<span class="variable">useLocalTimeStamp=</span><span class="constant">true</span>
+agent.sinks.sink1.<span class="variable">channel =</span> memoryChannel
+agent.sinks.sink1.hdfs.<span class="variable">filePrefix=</span>events-
+</code></pre><ul>
+<li>slave01</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = source1
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =sink1
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> =exec 
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.command</span>=tail -F /root/hadoop/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-flume/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-flume/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-haoop-cluster2/" title="Hadoop完全分布式集群安装" itemprop="url">Hadoop完全分布式集群安装</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:22:01.000Z" itemprop="datePublished"> 發表於 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <ul>
+<li>首先定义master 和 slave 我这里只有2台vim/etc/hosts</li>
+</ul>
+<pre><code>172.16.86.38 master
+172.16.86.39 slave01
+</code></pre><ul>
+<li>修改hostname slave01和hostname master只是临时修改</li>
+<li>打通各自的ssh和相互的ssh<br>ssh-keygen -t rsa<br>cat id_rsa.pub &gt; ./authorized_keys</li>
+</ul>
+<pre><code>#相互之间的ssh打通命令
+scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
+然后把 cat id_rsa.pub &gt;&gt;authoried_keys中，再把authorized_keys复制到其他机器
+scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
+</code></pre><ul>
+<li>以上次设置的为分布式机子为主机，需要复制一些文件到slave集群中设置。</li>
+<li>配置JDK复制master下的/usr/local/java目录到slave01，修改~/.bashrc</li>
+</ul>
+<pre><code><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
+<span class="built_in">export</span> JRE_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05/jre
+<span class="built_in">export</span> CLASSPATH=.:<span class="variable">$CLASSPATH</span>:<span class="variable">$JAVA_HOME</span>/lib:<span class="variable">$JRE_HOME</span>/lib  
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$JRE_HOME</span>/bin  
+</code></pre><p>执行source ~/.bashrc文件使配置生效,检查 java　-version </p>
+<ul>
+<li>参考<a href="http://going.blog.51cto.com/7876557/1365883" target="_blank" rel="external">文章</a><br>找不到jps命令问题：</li>
+</ul>
+<pre><code>vim ~/.bashrc文件
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/sbin:<span class="variable">$HIVE_HOME</span>/bin:<span class="variable">$JAVA_HOME</span>/bin
+</code></pre><p>最后结果：<br>salve:jps</p>
+<p><img src="/images/hadoop/cluster_1.png" alt="Alt text"></p>
+<p>master: jps </p>
+<p><img src="/images/hadoop/cluster_2.png" alt="Alt text"><br>在启动后发现最后没有发现liveNode，着实郁闷了很久最后发现，查看hadoop/logs的datanode文件日志返现，原来datanode连接不到namenode,试着使用telnet也不行，发现原来监听的是localhost的9000端口于是改回来就好了。<br>最后的配置文件</p>
+<ul>
+<li>core-site.xml </li>
+</ul>
+<pre><code>    <span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>fs.<span class="keyword">default</span>.name<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>hdfs://master:<span class="number">9000</span><span class="variable">&lt;/value&gt;</span>
+    <span class="variable">&lt;final&gt;</span>true<span class="variable">&lt;/final&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+<span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>hadoop.tmp.dir<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>/home/hadoop/hadoop_tmp<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;/property&gt;</span>
+</code></pre><ul>
+<li>hdfs-site.xml</li>
+</ul>
+<pre><code>    <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">value</span>&gt;</span>2<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.permissions<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">value</span>&gt;</span>false<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre><ul>
+<li><p>yarn-site.xml</p>
+<pre><code> <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8025<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.scheduler.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8030<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8040<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre></li>
+<li><p>mapred-site.xml</p>
+</li>
+</ul>
+<pre><code><span class="tag">&lt;<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+<span class="tag">&lt;<span class="title">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre><ul>
+<li>差点忘了 /etc/hosts了</li>
+</ul>
+<pre><code><span class="number">127.0</span>.<span class="number">0.1</span>      localhost
+::<span class="number">1</span>     localhost6<span class="class">.localdomain6</span> localhost6
+<span class="number">172.16</span>.<span class="number">86.38</span> master 
+<span class="number">172.16</span>.<span class="number">86.39</span> slave01
+</code></pre><p>问题转移，map任务一直处于停止状态，不知道日志信息在哪里<br>解决方法：打开调试信息：</p>
+<pre><code><span class="reserved">export</span> HADOOP_ROOT_LOGGER=DEBUG,<span class="built_in">console</span>
+</code></pre><p>最后问题： 服务器时间不同步，TMD这么大的坑啊。。。。</p>
+<pre><code>ntpdate <span class="tag">time</span><span class="class">.nist</span><span class="class">.gov</span>（每台服务器运行即可）
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-haoop-cluster2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-haoop-cluster2/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+  </nav>
 
 </div>
       <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
@@ -358,7 +1423,11 @@ infile.seek(<span class="number">0</span>)
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
+				<li><a href="/tags/大数据/" title="大数据">大数据<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
 			
 		
 			
@@ -367,6 +1436,10 @@ infile.seek(<span class="number">0</span>)
 		
 			
 				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
 			
 		
 		</ul>
