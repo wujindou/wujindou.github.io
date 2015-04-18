@@ -81,6 +81,390 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/18/libevent-c-2/" title="Libevent整合protobuf （二）" itemprop="url">Libevent整合protobuf （二）</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-18T02:01:47.000Z" itemprop="datePublished"> 发表于 2015-04-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的<a href="https://developers.google.com/protocol-buffers/docs/cpptutorial?hl=zh-cn" target="_blank" rel="external">代码</a><br>定义一个简单的EchoMessage.proto<br>内容如下： </p>
+<pre><code>message EchoRequest
+{
+    <span class="keyword">required</span> <span class="built_in">string</span> message = <span class="number">1</span>; <span class="comment">//请求字符串</span>
+};
+message EchoResponse
+{
+    <span class="keyword">required</span> <span class="built_in">string</span> response = <span class="number">1</span>; <span class="comment">//回应字符串</span>
+};
+</code></pre><p>测试：<br>test.cpp </p>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;string&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>
+</span>{
+    <span class="built_in">string</span> s=<span class="string">"hello request"</span>;
+    EchoRequest request ;
+    request.set_message(s);
+    <span class="built_in">cout</span>&lt;&lt;request.message()&lt;&lt;endl;
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+</code></pre><p>编译：<br> g++ echo.pb.cc testecho.cpp -o testecho -lprotobuf<br>问题：<br>./testecho: error while loading shared libraries: libprotobuf.so.8: cannot open shared object file: No such file or directory<br>export<br>LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib<br>最后：<br>client.cpp </p>
+<pre><code>    <span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;string.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;unistd.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/types.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/socket.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;netinet/in.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;arpa/inet.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
+
+<span class="preprocessor">#<span class="keyword">define</span> oops(msg) {\
+    perror(msg); \
+    exit(1); \
+}  </span>
+<span class="preprocessor">#<span class="keyword">define</span> SIZE 256  </span>
+
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999  </span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span>
+</span>{
+
+
+    <span class="keyword">int</span> socket_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>);
+    <span class="keyword">if</span>(socket_fd == -<span class="number">1</span>)
+        oops(<span class="string">"socket initiating error..."</span>);
+
+
+    <span class="keyword">struct</span> sockaddr_in address;
+    bzero(&amp;address, <span class="keyword">sizeof</span>(address));
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);
+    address.sin_port =  htons(LISTEN_PORT);
+
+    <span class="keyword">int</span> connect_result = connect(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;address, <span class="keyword">sizeof</span>(address));
+    <span class="keyword">if</span>(connect_result == -<span class="number">1</span>)
+        oops(<span class="string">"connect error..."</span>);
+
+
+         <span class="built_in">string</span> data;
+         EchoRequest req;
+         req.set_message(<span class="string">"wwwww"</span>);
+         req.SerializeToString(&amp;data);
+        <span class="keyword">char</span> bts[data.length()];
+        <span class="built_in">strcpy</span>(bts, data.c_str());
+        ssize_t write_length = write(socket_fd, bts, <span class="keyword">sizeof</span>(bts));
+        <span class="keyword">if</span>(write_length &lt;= <span class="number">0</span> )
+            oops(<span class="string">"error: write ..."</span>);
+
+
+        <span class="keyword">char</span> buf[<span class="number">512</span>];
+        bzero(buf, <span class="number">0</span>);
+        ssize_t read_length = read(socket_fd, buf, <span class="keyword">sizeof</span>(buf));
+        <span class="keyword">if</span>(read_length == -<span class="number">1</span>)
+            oops(<span class="string">"error: read data from socket..."</span>);
+
+        <span class="built_in">printf</span>(<span class="string">"the ret msg is: %s\n"</span>, buf);
+    close(socket_fd);
+    <span class="keyword">return</span> EXIT_SUCCESS;
+}
+</code></pre><p>最后介绍我看到过的一个架构吧：<br><img src="/images/c++/libevent.png" alt="Alt text"></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/c-学习/">c++学习</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/18/libevent-c-2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/18/libevent-c-2/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/18/libevent-c-1/" title="Libevent整合protobuf（一)" itemprop="url">Libevent整合protobuf（一)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-18T01:57:53.000Z" itemprop="datePublished"> 发表于 2015-04-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>ProtocolBuffer是用于结构化数据串行化的灵活、高效、自动的方法，有如XML，不过它更小、更快、也更简单。你可以定义自己的数据结构，然后使用代码生成器生成的代码来读写这个数据结构。你甚至可以在无需</p>
+<ul>
+<li>下载protobuf<a href="http://code.google.com/p/protobuf/downloads/list" target="_blank" rel="external">地址</a>安装也比较简单，就不赘述。</li>
+<li>当执行protoc —version成功后就表示已经安装成功了。<br>libevent是一个强大的网络库，网上的网络库有很多，想libev、boost、muduo（陈硕）写的网络库，之所以考虑libevent作为学习对象是发现公司内部好像用的很多。<br>例子代码：<br>server.cpp </li>
+</ul>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;errno.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;assert.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;event2/event.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;event2/bufferevent.h&gt; </span>
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999</span>
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_BACKLOG 32</span>
+
+<span class="function"><span class="keyword">void</span> <span class="title">do_accept</span><span class="params">(evutil_socket_t listener, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span></span>;
+<span class="function"><span class="keyword">void</span> <span class="title">read_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span></span>;
+<span class="function"><span class="keyword">void</span> <span class="title">error_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span></span>;
+<span class="function"><span class="keyword">void</span> <span class="title">write_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span></span>;
+
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span>
+</span>{
+
+    <span class="keyword">int</span> ret;
+    evutil_socket_t listener;
+    listener = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>); 
+    assert(listener &gt; <span class="number">0</span>); 
+    evutil_make_listen_socket_reuseable(listener);
+
+    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;
+    <span class="built_in">sin</span>.sin_family = AF_INET;
+    <span class="built_in">sin</span>.sin_addr.s_addr = <span class="number">0</span>;
+    <span class="built_in">sin</span>.sin_port = htons(LISTEN_PORT);
+
+    <span class="keyword">if</span> (bind(listener, (<span class="keyword">struct</span> sockaddr *)&amp;<span class="built_in">sin</span>, <span class="keyword">sizeof</span>(<span class="built_in">sin</span>)) &lt; <span class="number">0</span>) {
+
+        perror(<span class="string">"bind"</span>);
+        <span class="keyword">return</span> <span class="number">1</span>;
+    }
+    <span class="keyword">if</span> (listen(listener, LISTEN_BACKLOG) &lt; <span class="number">0</span>) {
+
+        perror(<span class="string">"listen"</span>);
+        <span class="keyword">return</span> <span class="number">1</span>;
+    }
+    <span class="built_in">printf</span> (<span class="string">"Listening...\n"</span>);
+
+    evutil_make_socket_nonblocking(listener);
+
+    <span class="keyword">struct</span> event_base *base = event_base_new();
+    assert(base != NULL);
+    <span class="keyword">struct</span> event *listen_event;
+    listen_event = event_new(base, listener, EV_READ|EV_PERSIST, do_accept, (<span class="keyword">void</span>*)base);
+    event_add(listen_event, NULL);
+    event_base_dispatch(base);
+
+    <span class="built_in">printf</span>(<span class="string">"The End."</span>);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+
+<span class="function"><span class="keyword">void</span> <span class="title">do_accept</span><span class="params">(evutil_socket_t listener, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span>
+</span>{
+
+    <span class="keyword">struct</span> event_base *base = (<span class="keyword">struct</span> event_base *)arg;
+    evutil_socket_t fd;
+    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;
+    socklen_t slen;
+    fd = accept(listener, (<span class="keyword">struct</span> sockaddr *)&amp;<span class="built_in">sin</span>, &amp;slen);
+    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) {
+
+        perror(<span class="string">"accept"</span>);
+        <span class="keyword">return</span>;
+    }
+    <span class="keyword">if</span> (fd &gt; FD_SETSIZE) {
+
+        perror(<span class="string">"fd &gt; FD_SETSIZE\n"</span>);
+        <span class="keyword">return</span>;
+    }
+
+    <span class="built_in">printf</span>(<span class="string">"ACCEPT: fd = %u\n"</span>, fd);
+
+    <span class="keyword">struct</span> bufferevent *bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
+    bufferevent_setcb(bev, read_cb, NULL, error_cb, arg);
+    bufferevent_enable(bev, EV_READ|EV_WRITE|EV_PERSIST);
+}
+
+<span class="function"><span class="keyword">void</span> <span class="title">read_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span>
+</span>{
+
+<span class="preprocessor">#<span class="keyword">define</span> MAX_LINE    256</span>
+    <span class="keyword">char</span> line[MAX_LINE+<span class="number">1</span>];
+    <span class="keyword">int</span> n;
+    evutil_socket_t fd = bufferevent_getfd(bev);
+
+    <span class="keyword">while</span> (n = bufferevent_read(bev, line, MAX_LINE), n &gt; <span class="number">0</span>) {
+
+        line[n] = <span class="string">'\0'</span>;
+        <span class="built_in">printf</span>(<span class="string">"fd=%u, read line: %s\n"</span>, fd, line);
+
+        bufferevent_write(bev, line, n);
+    }
+}
+<span class="function"><span class="keyword">void</span> <span class="title">write_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span> </span>{
+}
+<span class="function"><span class="keyword">void</span> <span class="title">error_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span>
+</span>{
+    evutil_socket_t fd = bufferevent_getfd(bev);
+    <span class="built_in">printf</span>(<span class="string">"fd = %u, "</span>, fd);
+    <span class="keyword">if</span> (event &amp; BEV_EVENT_TIMEOUT) {
+
+        <span class="built_in">printf</span>(<span class="string">"Timed out\n"</span>);
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span> (event &amp; BEV_EVENT_EOF) {
+
+        <span class="built_in">printf</span>(<span class="string">"connection closed\n"</span>);
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span> (event &amp; BEV_EVENT_ERROR) {
+
+        <span class="built_in">printf</span>(<span class="string">"some other error\n"</span>);
+    }
+    bufferevent_free(bev);
+</code></pre><p>````<br>client.cpp<br>参考代码： </p>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;string.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;unistd.h&gt;</span>
+
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/types.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/socket.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;netinet/in.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;arpa/inet.h&gt;</span>
+
+<span class="preprocessor">#<span class="keyword">define</span> oops(msg) {\
+    perror(msg); \
+    exit(1); \
+}  </span>
+<span class="preprocessor">#<span class="keyword">define</span> SIZE 256  </span>
+
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999  </span>
+
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span>
+</span>{
+
+
+    <span class="keyword">int</span> socket_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>); 
+    <span class="keyword">if</span>(socket_fd == -<span class="number">1</span>) 
+        oops(<span class="string">"socket initiating error..."</span>);
+    <span class="keyword">struct</span> sockaddr_in address;
+    bzero(&amp;address, <span class="keyword">sizeof</span>(address));
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);
+    address.sin_port =  htons(LISTEN_PORT);
+
+    <span class="keyword">int</span> connect_result = connect(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;address, <span class="keyword">sizeof</span>(address));
+    <span class="keyword">if</span>(connect_result == -<span class="number">1</span>)
+        oops(<span class="string">"connect error..."</span>);
+
+    <span class="keyword">while</span>(<span class="number">1</span>)
+    {
+
+        <span class="keyword">char</span> buffer[<span class="number">256</span>] ={
+            <span class="number">0</span>};
+        <span class="built_in">printf</span>(<span class="string">"pls enter a string, or enter 'q' exit:\n"</span>);
+        <span class="built_in">scanf</span>(<span class="string">"%s"</span>, buffer);
+        <span class="keyword">if</span>(<span class="built_in">strcmp</span>(buffer, <span class="string">"q"</span>) == <span class="number">0</span>)
+        {
+
+            <span class="built_in">printf</span>(<span class="string">"You exit!"</span>);
+            <span class="keyword">return</span> <span class="number">0</span>;
+        }
+        <span class="built_in">printf</span>(<span class="string">"your enter is %s\n"</span>, buffer);
+        ssize_t write_length = write(socket_fd, buffer, <span class="built_in">strlen</span>(buffer)+<span class="number">1</span>);
+        <span class="keyword">if</span>(write_length &lt;= <span class="number">0</span> || write_length != (<span class="built_in">strlen</span>(buffer)+<span class="number">1</span>))
+            oops(<span class="string">"error: write ..."</span>);
+
+
+        <span class="keyword">char</span> buf[<span class="number">512</span>];
+        bzero(buf, <span class="number">0</span>);
+        ssize_t read_length = read(socket_fd, buf, <span class="keyword">sizeof</span>(buf));
+        <span class="keyword">if</span>(read_length == -<span class="number">1</span>)
+            oops(<span class="string">"error: read data from socket..."</span>);
+
+        <span class="built_in">printf</span>(<span class="string">"the ret msg is: %s\n"</span>, buf);
+    }
+    close(socket_fd);
+    <span class="keyword">return</span> EXIT_SUCCESS;
+}
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/c-学习/">c++学习</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/18/libevent-c-1/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/18/libevent-c-1/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/17/mysql-learn/" title="MySQL触发器学习" itemprop="url">MySQL触发器学习</a>
   </h1>
   <p class="article-author">By
@@ -951,381 +1335,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-log/" title="日志收集系统环境整合" itemprop="url">日志收集系统环境整合</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:34:18.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>=========</p>
-<ul>
-<li>首先创建数据表：</li>
-</ul>
-<pre><code>     <span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> kpilog(
-remote_addr <span class="keyword">STRING</span>, 
-remote_user <span class="keyword">STRING</span>,
-time_local <span class="keyword">STRING</span>,
-request <span class="keyword">STRING</span>,
-<span class="keyword">status</span> <span class="built_in">INT</span>,
-<span class="keyword">size</span> <span class="built_in">INT</span>,
-referer <span class="keyword">STRING</span>,
-http_user_agent <span class="keyword">STRING</span>)<span class="keyword">ROW</span> <span class="keyword">FORMAT</span> DELIMITED <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span> STORED <span class="keyword">AS</span> INPUTFORMAT <span class="string">'com.test.NginxLogInputFormat'</span> OUTPUTFORMAT <span class="string">'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'</span>;</span>
-</code></pre><ul>
-<li>导入测试数据看下是否成功</li>
-</ul>
-<pre><code><span class="operator"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> INPATH <span class="string">'/root/hadoop/nginx.log'</span> OVERWRITE <span class="keyword">INTO</span> <span class="keyword">TABLE</span> kpilog;</span>
-</code></pre><ul>
-<li>截图,还好原来的jar文件环境都没有问题.<br>  <img src="/images/hadoop/log.png" alt="Alt text"></li>
-</ul>
-<pre><code><span class="operator"><span class="keyword">drop</span> <span class="keyword">table</span> kpilog;</span>(删除测试数据)
-</code></pre><p>首先写一个脚本把生成的日志定时清理出来到要收集的目录下面，然后flume会把文件收集到hdfs中，<br>接着定义hive命令脚本把新收集文件的信息中的内容load到数据库表中。Flume这里需要把上次改掉的salve01的文件重新改回spooldir类型的。把Nginx.log文件复制到监听的目录下面，可以看到hdfs中新增加了很多文件是因为flume会把大的文件拆分成效的文件，所以load的时候只要指定目录就行了。</p>
-<pre><code><span class="operator"><span class="keyword">load</span> <span class="keyword">data</span> inpath <span class="string">'hdfs://master:9000/hmbbs/14-05-07/112500'</span>  overwrite <span class="keyword">into</span> <span class="keyword">table</span> kpilog ;</span>
-</code></pre><p>清除数据保留表结构：</p>
-<pre><code>dfs rm -r <span class="regexp">/user/</span>hive<span class="regexp">/warehouse/</span>kpilog;
-</code></pre><p>这里还需要改点东西。就是复制的时候创建的是以日为单位，这里改到时间下。<br> master</p>
-<pre><code>agent<span class="class">.sources</span> = source1
-agent<span class="class">.channels</span> = memoryChannel
-agent<span class="class">.sinks</span> = sink1
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> = avro
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.bind</span> = master 
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.port</span> = <span class="number">23004</span>
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">100</span> 
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">100</span> 
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span>=hdfs
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.path</span>=hdfs:<span class="comment">//master:9000/hmbbs/%y-%m-%d/%H%M%S/</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.fileType</span>=DataStream
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.writeFormat</span>=TEXT
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.round</span>=true
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.roundValue</span>=<span class="number">5</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.roundUnit</span>=minute
-<span class="id">#agent</span><span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.rollInterval</span>=<span class="number">1</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.useLocalTimeStamp</span>=true
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.filePrefix</span>=events-
-</code></pre><p>slave01:</p>
-<pre><code>agent<span class="class">.sources</span> =source1
-agent<span class="class">.channels</span> =memoryChannel
-agent<span class="class">.sinks</span> =sink1
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> =spooldir
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.spoolDir</span>=/root/hmbbs
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
-</code></pre><p>文件命名： agent.sinks.sink1.hdfs.roundValue=5这句话表示使用的是5分钟的约束，即如果是51…54都会粗处到50分的时间里面56…59都会存储到55分的时间里面.</p>
-<p>master主机：load_data.sh (该脚本负责把收集的日志信息load到hive的数据库表中)</p>
-<pre><code><span class="shebang">#!/bin/sh</span>
-hive <span class="operator">-e</span> <span class="string">"load data inpath 'hdfs://master:9000/hmbbs/14-05-07/130500'  overwrite into table kpilog "</span>;
-</code></pre><p>slave01主机：mv_file.sh (脚本功能：发日志收集到flume监听的文件夹中)</p>
-<pre><code><span class="shebang">#!/bin/sh</span>
-cp  /root/hadoop/nginx.log /root/hmbbs/
-</code></pre><p>清空原来的数据来建立数据定时任务：</p>
-<p><code>注意</code><br> crontab的脚本运行的时候由于环境变量的问题有可能不能运行，所以可以通过把错误信息输出到文件中进行调试，另外flume在移动文件的过程中如果文件名字相同会出现报错的情况。使用load file后原来的文件就会被删除掉，所以注意不要多次运行同一个目录下的文件会提示找不到的。<br> 　　　　　　　<br> 最后的load脚本：</p>
-<pre><code>    #!<span class="regexp">/bin/</span>sh
-export JAVA_HOME=<span class="regexp">/usr/</span>local<span class="regexp">/java/</span>jdk1.<span class="number">8.0</span>_05
-export HADOOP_HOME=~<span class="regexp">/hadoop/</span>hadoop-<span class="number">2.2</span>.<span class="number">0</span>
-<span class="regexp">/root/</span>hadoop<span class="regexp">/hive/</span>bin<span class="regexp">/hive -e "load data inpath 'hdfs:/</span><span class="regexp">/master:9000/</span>hmbbs<span class="regexp">/14-05-07/</span><span class="number">152500</span><span class="string">'  overwrite into table kpilog " &gt; /root/hadoop/test/test.txt  2&gt;&amp;1</span>
-</code></pre><p>crontab </p>
-<pre><code>30 15 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span>  /root/hadoop/load_data.sh
-</code></pre><p>最后的资源：<a href="http://pan.baidu.com/s/1eQeNXrs" target="_blank" rel="external">nginx.jar</a>和测试的<a href="http://pan.baidu.com/s/1mgJnr2g" target="_blank" rel="external">log</a>文件，有个参考的文章也记下吧<a href="http://m.blog.csdn.net/blog/xueliang1029/24039459" target="_blank" rel="external">文章</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-log/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-log/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-flume/" title="Flume安装配置" itemprop="url">Flume安装配置</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:26:06.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><a href="http://f.dataguru.cn/thread-48324-1-1.html" target="_blank" rel="external">参考文章</a></p>
-<h4 id="下载Flume1-4-0">下载Flume1.4.0</h4><pre><code>wget <span class="symbol">http:</span>/<span class="regexp">/mirrors.cnnic.cn/apache</span><span class="regexp">/flume/</span><span class="number">1.4</span>.<span class="number">0</span>/apache-flume-<span class="number">1.4</span>.<span class="number">0</span>-bin.tar.gz
-</code></pre><h4 id="配置及测试参考Apache文章Flume">配置及测试参考Apache文章<a href="https://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="external">Flume</a></h4><ul>
-<li>新建文件example-conf.properties</li>
-</ul>
-<pre><code> <span class="comment"># example.conf: A single-node Flume configuration</span>
-
-<span class="comment"># Name the components on this agent</span>
-a1.<span class="variable">sources =</span> r1
-a1.<span class="variable">sinks =</span> k1
-a1.<span class="variable">channels =</span> c1
-
-<span class="comment"># Describe/configure the source</span>
-a1.sources.r1.<span class="variable">type =</span> netcat
-a1.sources.r1.<span class="variable">bind =</span> localhost
-a1.sources.r1.<span class="variable">port =</span> <span class="number">44444</span>
-
-<span class="comment"># Describe the sink</span>
-a1.sinks.k1.<span class="variable">type =</span> logger
-
-<span class="comment"># Use a channel which buffers events in memory</span>
-a1.channels.c1.<span class="variable">type =</span> memory
-a1.channels.c1.<span class="variable">capacity =</span> <span class="number">1000</span>
-a1.channels.c1.<span class="variable">transactionCapacity =</span> <span class="number">100</span> 
-
-<span class="comment"># Bind the source and sink to the channel</span>
-a1.sources.r1.<span class="variable">channels =</span> c1
-a1.sinks.k1.<span class="variable">channel =</span> c1
-</code></pre><ul>
-<li>启动</li>
-</ul>
-<pre><code>flume-ng agent --<span class="keyword">conf</span> <span class="keyword">conf</span> --<span class="keyword">conf</span>-<span class="keyword">file</span> example-<span class="keyword">conf</span>.properties --name a1                      -Dflume.root.logger=INFO,console
-</code></pre><ul>
-<li>测试 : 新建终端测试 telnet localhost 44444 在终端可以输入内容可以看到如下结果<br><img src="/images/hadoop/flume.png" alt="Alt text"><h4 id="本地hdfs测试">本地hdfs测试</h4></li>
-<li>配置文件</li>
-</ul>
-<pre><code>agent<span class="class">.sources</span> = avrosrc
-agent<span class="class">.sinks</span> =hdfs-write 
-agent<span class="class">.channels</span> = memoryChannel
-agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.type</span> =exec 
-agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.command</span> =tail -F  /root/hadoop/test/data<span class="class">.txt</span>
-agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.channels</span> = memoryChannel
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> =<span class="number">10000</span>
-agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.type</span> = hdfs
-agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.path</span> =hdfs:<span class="comment">//172.16.86.38:9000/flume/webdata</span>
-agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.rollInterval</span> = <span class="number">30</span>
-agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.channel</span>=memoryChannel
-</code></pre><ul>
-<li>问题</li>
-</ul>
-<pre><code><span class="number">14</span>/<span class="number">05</span>/<span class="number">06</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">28</span> <span class="type">ERROR</span> hdfs.<span class="type">HDFSEventSink</span>: process failed
-java.lang.<span class="type">VerifyError</span>: class org.apache.hadoop.hdfs.protocol.proto.<span class="type">ClientNamenodeProtocolProtos</span>$<span class="type">RecoverLeaseRequestProto</span> overrides final <span class="keyword">method</span> getUnknownFields.()<span class="type">Lcom</span>/google/protobuf/<span class="type">UnknownFieldSet</span>;
-
-<span class="type">Exception</span> <span class="keyword">in</span> thread <span class="string">"SinkRunner-PollingRunner-DefaultSinkProcessor"</span> java.lang.<span class="type">VerifyError</span>: class org.apache.hadoop.hdfs.protocol.proto.<span class="type">ClientNamenodeProtocolProtos</span>$<span class="type">RecoverLeaseRequestProto</span> overrides final <span class="keyword">method</span> getUnknownFields.()<span class="type">Lcom</span>/google/protobuf/<span class="type">UnknownFieldSet</span>;
-</code></pre><p> 解决方法：mv {protobuf-java-2.4.1.jar,guava-10.0.1.jar} ~/<br>－ master  example-conf.properties</p>
-<pre><code>    agent<span class="class">.sources</span> = avrosrc
-agent<span class="class">.sinks</span> =hdfs-write 
-agent<span class="class">.channels</span> = memoryChannel
-agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.type</span> =avro
-agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.bind</span> =master
-agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.port</span> =<span class="number">23004</span>
-agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.channels</span>=memoryChannel
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> =<span class="number">10000</span>
-agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.type</span> = hdfs
-agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.path</span> =hdfs:<span class="comment">//172.16.86.38:9000/flume/webdata</span>
-agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.rollInterval</span> = <span class="number">0</span>   
-agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.channel</span>=memoryChannel
-</code></pre><ul>
-<li>slave01 example-conf.properties</li>
-</ul>
-<pre><code>agent<span class="class">.sources</span> = baksrc
-agent<span class="class">.channels</span> = memoryChannel
-agent<span class="class">.sinks</span> =avro-forward-sink 
-agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.type</span> = exec
-agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.command</span> =tail -F /root/hadoo/test/data<span class="class">.txt</span>
-agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.checkperiodic</span> = <span class="number">1000</span>
-agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.channels</span> =memoryChannel 
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> = <span class="number">10000</span>
-agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.type</span> = avro
-agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.hostname</span> = master
-agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.port</span> = <span class="number">23004</span>
-agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.channel</span> = memoryChannel
-</code></pre><ul>
-<li><p>master:<br>flume-ng agent —conf conf —conf-file example-conf.properties —name agent -Dflume.root.logger=DEBUG,console</p>
-</li>
-<li><p>slave:<br>flume-ng avro-client -c conf  -H master -p 23004  -F /root/hadoop/test/data.txt -Dflume.root.logger=DEBUG,console<br>竟然成功了。。接下来研究如何使用配置文件或者使用tail -f </p>
-<h4 id="收集目录下面的文件内容">收集目录下面的文件内容</h4></li>
-<li>master</li>
-</ul>
-<pre><code>agent.<span class="variable">sources =</span> source1
-agent.<span class="variable">channels =</span> memoryChannel
-agent.<span class="variable">sinks =</span> sink1
-agent.sources.source1.<span class="variable">type =</span> avro
-agent.sources.source1.<span class="variable">bind =</span> master 
-agent.sources.source1.<span class="variable">port =</span> <span class="number">23004</span>
-agent.sources.source1.<span class="variable">channels =</span> memoryChannel
-<span class="comment"># Each channel's type is defined.</span>
-agent.channels.memoryChannel.<span class="variable">type =</span> memory
-agent.channels.memoryChannel.<span class="variable">capacity =</span> <span class="number">100</span> 
-agent.channels.memoryChannel.<span class="variable">keep-alive =</span> <span class="number">100</span> 
-agent.sinks.sink1.<span class="variable">type=</span>hdfs
-agent.sinks.sink1.hdfs.<span class="variable">path=</span>hdfs://master:<span class="number">9000</span>/hmbbs/%y-%m-%d/%H%M%S
-agent.sinks.sink1.hdfs.<span class="variable">fileType=</span>DataStream
-agent.sinks.sink1.hdfs.<span class="variable">writeFormat=</span>TEXT
-agent.sinks.sink1.hdfs.<span class="variable">round=</span><span class="constant">true</span>
-agent.sinks.sink1.hdfs.<span class="variable">roundValue=</span><span class="number">5</span>
-agent.sinks.sink1.hdfs.<span class="variable">roundUnit=</span>minute
-<span class="comment">#agent.sinks.sink1.hdfs.rollInterval=1</span>
-agent.sinks.sink1.hdfs.<span class="variable">useLocalTimeStamp=</span><span class="constant">true</span>
-agent.sinks.sink1.<span class="variable">channel =</span> memoryChannel
-agent.sinks.sink1.hdfs.<span class="variable">filePrefix=</span>events-
-</code></pre><ul>
-<li>slave 文件</li>
-</ul>
-<pre><code>agent<span class="class">.sources</span> = source1
-agent<span class="class">.channels</span> = memoryChannel
-agent<span class="class">.sinks</span> =sink1
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> = spooldir
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.spoolDir</span>=/root/hmbbs
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
-</code></pre><h3 id="使用tail_-F">使用tail -F</h3><p>修改下 /root/hadoop/test/目录和文件的权限 chmod 777 /root/hadoop/test 和 chmod 777 /root/hadoop/test/data.txt</p>
-<ul>
-<li>master</li>
-</ul>
-<pre><code>agent.<span class="variable">sources =</span> source1
-agent.<span class="variable">channels =</span> memoryChannel
-agent.<span class="variable">sinks =</span> sink1
-agent.sources.source1.<span class="variable">type =</span> avro
-agent.sources.source1.<span class="variable">bind =</span> master 
-agent.sources.source1.<span class="variable">port =</span> <span class="number">23004</span>
-agent.sources.source1.<span class="variable">channels =</span> memoryChannel
-<span class="comment"># Each channel's type is defined.</span>
-agent.channels.memoryChannel.<span class="variable">type =</span> memory
-agent.channels.memoryChannel.<span class="variable">capacity =</span> <span class="number">100</span> 
-agent.channels.memoryChannel.<span class="variable">keep-alive =</span> <span class="number">100</span> 
-agent.sinks.sink1.<span class="variable">type=</span>hdfs
-agent.sinks.sink1.hdfs.<span class="variable">path=</span>hdfs://master:<span class="number">9000</span>/hmbbs/%y-%m-%d/%H%M%S
-agent.sinks.sink1.hdfs.<span class="variable">fileType=</span>DataStream
-agent.sinks.sink1.hdfs.<span class="variable">writeFormat=</span>TEXT
-agent.sinks.sink1.hdfs.<span class="variable">round=</span><span class="constant">true</span>
-agent.sinks.sink1.hdfs.<span class="variable">roundValue=</span><span class="number">5</span>
-agent.sinks.sink1.hdfs.<span class="variable">roundUnit=</span>minute
-<span class="comment">#agent.sinks.sink1.hdfs.rollInterval=1</span>
-agent.sinks.sink1.hdfs.<span class="variable">useLocalTimeStamp=</span><span class="constant">true</span>
-agent.sinks.sink1.<span class="variable">channel =</span> memoryChannel
-agent.sinks.sink1.hdfs.<span class="variable">filePrefix=</span>events-
-</code></pre><ul>
-<li>slave01</li>
-</ul>
-<pre><code>agent<span class="class">.sources</span> = source1
-agent<span class="class">.channels</span> = memoryChannel
-agent<span class="class">.sinks</span> =sink1
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> =exec 
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.command</span>=tail -F /root/hadoop/test/data<span class="class">.txt</span>
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-flume/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-flume/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -1348,6 +1360,10 @@ agent<span class="class">.sinks</span><span class="class">.sink1</span><span cla
 		
 			
 				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
 			
 		
 			

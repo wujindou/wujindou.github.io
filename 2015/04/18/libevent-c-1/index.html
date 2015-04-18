@@ -1,0 +1,609 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Libevent整合protobuf（一) | Jackie&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jackie wu">
+    
+
+    
+    <meta name="description" content="ProtocolBuffer是用于结构化数据串行化的灵活、高效、自动的方法，有如XML，不过它更小、更快、也更简单。你可以定义自己的数据结构，然后使用代码生成器生成的代码来读写这个数据结构。你甚至可以在无需
+
+下载protobuf地址安装也比较简单，就不赘述。
+当执行protoc —version成功后就表示已经安装成功了。libevent是一个强大的网络库，网上的网络库有很多，想libev、bo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Libevent整合protobuf（一)">
+<meta property="og:url" content="http://yoursite.com/2015/04/18/libevent-c-1/index.html">
+<meta property="og:site_name" content="Jackie's Blog">
+<meta property="og:description" content="ProtocolBuffer是用于结构化数据串行化的灵活、高效、自动的方法，有如XML，不过它更小、更快、也更简单。你可以定义自己的数据结构，然后使用代码生成器生成的代码来读写这个数据结构。你甚至可以在无需
+
+下载protobuf地址安装也比较简单，就不赘述。
+当执行protoc —version成功后就表示已经安装成功了。libevent是一个强大的网络库，网上的网络库有很多，想libev、bo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Libevent整合protobuf（一)">
+<meta name="twitter:description" content="ProtocolBuffer是用于结构化数据串行化的灵活、高效、自动的方法，有如XML，不过它更小、更快、也更简单。你可以定义自己的数据结构，然后使用代码生成器生成的代码来读写这个数据结构。你甚至可以在无需
+
+下载protobuf地址安装也比较简单，就不赘述。
+当执行protoc —version成功后就表示已经安装成功了。libevent是一个强大的网络库，网上的网络库有很多，想libev、bo">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jackie&#39;s Blog" title="Jackie&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/18/libevent-c-1/" title="Libevent整合protobuf（一)" itemprop="url">Libevent整合protobuf（一)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-18T01:57:53.000Z" itemprop="datePublished"> 发表于 2015-04-18</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>ProtocolBuffer是用于结构化数据串行化的灵活、高效、自动的方法，有如XML，不过它更小、更快、也更简单。你可以定义自己的数据结构，然后使用代码生成器生成的代码来读写这个数据结构。你甚至可以在无需</p>
+<ul>
+<li>下载protobuf<a href="http://code.google.com/p/protobuf/downloads/list" target="_blank" rel="external">地址</a>安装也比较简单，就不赘述。</li>
+<li>当执行protoc —version成功后就表示已经安装成功了。<br>libevent是一个强大的网络库，网上的网络库有很多，想libev、boost、muduo（陈硕）写的网络库，之所以考虑libevent作为学习对象是发现公司内部好像用的很多。<br>例子代码：<br>server.cpp </li>
+</ul>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;errno.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;assert.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;event2/event.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;event2/bufferevent.h&gt; </span>
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999</span>
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_BACKLOG 32</span>
+
+<span class="function"><span class="keyword">void</span> <span class="title">do_accept</span><span class="params">(evutil_socket_t listener, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span></span>;
+<span class="function"><span class="keyword">void</span> <span class="title">read_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span></span>;
+<span class="function"><span class="keyword">void</span> <span class="title">error_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span></span>;
+<span class="function"><span class="keyword">void</span> <span class="title">write_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span></span>;
+
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span>
+</span>{
+
+    <span class="keyword">int</span> ret;
+    evutil_socket_t listener;
+    listener = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>); 
+    assert(listener &gt; <span class="number">0</span>); 
+    evutil_make_listen_socket_reuseable(listener);
+
+    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;
+    <span class="built_in">sin</span>.sin_family = AF_INET;
+    <span class="built_in">sin</span>.sin_addr.s_addr = <span class="number">0</span>;
+    <span class="built_in">sin</span>.sin_port = htons(LISTEN_PORT);
+
+    <span class="keyword">if</span> (bind(listener, (<span class="keyword">struct</span> sockaddr *)&amp;<span class="built_in">sin</span>, <span class="keyword">sizeof</span>(<span class="built_in">sin</span>)) &lt; <span class="number">0</span>) {
+
+        perror(<span class="string">"bind"</span>);
+        <span class="keyword">return</span> <span class="number">1</span>;
+    }
+    <span class="keyword">if</span> (listen(listener, LISTEN_BACKLOG) &lt; <span class="number">0</span>) {
+
+        perror(<span class="string">"listen"</span>);
+        <span class="keyword">return</span> <span class="number">1</span>;
+    }
+    <span class="built_in">printf</span> (<span class="string">"Listening...\n"</span>);
+
+    evutil_make_socket_nonblocking(listener);
+
+    <span class="keyword">struct</span> event_base *base = event_base_new();
+    assert(base != NULL);
+    <span class="keyword">struct</span> event *listen_event;
+    listen_event = event_new(base, listener, EV_READ|EV_PERSIST, do_accept, (<span class="keyword">void</span>*)base);
+    event_add(listen_event, NULL);
+    event_base_dispatch(base);
+
+    <span class="built_in">printf</span>(<span class="string">"The End."</span>);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+
+<span class="function"><span class="keyword">void</span> <span class="title">do_accept</span><span class="params">(evutil_socket_t listener, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span>
+</span>{
+
+    <span class="keyword">struct</span> event_base *base = (<span class="keyword">struct</span> event_base *)arg;
+    evutil_socket_t fd;
+    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;
+    socklen_t slen;
+    fd = accept(listener, (<span class="keyword">struct</span> sockaddr *)&amp;<span class="built_in">sin</span>, &amp;slen);
+    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) {
+
+        perror(<span class="string">"accept"</span>);
+        <span class="keyword">return</span>;
+    }
+    <span class="keyword">if</span> (fd &gt; FD_SETSIZE) {
+
+        perror(<span class="string">"fd &gt; FD_SETSIZE\n"</span>);
+        <span class="keyword">return</span>;
+    }
+
+    <span class="built_in">printf</span>(<span class="string">"ACCEPT: fd = %u\n"</span>, fd);
+
+    <span class="keyword">struct</span> bufferevent *bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
+    bufferevent_setcb(bev, read_cb, NULL, error_cb, arg);
+    bufferevent_enable(bev, EV_READ|EV_WRITE|EV_PERSIST);
+}
+
+<span class="function"><span class="keyword">void</span> <span class="title">read_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span>
+</span>{
+
+<span class="preprocessor">#<span class="keyword">define</span> MAX_LINE    256</span>
+    <span class="keyword">char</span> line[MAX_LINE+<span class="number">1</span>];
+    <span class="keyword">int</span> n;
+    evutil_socket_t fd = bufferevent_getfd(bev);
+
+    <span class="keyword">while</span> (n = bufferevent_read(bev, line, MAX_LINE), n &gt; <span class="number">0</span>) {
+
+        line[n] = <span class="string">'\0'</span>;
+        <span class="built_in">printf</span>(<span class="string">"fd=%u, read line: %s\n"</span>, fd, line);
+
+        bufferevent_write(bev, line, n);
+    }
+}
+<span class="function"><span class="keyword">void</span> <span class="title">write_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span> </span>{
+}
+<span class="function"><span class="keyword">void</span> <span class="title">error_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span>
+</span>{
+    evutil_socket_t fd = bufferevent_getfd(bev);
+    <span class="built_in">printf</span>(<span class="string">"fd = %u, "</span>, fd);
+    <span class="keyword">if</span> (event &amp; BEV_EVENT_TIMEOUT) {
+
+        <span class="built_in">printf</span>(<span class="string">"Timed out\n"</span>);
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span> (event &amp; BEV_EVENT_EOF) {
+
+        <span class="built_in">printf</span>(<span class="string">"connection closed\n"</span>);
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span> (event &amp; BEV_EVENT_ERROR) {
+
+        <span class="built_in">printf</span>(<span class="string">"some other error\n"</span>);
+    }
+    bufferevent_free(bev);
+</code></pre><p>````<br>client.cpp<br>参考代码： </p>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;string.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;unistd.h&gt;</span>
+
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/types.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/socket.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;netinet/in.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;arpa/inet.h&gt;</span>
+
+<span class="preprocessor">#<span class="keyword">define</span> oops(msg) {\
+    perror(msg); \
+    exit(1); \
+}  </span>
+<span class="preprocessor">#<span class="keyword">define</span> SIZE 256  </span>
+
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999  </span>
+
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span>
+</span>{
+
+
+    <span class="keyword">int</span> socket_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>); 
+    <span class="keyword">if</span>(socket_fd == -<span class="number">1</span>) 
+        oops(<span class="string">"socket initiating error..."</span>);
+    <span class="keyword">struct</span> sockaddr_in address;
+    bzero(&amp;address, <span class="keyword">sizeof</span>(address));
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);
+    address.sin_port =  htons(LISTEN_PORT);
+
+    <span class="keyword">int</span> connect_result = connect(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;address, <span class="keyword">sizeof</span>(address));
+    <span class="keyword">if</span>(connect_result == -<span class="number">1</span>)
+        oops(<span class="string">"connect error..."</span>);
+
+    <span class="keyword">while</span>(<span class="number">1</span>)
+    {
+
+        <span class="keyword">char</span> buffer[<span class="number">256</span>] ={
+            <span class="number">0</span>};
+        <span class="built_in">printf</span>(<span class="string">"pls enter a string, or enter 'q' exit:\n"</span>);
+        <span class="built_in">scanf</span>(<span class="string">"%s"</span>, buffer);
+        <span class="keyword">if</span>(<span class="built_in">strcmp</span>(buffer, <span class="string">"q"</span>) == <span class="number">0</span>)
+        {
+
+            <span class="built_in">printf</span>(<span class="string">"You exit!"</span>);
+            <span class="keyword">return</span> <span class="number">0</span>;
+        }
+        <span class="built_in">printf</span>(<span class="string">"your enter is %s\n"</span>, buffer);
+        ssize_t write_length = write(socket_fd, buffer, <span class="built_in">strlen</span>(buffer)+<span class="number">1</span>);
+        <span class="keyword">if</span>(write_length &lt;= <span class="number">0</span> || write_length != (<span class="built_in">strlen</span>(buffer)+<span class="number">1</span>))
+            oops(<span class="string">"error: write ..."</span>);
+
+
+        <span class="keyword">char</span> buf[<span class="number">512</span>];
+        bzero(buf, <span class="number">0</span>);
+        ssize_t read_length = read(socket_fd, buf, <span class="keyword">sizeof</span>(buf));
+        <span class="keyword">if</span>(read_length == -<span class="number">1</span>)
+            oops(<span class="string">"error: read data from socket..."</span>);
+
+        <span class="built_in">printf</span>(<span class="string">"the ret msg is: %s\n"</span>, buf);
+    }
+    close(socket_fd);
+    <span class="keyword">return</span> EXIT_SUCCESS;
+}
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/c-学习/">c++学习</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/04/18/libevent-c-1/" data-title="Libevent整合protobuf（一) | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/04/18/libevent-c-2/" title="Libevent整合protobuf （二）">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Libevent整合protobuf （二）</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/04/17/mysql-learn/"  title="MySQL触发器学习">
+ <strong>下一篇：</strong><br/> 
+ <span>MySQL触发器学习
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/04/18/libevent-c-1/" data-title="Libevent整合protobuf（一)" data-url="http://yoursite.com/2015/04/18/libevent-c-1/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/大数据/" title="大数据">大数据<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://wujindou.github.io" target="_blank" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wujindou"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -4,28 +4,44 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Flume 1.4整合kafka消息系统 | Jackie&#39;s Blog</title>
+    <title>Libevent整合protobuf （二） | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：简单记录下自己整合的过程吧：参考文章里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。
-
-复制插件下的lib">
+    <meta name="description" content="Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的代码定义一个简单的EchoMessage.proto内容如下： 
+message EchoRequest
+{
+    required string message = 1; //请求字符串
+};
+message EchoResponse
+{
+    required string res">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Flume 1.4整合kafka消息系统">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-flume-kafaka/index.html">
+<meta property="og:title" content="Libevent整合protobuf （二）">
+<meta property="og:url" content="http://yoursite.com/2015/04/18/libevent-c-2/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：简单记录下自己整合的过程吧：参考文章里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。
-
-复制插件下的lib">
+<meta property="og:description" content="Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的代码定义一个简单的EchoMessage.proto内容如下： 
+message EchoRequest
+{
+    required string message = 1; //请求字符串
+};
+message EchoResponse
+{
+    required string res">
+<meta property="og:image" content="/images/c++/libevent.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Flume 1.4整合kafka消息系统">
-<meta name="twitter:description" content="Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：简单记录下自己整合的过程吧：参考文章里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。
-
-复制插件下的lib">
+<meta name="twitter:title" content="Libevent整合protobuf （二）">
+<meta name="twitter:description" content="Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的代码定义一个简单的EchoMessage.proto内容如下： 
+message EchoRequest
+{
+    required string message = 1; //请求字符串
+};
+message EchoResponse
+{
+    required string res">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -85,14 +101,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/big-data-flume-kafaka/" title="Flume 1.4整合kafka消息系统" itemprop="url">Flume 1.4整合kafka消息系统</a>
+      <a href="/2015/04/18/libevent-c-2/" title="Libevent整合protobuf （二）" itemprop="url">Libevent整合protobuf （二）</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T08:45:58.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    <time datetime="2015-04-18T02:01:47.000Z" itemprop="datePublished"> 发表于 2015-04-18</time>
     
   </p>
 </header>
@@ -105,12 +121,91 @@
 		
 		</div>
 		
-		<p>Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：<br>简单记录下自己整合的过程吧：参考<a href="http://www.tuicool.com/articles/mMrQnu7" target="_blank" rel="external">文章</a>里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。</p>
-<ul>
-<li>复制插件下的lib下的所有jar文件到flume/lib下</li>
-<li>复制插件下的package下的flumeng-kafka-plugin.jar文件到flume/lib下</li>
-<li>修改插件下的flume-conf.properties文件，并复制到flume/conf下<br>启动：<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/flume-ng agent --conf conf --conf-file conf/flume-conf<span class="class">.properties</span> --name producer -Dflume<span class="class">.root</span><span class="class">.logger</span>=INFO,console</span><br><span class="line"><span class="comment">//启动zookeeper</span></span><br><span class="line">bin/zookeeper-server-start<span class="class">.sh</span> config/zookeeper<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动kafka</span></span><br><span class="line">bin/kafka-server-start<span class="class">.sh</span> config/server<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动consumer</span></span><br><span class="line">bin/kafka-console-consumer<span class="class">.sh</span> --zookeeper localhost:<span class="number">2181</span> --topic test2 --from-beginning</span><br></pre></td></tr></table></figure></li>
-</ul>
+		<p>Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的<a href="https://developers.google.com/protocol-buffers/docs/cpptutorial?hl=zh-cn" target="_blank" rel="external">代码</a><br>定义一个简单的EchoMessage.proto<br>内容如下： </p>
+<pre><code>message EchoRequest
+{
+    <span class="keyword">required</span> <span class="built_in">string</span> message = <span class="number">1</span>; <span class="comment">//请求字符串</span>
+};
+message EchoResponse
+{
+    <span class="keyword">required</span> <span class="built_in">string</span> response = <span class="number">1</span>; <span class="comment">//回应字符串</span>
+};
+</code></pre><p>测试：<br>test.cpp </p>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;string&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>
+</span>{
+    <span class="built_in">string</span> s=<span class="string">"hello request"</span>;
+    EchoRequest request ;
+    request.set_message(s);
+    <span class="built_in">cout</span>&lt;&lt;request.message()&lt;&lt;endl;
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+</code></pre><p>编译：<br> g++ echo.pb.cc testecho.cpp -o testecho -lprotobuf<br>问题：<br>./testecho: error while loading shared libraries: libprotobuf.so.8: cannot open shared object file: No such file or directory<br>export<br>LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib<br>最后：<br>client.cpp </p>
+<pre><code>    <span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;string.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;unistd.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/types.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/socket.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;netinet/in.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;arpa/inet.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
+
+<span class="preprocessor">#<span class="keyword">define</span> oops(msg) {\
+    perror(msg); \
+    exit(1); \
+}  </span>
+<span class="preprocessor">#<span class="keyword">define</span> SIZE 256  </span>
+
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999  </span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span>
+</span>{
+
+
+    <span class="keyword">int</span> socket_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>);
+    <span class="keyword">if</span>(socket_fd == -<span class="number">1</span>)
+        oops(<span class="string">"socket initiating error..."</span>);
+
+
+    <span class="keyword">struct</span> sockaddr_in address;
+    bzero(&amp;address, <span class="keyword">sizeof</span>(address));
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);
+    address.sin_port =  htons(LISTEN_PORT);
+
+    <span class="keyword">int</span> connect_result = connect(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;address, <span class="keyword">sizeof</span>(address));
+    <span class="keyword">if</span>(connect_result == -<span class="number">1</span>)
+        oops(<span class="string">"connect error..."</span>);
+
+
+         <span class="built_in">string</span> data;
+         EchoRequest req;
+         req.set_message(<span class="string">"wwwww"</span>);
+         req.SerializeToString(&amp;data);
+        <span class="keyword">char</span> bts[data.length()];
+        <span class="built_in">strcpy</span>(bts, data.c_str());
+        ssize_t write_length = write(socket_fd, bts, <span class="keyword">sizeof</span>(bts));
+        <span class="keyword">if</span>(write_length &lt;= <span class="number">0</span> )
+            oops(<span class="string">"error: write ..."</span>);
+
+
+        <span class="keyword">char</span> buf[<span class="number">512</span>];
+        bzero(buf, <span class="number">0</span>);
+        ssize_t read_length = read(socket_fd, buf, <span class="keyword">sizeof</span>(buf));
+        <span class="keyword">if</span>(read_length == -<span class="number">1</span>)
+            oops(<span class="string">"error: read data from socket..."</span>);
+
+        <span class="built_in">printf</span>(<span class="string">"the ret msg is: %s\n"</span>, buf);
+    close(socket_fd);
+    <span class="keyword">return</span> EXIT_SUCCESS;
+}
+</code></pre><p>最后介绍我看到过的一个架构吧：<br><img src="/images/c++/libevent.png" alt="Alt text"></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -119,7 +214,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/大数据/">大数据</a>
+  <span></span> <a href="/tags/c-学习/">c++学习</a>
   </div>
 
 </div>
@@ -128,7 +223,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/big-data-flume-kafaka/" data-title="Flume 1.4整合kafka消息系统 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/18/libevent-c-2/" data-title="Libevent整合protobuf （二） | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -141,19 +236,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/17/php-yaf/" title="yaf学习笔记">
-  <strong>上一篇：</strong><br/>
-  <span>
-  yaf学习笔记</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/17/big-data-hadoop-online/"  title="hadoop线上环境搭建">
+<a href="/2015/04/18/libevent-c-1/"  title="Libevent整合protobuf（一)">
  <strong>下一篇：</strong><br/> 
- <span>hadoop线上环境搭建
+ <span>Libevent整合protobuf（一)
 </span>
 </a>
 </div>
@@ -162,7 +249,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/big-data-flume-kafaka/" data-title="Flume 1.4整合kafka消息系统" data-url="http://yoursite.com/2015/04/17/big-data-flume-kafaka/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/18/libevent-c-2/" data-title="Libevent整合protobuf （二）" data-url="http://yoursite.com/2015/04/18/libevent-c-2/"></div>
 </section>
 
 
