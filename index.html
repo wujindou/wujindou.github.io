@@ -81,6 +81,753 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/19/android-blog-4/" title="Android应用开发四" itemprop="url">Android应用开发四</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-19T06:46:10.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>首先关于上次遇到的问题，就是使用jsoup抓取网页时候一直报错，后来查找发现<br>不能直接在Android的MainActivity线程中直接调用http请求，所以可以通过重新启动一个线程<br>来完成，同时需要进行多线程之间的通讯使用Message和Handler类实现进程之间的通信传送数据。代码参考</p>
+<pre><code>mHandler = <span class="keyword">new</span> Handler() {    
+            @Override    
+            <span class="keyword">public</span> <span class="keyword">void</span> handleMessage(Message msg) {    
+                myadapter=<span class="keyword">new</span>  MySimpleAdapter(MainActivity.<span class="keyword">this</span>,newsDataList,R.layout.data_list);
+                listView.setAdapter(myadapter);  
+
+                listView.setOnItemClickListener(<span class="keyword">new</span> OnItemClickListener(){
+
+                    @Override
+                    <span class="keyword">public</span> <span class="keyword">void</span> onItemClick(AdapterView&lt;?&gt; adapter, View v, <span class="built_in">int</span> position,
+                            <span class="keyword">long</span> id) {
+                        System.out.<span class="built_in">println</span>(v);
+                        Item t = (Item)newsDataList.<span class="built_in">get</span>(position);
+                        Intent it = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>,ItemDetail.class) ;
+                        it.putExtra(<span class="string">"blog_id"</span>, t.getId());
+                        MainActivity.<span class="keyword">this</span>.startActivity(it) ;
+
+                    }
+
+                });
+            }    
+        };    
+        <span class="keyword">new</span> Thread(runnable).start();
+Runnable runnable = <span class="keyword">new</span> Runnable(){
+@Override
+<span class="keyword">public</span> <span class="keyword">void</span> run() {
+    <span class="keyword">String</span> blog_url = <span class="string">"http://blog.csdn.net/xxxx"</span>;
+    Document doc =<span class="keyword">null</span>;
+    <span class="keyword">try</span> {
+        doc = Jsoup.connect(blog_url).userAgent(<span class="string">"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36"</span>).timeout(<span class="number">5000</span>).<span class="built_in">get</span>();
+    } <span class="keyword">catch</span> (IOException e) {
+        e.printStackTrace();
+    }
+    <span class="keyword">if</span>(doc !=<span class="keyword">null</span>){
+        Elements news = doc.select(<span class="string">"#article_list span.link_title a"</span>);
+        List&lt;Item&gt; blogs = <span class="keyword">new</span> ArrayList&lt;Item&gt;();
+        <span class="keyword">for</span>(Element link: news){
+            <span class="keyword">String</span> href = link.attr(<span class="string">"href"</span>);
+
+            <span class="keyword">String</span> id = href.substring(href.length()-<span class="number">8</span>,href.length());
+            Log.i(<span class="string">"id="</span>,id);
+            Item item = <span class="keyword">new</span> Item(id,link.<span class="built_in">text</span>());
+            newsDataList.<span class="built_in">add</span>(item);
+        }
+         mHandler.sendEmptyMessage(<span class="number">0</span>); 
+    }<span class="keyword">else</span>{
+        Log.i(<span class="string">"data="</span>, <span class="keyword">String</span>.valueOf(<span class="number">1234124</span>));
+    }
+}
+};
+</code></pre><p>然后把以前的进入主页面的Splash程序和使用ActionBar创建下拉菜单的操作也加进去,这个练手程序就到此为止了。上张图片吧。。<br><img src="/images/android/android_blog_4_1.png" alt="Alt text"></p>
+<p><a href="http://pan.baidu.com/s/1jGA3oSA" target="_blank" rel="external">代码下载</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android开发/">Android开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/19/android-blog-4/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/19/android-blog-4/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/19/android-blog-3/" title="Android应用开发三" itemprop="url">Android应用开发三</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-19T06:44:53.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="使用webview">使用webview</h3><p> 由于需要浏览网页内容所以，所以考虑使用webView直接加载原来网页中的内容来显示。<br> 网络因素所以使用本地的html文件加速文件的显示。<br> 一个小的技巧，使用顶部导航栏时，图标点击和不点击显示不同颜色可以设置一个html文件比如<br>main.xml文件</p>
+<pre><code>&lt;ImageView
+      android:<span class="variable">id=</span><span class="string">"@+id/news_detail_home"</span>
+      android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>
+      android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+      android:<span class="variable">layout_gravity=</span><span class="string">"left|center"</span>
+      android:<span class="variable">background=</span><span class="string">"@drawable/head_home"</span>
+      android:<span class="variable">clickable=</span><span class="string">"true"</span> /&gt;
+</code></pre><p>在drawable下建立home.xml文件和选择和正常的样式图片：</p>
+<pre><code><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;<span class="title">selector</span>
+  <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_focused</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/head_home_selected"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_selected</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/head_home_selected"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_pressed</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/head_home_selected"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/head_home_normal"</span> /&gt;</span>
+<span class="tag">&lt;/<span class="title">selector</span>&gt;</span>
+</code></pre><p>最后代码：</p>
+<pre><code>&lt;LinearLayout xmlns:<span class="variable">android=</span><span class="string">"http://schemas.android.com/apk/res/android"</span>  
+    xmlns:<span class="variable">tools=</span><span class="string">"http://schemas.android.com/tools"</span>
+    android:<span class="variable">orientation=</span><span class="string">"vertical"</span>
+    android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>  
+    android:<span class="variable">layout_height=</span><span class="string">"fill_parent"</span>  
+    tools:<span class="variable">context=</span><span class="string">".MainActivity"</span> &gt;  
+   &lt;FrameLayout
+        android:<span class="variable">id=</span><span class="string">"@+id/news_detail_header"</span>
+        android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>
+        android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+        android:<span class="variable">background=</span><span class="string">"@drawable/head_bg"</span>
+        android:<span class="variable">gravity=</span><span class="string">"center_vertical"</span>
+        android:<span class="variable">orientation=</span><span class="string">"horizontal"</span>
+        android:<span class="variable">paddingLeft=</span><span class="string">"2dip"</span>
+        android:<span class="variable">paddingRight=</span><span class="string">"2dip"</span> &gt;
+
+        &lt;ImageView
+            android:<span class="variable">id=</span><span class="string">"@+id/news_detail_home"</span>
+            android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>
+            android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+            android:<span class="variable">layout_gravity=</span><span class="string">"left|center"</span>
+            android:<span class="variable">background=</span><span class="string">"@drawable/head_home"</span>
+            android:<span class="variable">clickable=</span><span class="string">"true"</span> /&gt;
+
+    &lt;/FrameLayout&gt;
+     &lt;WebView 
+         android:<span class="variable">id=</span><span class="string">"@+id/webview"</span>
+         android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>
+         android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+         /&gt;
+&lt;/LinearLayout&gt;  
+</code></pre><ul>
+<li>ItemDetai.java文件</li>
+</ul>
+<pre><code><span class="keyword">package</span> com.example.blogapp;
+<span class="keyword">import</span> android.app.<span class="type">Activity</span>;
+<span class="keyword">import</span> android.content.<span class="type">Intent</span>;
+<span class="keyword">import</span> android.os.<span class="type">Bundle</span>;
+<span class="keyword">import</span> android.view.<span class="type">View</span>;
+<span class="keyword">import</span> android.view.<span class="type">View</span>.<span class="type">OnClickListener</span>;
+<span class="keyword">import</span> android.webkit.<span class="type">WebView</span>;
+<span class="keyword">import</span> android.webkit.<span class="type">WebViewClient</span>;
+<span class="keyword">import</span> android.widget.<span class="type">Button</span>;
+<span class="keyword">import</span> android.widget.<span class="type">ImageView</span>;
+<span class="keyword">import</span> android.widget.<span class="type">TextView</span>;
+public <span class="class"><span class="keyword">class</span> <span class="title">ItemDetail</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Activity</span> {</span>
+    <span class="keyword">private</span> <span class="type">ImageView</span> <span class="type">Iv</span> ;
+    <span class="keyword">private</span> <span class="type">TextView</span> tv ;
+    <span class="keyword">private</span> <span class="type">WebView</span> wv ;
+    <span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(<span class="type">R</span>.layout.detail_main);
+        <span class="type">Intent</span> intent = getIntent();
+        intent.getExtras();
+        <span class="type">Bundle</span> data = intent.getExtras();
+        <span class="type">String</span> id = data.getString(<span class="string">"blog_id"</span>);
+        wv = (<span class="type">WebView</span>) <span class="keyword">this</span>.findViewById(<span class="type">R</span>.id.webview);
+        wv.getSettings().setJavaScriptEnabled(<span class="literal">true</span>);  
+        wv.loadUrl(<span class="string">"file:///android_asset/index.html"</span>);  
+        wv.setWebViewClient(<span class="keyword">new</span> <span class="type">HelloWebViewClient</span> ()); 
+        <span class="type">Iv</span> = (<span class="type">ImageView</span>)<span class="keyword">this</span>.findViewById(<span class="type">R</span>.id.news_detail_home);
+        <span class="type">Iv</span>.setOnClickListener(<span class="keyword">new</span> <span class="type">OnClickListener</span>(){
+            <span class="annotation">@Override</span>
+            public void onClick(<span class="type">View</span> v) {
+                <span class="type">Intent</span> it = <span class="keyword">new</span> <span class="type">Intent</span>(<span class="type">ItemDetail</span>.<span class="keyword">this</span>,<span class="type">MainActivity</span>.<span class="keyword">class</span>);
+                <span class="type">ItemDetail</span>.<span class="keyword">this</span>.startActivity(it);
+                <span class="type">ItemDetail</span>.<span class="keyword">this</span>.finish();
+            }});
+    }
+
+     <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWebViewClient</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">WebViewClient</span> {</span>  
+            public boolean shouldOverrideUrlLoading(<span class="type">WebView</span> view, <span class="type">String</span> url) {  
+                view.loadUrl(url);  
+                <span class="keyword">return</span> <span class="literal">true</span>;  
+            }  
+        }  
+
+}
+</code></pre><p>效果图：</p>
+<p><img src="/images/android/android_blog_3_1.png" alt="Alt text"></p>
+<p>完整代码下载：<a href="http://pan.baidu.com/s/13rJ8E" target="_blank" rel="external">百度云盘</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android开发/">Android开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/19/android-blog-3/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/19/android-blog-3/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/19/android-blog-2/" title="Android应用开发二" itemprop="url">Android应用开发二</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-19T06:39:52.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="了解Activity">了解Activity</h3><p><img src="/images/android/android_blog_2.png" alt="Alt text"></p>
+<h3 id="了解Intent">了解Intent</h3><p>  在一个项目之中，会由多个Activity程序所组成，那么此时，这多个Activity程序之间就需要进行通讯，而这之间的通讯就依靠Intent完成。<br><img src="/images/android/android_blog_2_2.png" alt="Alt text"><br>示例： </p>
+<ul>
+<li>MainActivity.java</li>
+</ul>
+<pre><code><span class="keyword">package</span> com.example.blogapp;
+<span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> android.app.Activity;
+<span class="keyword">import</span> android.content.Intent;
+<span class="keyword">import</span> android.os.Bundle;
+<span class="keyword">import</span> android.view.Menu;
+<span class="keyword">import</span> android.view.View;
+<span class="keyword">import</span> android.view.View.OnClickListener;
+<span class="keyword">import</span> android.widget.Button;
+<span class="keyword">import</span> android.widget.ListView;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>{
+
+    <span class="keyword">private</span> Item item ;
+    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;Item&gt; newsDataList = <span class="keyword">new</span> ArrayList&lt;Item&gt;();
+    <span class="keyword">private</span> ListView listView ;
+    <span class="keyword">private</span> MySimpleAdapter myadapter ;
+    <span class="keyword">private</span> Button btn ;
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>{
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+        <span class="keyword">this</span>.initNewsData();
+        myadapter = <span class="keyword">new</span> MySimpleAdapter(MainActivity.<span class="keyword">this</span>, newsDataList,R.layout.data_list);  
+        listView =(ListView) findViewById(R.id.listview);
+        listView.setAdapter(myadapter);
+        btn = (Button)<span class="keyword">this</span>.findViewById(R.id.btn);
+        btn.setOnClickListener(<span class="keyword">new</span> OnClickListener(){
+            <span class="annotation">@Override</span>
+            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>{
+                Intent it = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>,ItemDetail.class) ;
+                MainActivity.<span class="keyword">this</span>.startActivity(it) ;    
+            }
+
+
+        });
+
+    }
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>{
+        getMenuInflater().inflate(R.menu.main, menu);
+        <span class="keyword">return</span> <span class="keyword">true</span>;
+    }
+    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initNewsData</span><span class="params">()</span> </span>{
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">20</span>; i++) {
+            item = <span class="keyword">new</span> Item(<span class="string">"ID:"</span>+i,<span class="string">"标题"</span>+ i);
+            newsDataList.add(item);
+        }
+    }
+
+}
+</code></pre><ul>
+<li><p>AndroidManifest.xml添加Activity信息</p>
+  <activity android:name="com.example.blogapp.ItemDetail" android:label="@string/app_name"><br>  </activity></li>
+<li>ItemDetail.java</li>
+</ul>
+<pre><code><span class="keyword">package</span> com.example.blogapp;
+<span class="keyword">import</span> android.app.<span class="type">Activity</span>;
+<span class="keyword">import</span> android.content.<span class="type">Intent</span>;
+<span class="keyword">import</span> android.os.<span class="type">Bundle</span>;
+<span class="keyword">import</span> android.view.<span class="type">View</span>;
+<span class="keyword">import</span> android.view.<span class="type">View</span>.<span class="type">OnClickListener</span>;
+<span class="keyword">import</span> android.widget.<span class="type">Button</span>;
+public <span class="class"><span class="keyword">class</span> <span class="title">ItemDetail</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Activity</span> {</span>
+<span class="keyword">private</span> <span class="type">Button</span> btn ;
+<span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) {
+    <span class="keyword">super</span>.onCreate(savedInstanceState);
+    setContentView(<span class="type">R</span>.layout.detail_main);
+    btn = (<span class="type">Button</span>)<span class="keyword">this</span>.findViewById(<span class="type">R</span>.id.back);
+    btn.setOnClickListener(<span class="keyword">new</span> <span class="type">OnClickListener</span>(){
+        <span class="annotation">@Override</span>
+        public void onClick(<span class="type">View</span> v) {
+            <span class="type">Intent</span> it = <span class="keyword">new</span> <span class="type">Intent</span>(<span class="type">ItemDetail</span>.<span class="keyword">this</span>,<span class="type">MainActivity</span>.<span class="keyword">class</span>);
+            <span class="type">ItemDetail</span>.<span class="keyword">this</span>.startActivity(it);
+            <span class="type">ItemDetail</span>.<span class="keyword">this</span>.finish();
+        }});
+};
+}
+</code></pre><p>配置文件就是添加了2个按钮来获取点击事件跳转Activity。</p>
+<h3 id="实现Activity通信，传递信息">实现Activity通信，传递信息</h3><ul>
+<li>MainActivity.java修改onCreate方法如下:</li>
+</ul>
+<pre><code><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>{
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+        <span class="keyword">this</span>.initNewsData();
+        myadapter = <span class="keyword">new</span>   
+        MySimpleAdapter(MainActivity.<span class="keyword">this</span>,newsDataList,R.layout.data_list);  
+        listView =(ListView) findViewById(R.id.listview);
+        listView.setAdapter(myadapter);
+        listView.setOnItemClickListener(<span class="keyword">new</span> OnItemClickListener(){
+            <span class="annotation">@Override</span>
+            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(AdapterView&lt;?&gt; adapter, View v, <span class="keyword">int</span> position,
+                    <span class="keyword">long</span> id)</span> </span>{
+                System.out.println(v);
+                Item t = (Item)newsDataList.get(position);
+                Intent it = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>,ItemDetail.class) ;
+                it.putExtra(<span class="string">"blog_id"</span>, t.getId());
+                MainActivity.<span class="keyword">this</span>.startActivity(it) ;
+            }
+
+        });
+
+}
+</code></pre><ul>
+<li>ItemDetail.java修改onCreate方法如下:</li>
+</ul>
+<pre><code><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>{
+    <span class="keyword">super</span>.onCreate(savedInstanceState);
+    setContentView(R.layout.detail_main);
+    Intent intent = getIntent();
+    intent.getExtras();
+    Bundle data = intent.getExtras();
+    String id = data.getString(<span class="string">"blog_id"</span>);
+    tv = (TextView) <span class="keyword">this</span>.findViewById(R.id.info);
+    tv.setText(<span class="string">"接收到信息"</span>+id);
+    btn = (Button)<span class="keyword">this</span>.findViewById(R.id.back);
+    btn.setOnClickListener(<span class="keyword">new</span> OnClickListener(){
+
+        <span class="annotation">@Override</span>
+        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>{
+            Intent it = <span class="keyword">new</span> Intent(ItemDetail.<span class="keyword">this</span>,MainActivity.class);
+            ItemDetail.<span class="keyword">this</span>.startActivity(it);
+            ItemDetail.<span class="keyword">this</span>.finish();
+        }});
+}
+</code></pre><ul>
+<li>图示：</li>
+</ul>
+<p><img src="/images/android/android_blog_2_3.png" alt="Alt text"></p>
+<ul>
+<li>详情页：</li>
+</ul>
+<p><img src="/images/android/android_blog_2_4.png" alt="Alt text"></p>
+<p>至此准备工作已经差不多了下面开始整合吧.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android开发/">Android开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/19/android-blog-2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/19/android-blog-2/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/19/android-blog-1/" title="Android应用开发一" itemprop="url">Android应用开发一</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-19T06:35:46.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>   学习Android已经有一段时间了，可是一直没有动手开发实际的应用，今天就简单的实践下使用android来抓取自己的博客在手机上查看。</p>
+<h3 id="知识准备">知识准备</h3><ol>
+<li>使用Jsoup抓取网页<br> Jsoup是一个很好用的java的库可以使用jsoup来抓取网页进行解析，jsoup提供了类似于jquery的元素查找的方法可以很方便解析HTML元素或者内容。详情请参考<a href="http://jsoup.org/" target="_blank" rel="external">jsoup</a>中内容进行参考。简单示例:</li>
+</ol>
+<pre><code>String blog_url = <span class="string">"http://blog.csdn.net/wujindou"</span>;
+Document doc = Jsoup.connect(blog_url).
+userAgent(<span class="string">"Mozilla"</span>).followRedirects(<span class="constant">true</span>).<span class="keyword">timeout</span>(<span class="number">10000</span>).<span class="keyword">get</span>();
+Elements news = doc.select(<span class="string">"#article_list span.link_title a"</span>);
+<span class="keyword">for</span>(Element link: news){
+    String href = link.attr(<span class="string">"href"</span>);
+    String <span class="property">id</span> = href.substring(href.<span class="property">length</span>()-<span class="number">8</span>,href.<span class="property">length</span>());
+    System.out.println(<span class="property">id</span>);
+    System.out.println(link.<span class="type">text</span>());
+}
+</code></pre><ol>
+<li>编写自定义Adapter<br>使用ListView显示列表最简单的方法就是：定义item布局文件,然后使用Map建立组件之间的对应关系<br>比如:</li>
+</ol>
+<ul>
+<li>定义各个item的布局文件data_list.xml<br><img src="/images/android/anroid_blog_1.png" alt="Alt text"></li>
+<li>定义全局的布局文件main.xml<br><img src="/images/android/anroid_blog_2.png" alt="Alt text"></li>
+<li>使用<br><img src="/images/android/anroid_blog_3.png" alt="Alt text"><br>这样写虽然可以但是结构不清晰而且如果数据的内容过多也不方便进行扩展了，所以考虑使用自定的Adapter来封装原始的SimpleAdapter类方便程序的扩展和实现。</li>
+<li>首先编写Item类： </li>
+</ul>
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> Item {
+    <span class="keyword">private</span> <span class="built_in">String</span> id;
+    <span class="keyword">private</span> <span class="built_in">String</span> title;
+    <span class="keyword">public</span> Item(<span class="built_in">String</span> id,<span class="built_in">String</span> title){
+        <span class="keyword">this</span>.id = id ;
+        <span class="keyword">this</span>.title = title;
+    }
+    <span class="keyword">public</span> <span class="built_in">String</span> getId() {
+        <span class="keyword">return</span> id;
+    }
+    <span class="keyword">public</span> <span class="built_in">void</span> setId(<span class="built_in">String</span> id) {
+        <span class="keyword">this</span>.id = id;
+    }
+    <span class="keyword">public</span> <span class="built_in">String</span> getTitle() {
+        <span class="keyword">return</span> title;
+    }
+    <span class="keyword">public</span> <span class="built_in">void</span> setTitle(<span class="built_in">String</span> title) {
+        <span class="keyword">this</span>.title = title;
+    }
+</code></pre><p>}</p>
+<ul>
+<li>自定义Adapter</li>
+</ul>
+<pre><code><span class="keyword">package</span> com.example.blogapp;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> android.content.Context;
+<span class="keyword">import</span> android.view.LayoutInflater;
+<span class="keyword">import</span> android.view.View;
+<span class="keyword">import</span> android.view.ViewGroup;
+<span class="keyword">import</span> android.widget.BaseAdapter;
+<span class="keyword">import</span> android.widget.TextView;
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MySimpleAdapter</span> <span class="keyword">extends</span> <span class="title">BaseAdapter</span></span>{
+<span class="keyword">private</span> Context context;
+<span class="comment">// 父列表视图容器</span>
+<span class="keyword">private</span> LayoutInflater listContainer;
+<span class="comment">// 新闻数据集合</span>
+<span class="keyword">private</span> List&lt;Item&gt; newsDataList;
+<span class="comment">// 列表项布局</span>
+<span class="keyword">private</span> <span class="keyword">int</span> itemViewResource;
+<span class="comment">// 列表项组件集合(title、author、count、date、flag)</span>
+<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ListItemView</span> </span>{ 
+    <span class="keyword">public</span> TextView title;
+    <span class="keyword">public</span> TextView id;
+}
+
+<span class="javadoc">/**
+ * 根据父列表构造列表项适配器，加载列表项界面、读取并设置列表项数据
+ *<span class="javadoctag"> @param</span> context 父列表
+ *<span class="javadoctag"> @param</span> newsDataList 列表项数据
+ *<span class="javadoctag"> @param</span> itemViewResource 列表项界面布局
+ */</span>
+<span class="function"><span class="keyword">public</span> <span class="title">MySimpleAdapter</span><span class="params">(Context context, List&lt;Item&gt; newsDataList, <span class="keyword">int</span> itemViewResource)</span> </span>{
+    <span class="keyword">this</span>.context = context;
+    <span class="keyword">this</span>.listContainer = LayoutInflater.from(context);
+    <span class="keyword">this</span>.itemViewResource = itemViewResource;
+    <span class="keyword">this</span>.newsDataList = newsDataList;
+}
+
+<span class="javadoc">/**
+ * 根据数据条目返回列表项数目
+ */</span>
+<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>{
+    <span class="keyword">return</span> newsDataList.size();
+}
+
+<span class="function"><span class="keyword">public</span> Object <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> arg0)</span> </span>{
+    <span class="keyword">return</span> <span class="keyword">null</span>;
+}
+
+<span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getItemId</span><span class="params">(<span class="keyword">int</span> arg0)</span> </span>{
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+
+<span class="javadoc">/**
+ * 根据位置和相关设定返回列表项
+ *<span class="javadoctag"> @param</span> position 列表项起始位置
+ *<span class="javadoctag"> @param</span> convertView 返回的每一个列表项
+ *<span class="javadoctag"> @param</span> parent 列表项父容器
+ */</span>
+
+<span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>{
+
+    <span class="comment">// 创建自定义列表项组件</span>
+    ListItemView listItemView = <span class="keyword">null</span>;
+
+    <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) {
+
+        <span class="comment">// 获取列表项布局（this.itemViewResource--）</span>
+        convertView = listContainer.inflate(<span class="keyword">this</span>.itemViewResource, <span class="keyword">null</span>);
+        <span class="comment">//初始化列表项各组件(title、author、count、date、flag)</span>
+        listItemView = <span class="keyword">new</span> ListItemView();
+        listItemView.title = (TextView) convertView
+                .findViewById(R.id<span class="number">._</span>title);
+        listItemView.id = (TextView) convertView
+                .findViewById(R.id<span class="number">._</span>id);
+        convertView.setTag(listItemView);
+
+    } <span class="keyword">else</span> {
+        listItemView = (ListItemView) convertView.getTag();
+    }
+
+    <span class="comment">//依次读取列表项数据中的第position项数据赋于news对象</span>
+    Item news = newsDataList.get(position);
+    listItemView.title.setText(news.getTitle());
+    listItemView.id.setText(news.getId());
+    <span class="keyword">return</span> convertView;
+}
+</code></pre><p>}</p>
+<ul>
+<li>data_list.xml</li>
+</ul>
+<pre><code>&lt;?xml <span class="variable">version=</span><span class="string">"1.0"</span> <span class="variable">encoding=</span><span class="string">"utf-8"</span>?&gt;
+    &lt;TableLayout
+        xmlns:<span class="variable">android=</span><span class="string">"http://schemas.android.com/apk/res/android"</span>
+        android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>
+        android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>&gt;
+    &lt;TableRow&gt;
+        &lt;TextView
+            android:<span class="variable">id=</span><span class="string">"@+id/_id"</span>
+            android:<span class="variable">textSize=</span><span class="string">"12px"</span>    
+            android:<span class="variable">gravity=</span><span class="string">"center_vertical"</span>
+            android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+            android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>/&gt;
+        &lt;TextView
+            android:<span class="variable">id=</span><span class="string">"@+id/_title"</span>
+            android:<span class="variable">textSize=</span><span class="string">"12px"</span>
+            android:<span class="variable">gravity=</span><span class="string">"center_vertical"</span>
+            android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+            android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>/&gt;
+    &lt;/TableRow&gt;
+&lt;/TableLayout&gt;
+</code></pre><ul>
+<li>main.xml文件</li>
+</ul>
+<pre><code>&lt;LinearLayout xmlns:<span class="variable">android=</span><span class="string">"http://schemas.android.com/apk/res/android"</span>  
+    xmlns:<span class="variable">tools=</span><span class="string">"http://schemas.android.com/tools"</span>
+    android:<span class="variable">orientation=</span><span class="string">"vertical"</span>
+    android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>  
+    android:<span class="variable">layout_height=</span><span class="string">"fill_parent"</span>  
+    tools:<span class="variable">context=</span><span class="string">".MainActivity"</span> &gt;  
+    &lt;TextView 
+        android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>
+        android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+        android:<span class="variable">text=</span><span class="string">"@string/head"</span>
+        /&gt;
+    &lt;ListView  
+        android:<span class="variable">id=</span><span class="string">"@+id/listview"</span>  
+        android:<span class="variable">layout_width=</span><span class="string">"match_parent"</span>  
+        android:<span class="variable">layout_height=</span><span class="string">"match_parent"</span> &gt;  
+    &lt;/ListView&gt;  
+&lt;/LinearLayout&gt;  
+</code></pre><ul>
+<li>使用MainActivity</li>
+</ul>
+<pre><code><span class="keyword">package</span> com.example.blogapp;
+
+<span class="keyword">import</span> java.util.ArrayList;
+
+<span class="keyword">import</span> java.util.List;
+
+<span class="keyword">import</span> android.app.Activity;
+<span class="keyword">import</span> android.os.Bundle;
+<span class="keyword">import</span> android.view.Menu;
+<span class="keyword">import</span> android.widget.ArrayAdapter;
+<span class="keyword">import</span> android.widget.ListView;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>{
+
+    <span class="keyword">private</span> Item item ;
+    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;Item&gt; newsDataList = <span class="keyword">new</span> ArrayList&lt;Item&gt;();
+    <span class="keyword">private</span> ListView listView ;
+    <span class="keyword">private</span> MySimpleAdapter myadapter ;
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>{
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+        <span class="keyword">this</span>.initNewsData();
+        myadapter = <span class="keyword">new</span> MySimpleAdapter(MainActivity.<span class="keyword">this</span>, newsDataList,R.layout.data_list);  
+      <span class="comment">//  listView.setAdapter(adapter);  </span>
+        listView =(ListView) findViewById(R.id.listview);
+        listView.setAdapter(myadapter);
+
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>{
+        <span class="comment">// Inflate the menu; this adds items to the action bar if it is present.</span>
+        getMenuInflater().inflate(R.menu.main, menu);
+        <span class="keyword">return</span> <span class="keyword">true</span>;
+    }
+    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initNewsData</span><span class="params">()</span> </span>{
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">20</span>; i++) {
+            item = <span class="keyword">new</span> Item(<span class="string">"ID:"</span>+i,<span class="string">"标题"</span>+ i);
+            newsDataList.add(item);
+        }
+    }
+
+}
+</code></pre><p>效果：</p>
+<p><img src="/images/android/anroid_blog_result.png" alt="Alt text"></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android开发/">Android开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/19/android-blog-1/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/19/android-blog-1/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/18/libevent-c-2/" title="Libevent整合protobuf （二）" itemprop="url">Libevent整合protobuf （二）</a>
   </h1>
   <p class="article-author">By
@@ -722,619 +1469,6 @@ message EchoResponse
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hadoop-online/" title="hadoop线上环境搭建" itemprop="url">hadoop线上环境搭建</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:43:29.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。</p>
-<ul>
-<li>调整系统时间</li>
-<li>安装新版jdk</li>
-<li>打通master和slave的ssh连接。</li>
-<li>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)</li>
-<li>启动测试访问，线上环境注意防火墙是否关闭。</li>
-<li>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja</li>
-<li>计划任务<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#load&#25968;&#25454;&#35745;&#21010;&#20219;&#21153;&#65306;2,12,22,32,42,52 *  * * *  /root/hadoop/exec_jar.sh  &#62; /root/hadoop/test/test.txt  2&#62;&#38;1&#10;//exec_jar.sh&#10;#!/bin/sh&#10;JAVA_HOME=/usr/local/java/jdk1.8.0_05&#10;CLASSPATH=.:$JAVA_HOME/lib/tools.jar&#10;PATH=$PATH:$JAVA_HOME/bin&#10;export PATH&#10;java -jar load_file1.jar &#62; /root/hadoop/test/test.txt  2&#62;&#38;1&#10;#mv&#26085;&#24535;&#25991;&#20214;&#31227;&#21160;&#20219;&#21153;:&#10;#0,10,20,30,40,50 * * * * /root/hadoop/mv_file.sh&#10;#!/bin/sh&#10;cp  /root/hadoop/access.log /root/hadoop/access_bak.log&#10;mv  /root/hadoop/access_bak.log /root/hmbbs/</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>其中jar文件是使用java来load数据进hive数据表的,代码参考如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.ResultSet;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"><span class="keyword">import</span> java.sql.Statement;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Calendar;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HiveServer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String driverName =  <span class="string">"org.apache.hadoop.hive.jdbc.HiveDriver"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> SQLException</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class.forName(driverName);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            System.exit(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        java.sql.Connection con =  DriverManager.getConnection( <span class="string">"jdbc:hive://172.16.86.38:10002/default"</span>, <span class="string">"root"</span>, <span class="string">""</span>);</span><br><span class="line">        Statement stmt = con.createStatement();</span><br><span class="line">        Calendar cal = Calendar.getInstance();</span><br><span class="line">        Date d = <span class="keyword">new</span> Date();</span><br><span class="line">        SimpleDateFormat df=<span class="keyword">new</span> SimpleDateFormat(<span class="string">"yy-MM-dd HHmm"</span>);</span><br><span class="line">        String time=df.format(d);</span><br><span class="line">        String arr[]=time.split(<span class="string">" "</span>);</span><br><span class="line">        String date = arr[<span class="number">0</span>];</span><br><span class="line">        String time_now = arr[<span class="number">1</span>];</span><br><span class="line">        System.out.println(time_now);</span><br><span class="line">        String temp = time_now.substring(<span class="number">3</span>,<span class="number">4</span>);</span><br><span class="line">        <span class="keyword">int</span> m = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(Integer.parseInt(temp)&gt;<span class="number">5</span>)&#123;</span><br><span class="line">        	m = <span class="number">5</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">        String sql =<span class="string">"LOAD DATA inpath '"</span>+<span class="string">"hdfs://master:9000/hmbbs/"</span>+date+<span class="string">"/"</span>+time_now.substring(<span class="number">0</span>,<span class="number">3</span>)+m+<span class="string">"00"</span>+<span class="string">"' into table test "</span>;</span><br><span class="line">        ResultSet res = stmt.executeQuery(sql);</span><br><span class="line">       <span class="keyword">while</span> (res.next()) &#123;       </span><br><span class="line">      &#125;	</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>下一步来安装flume文件同步<br>flume的配置稍微有点坑爹，注意复制的时候不要漏了什么字母或者符号了，而且需要配置protobuf2.5也就是删除  rm -f lib/protobuf-java-2.4.1.jar lib/guava-10.0.1.jar(<strong>注意只删除master上的不要删除slave上的</strong>),设置监听目录的权限为777可能也么关系保险起见吧。<br>之后检查配置文件：<br>flume-ng agent -n agent -c conf -f example-conf.properties -Dflume.root.logger=DEBUG,console<br>刚开始一直停顿在:log4j….上解决方法修改/etc/profile加入如下内容：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JAVA_HOME=/usr/local/java/jdk1.8.0_05&#10;export HADOOP_HOME=~/hadoop/hadoop-2.2.0&#10;CLASSPATH=.:$JAVA_HOME/lib/tools.jar&#10;PATH=$PATH:$JAVA_HOME/bin:/usr/local/mysql/bin&#10;export PATH&#10;export JAVA_HOME CLASSPATH PATH</span><br></pre></td></tr></table></figure></p>
-<p>当两边都看到这样的画面的时候表示基本成功了！<br><img src="/images/hadoop/hadoop_online.png" alt="Alt text"><br>下面修改日志收集脚本，需要重新启动nginx.log日志文件<br>在测试的时候发现job老是执行不成功，后来才发现datenode的ResourceManager没有启动成功，无奈重启！<br>start-dfs.sh和star-yarn.sh,<br>鉴于flume的性能问题，所以考虑使用脚本来同步复制文件。<br>问题：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Execution log at: /tmp/root/root_20140526202626_cc12ee2f-<span class="number">81</span>ab-<span class="number">47f</span>2-<span class="number">9</span>d9a-d4f4d1f4b137.log</span><br><span class="line">java.io.FileNotFoundException: File does not exist: hdfs:<span class="comment">//master:9000/root/hadoop/hive/lib/test_kpi.jar</span></span><br></pre></td></tr></table></figure></p>
-<p>问题原因hadoop2.2采用依赖jar，所以应该吧jar文件放到hdfs上去解决方法：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> ./bin/hdfs dfs -mkdir -p /root/hadoop/hive/lib/&#10;./bin/hdfs dfs  -copyFromLocal /root/hadoop/hive/lib/test_kpi.jar /root/hadoop/hive/lib/&#10;./bin/hdfs dfs  -copyFromLocal /root/hadoop/hive/lib/IP2Location.jar /root/hadoop/hive/lib/</span><br></pre></td></tr></table></figure></p>
-<p>原来的由于输入文件数量太少，所以mapreduce使用本地模式来执行，所以当线上环境的时候，老是提示NginxInputFormat.java和IPSeeker找不到，几次尝试发现只有通过绝对路径加进去才可以。。。坑爹到家了<br>```java<br>    String sql1=”add jar /root/hadoop/hadoop-2.2.0/lib/test_kpi.jar”;<br>            String sql2=”add jar /root/hadoop/hadoop-2.2.0/lib/IP2Location.jar”;<br>            String sql=”select sum(dis_url),count(ip),sum(dis_domain) from (select ip,count(distinct url) as dis_url,count(distinct request_domain) as dis_domain from nginx_log where time&gt;=”+start_time+” and time&lt;=”+end_time+”  group by ip) temp”;<br>            //System.out.println(sql1);<br>            System.out.println(sql);<br>            stmt.execute(sql1);<br>            stmt.execute(sql2);</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hadoop-online/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-online/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hadoop-advice/" title="Hadoop线上环境整合须知：&#39;" itemprop="url">Hadoop线上环境整合须知：&#39;</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:41:22.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>﻿由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。<br>调整系统时间<br>安装新版jdk<br>打通master和slave的ssh连接。<br>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)<br>启动测试访问，线上环境注意防火墙是否关闭。<br>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja<br>load数据计划任务：2,12,22,32,42,52 <em>  </em> <em> </em>  /root/hadoop/exec_jar.sh  &gt; /root/hadoop/test/test.txt  2&gt;&amp;1<br>mv日志文件移动任务</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hadoop-advice/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-advice/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hive-java/" title="Hive连接java" itemprop="url">Hive连接java</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:39:46.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h4 id="参考文章">参考<a href="http://blog.csdn.net/wypblog/article/details/17390333" target="_blank" rel="external">文章</a></h4><h4 id="环境整合">环境整合</h4><p>线上的环境已经可以收集日志了，所以考虑使用flume来整合把线上的日志，收集到测试环境中进行处理！<br>编译：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">    javac -classpath /root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/share/hadoop/common/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/common/*:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/*:/root/hadoop/hadoop-2.2.0/share/hadoop/mapreduce/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/mapreduce/*:/root/hadoop/hadoop-2.2.0/contrib/capacity-scheduler/*.jar:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/lib/*:/root/hadoop/IP2Location.jar -d class NginxLogInputFormat.java &#10;    cd class &#10;    jar -cvf test_kpi.jar *&#10;`</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>问题一<br>sbustr StringIndexOutOfBoundsException: String index out of range: -1，执行hive查询的时候总是失败，查看job执行情况，在/tmp/root/下面类似root_20140520131818_880f8b00-3d49-4534-b1ba-783dd55c2c08.log的文件中查看定位问题是因为IP2Location.java执行时候截取字符串的问题。修改IP2Location.java中相关文件定位信息：<br>cat main_bak.log|awk ‘{print $1}’&gt;ip.txt(提取ip地址检查类方法是否正确)<br>每隔十分钟计算pv值：<br>sql语句：</li>
-</ul>
-<ol>
-<li><p>每十分钟(间隔内pv值)</p>
-<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">sum</span>(dis_url)  <span class="keyword">from</span> (<span class="keyword">select</span> ip,<span class="keyword">count</span>(<span class="keyword">distinct</span> url) <span class="keyword">as</span> dis_url <span class="keyword">from</span> test <span class="keyword">where</span> <span class="keyword">time</span>&gt;=<span class="number">1394070000</span> <span class="keyword">and</span> <span class="keyword">time</span>&lt;=<span class="number">1394070600</span> <span class="keyword">group</span> <span class="keyword">by</span> ip) temp;</span>
-</code></pre></li>
-<li>从零点开始到现在pv值</li>
-</ol>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hive-java/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hive-java/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-ip-location/" title="纯真数据库获取location" itemprop="url">纯真数据库获取location</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:38:17.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>参考<a href="http://www.blogjava.net/libin2722/articles/338316.html" target="_blank" rel="external">文章</a><br>写好后打包成jar文件放在hive的lib中配置classpath包含jar所在的文件，可以本地中调试引入jar文件是否成功！之后其他的还是按照hive的NginxLogInputFormat的写jar文件方法！</p>
-<ul>
-<li><p>KPI.java</p>
-<pre><code><span class="preprocessor"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span>
-<span class="preprocessor"><span class="keyword">import</span> java.text.ParseException;</span>
-<span class="preprocessor"><span class="keyword">import</span> java.text.SimpleDateFormat;</span>
-<span class="preprocessor"><span class="keyword">import</span> java.util.Date;</span>
-<span class="preprocessor"><span class="keyword">import</span> java.util.Locale;</span>
-
-<span class="preprocessor"><span class="keyword">import</span> com.eastmoney.IP2Location.IPLocation;</span>
-<span class="preprocessor"><span class="keyword">import</span> com.eastmoney.IP2Location.IPSeeker;</span>
-</code></pre></li>
-</ul>
-<pre><code><span class="keyword">public</span>   class KPI {
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> true_flag = <span class="number">1</span>;
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> false_flag = <span class="number">0</span>;
-    <span class="keyword">private</span> <span class="keyword">String</span> ip;
-    <span class="keyword">private</span> IPLocation ip1  = <span class="keyword">null</span>;
-    <span class="keyword">private</span> Referer referer = <span class="keyword">null</span>;
-    <span class="comment">/*浏览器属性*/</span>
-    <span class="keyword">private</span> <span class="keyword">String</span> system_name;
-    <span class="keyword">private</span> <span class="keyword">String</span> browser_name;
-    <span class="keyword">private</span> <span class="keyword">String</span> browser_version;
-    <span class="keyword">private</span> <span class="keyword">String</span> browser_language;
-    <span class="keyword">private</span> <span class="keyword">String</span> flash_version;
-    <span class="keyword">private</span> <span class="built_in">int</span> set_home_page;
-    <span class="keyword">private</span> <span class="built_in">int</span> disable_javascript;
-    <span class="comment">/*页面加载*/</span>
-    <span class="keyword">private</span> <span class="built_in">int</span> page_load_time;
-    <span class="keyword">private</span> <span class="keyword">String</span> cookie_id;
-    <span class="keyword">private</span> <span class="keyword">String</span> screen_color;
-    <span class="keyword">private</span> <span class="keyword">String</span> screen_resolution;
-    <span class="keyword">private</span> <span class="built_in">int</span> scroll_height;
-    <span class="keyword">private</span> <span class="keyword">String</span> session_id;
-    <span class="keyword">private</span> <span class="built_in">int</span> time_zone;
-    <span class="keyword">private</span> <span class="keyword">String</span> login_user_id;
-    <span class="keyword">private</span> <span class="keyword">String</span> url ;
-    <span class="keyword">private</span> <span class="keyword">String</span> mouse_x;
-    <span class="keyword">private</span> <span class="keyword">String</span> mouse_y;
-    <span class="keyword">private</span> <span class="built_in">int</span> time;
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> getTrue_flag() {
-        <span class="keyword">return</span> true_flag;
-    }
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setTrue_flag(<span class="built_in">int</span> true_flag) {
-        KPI.true_flag = true_flag;
-    }
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> getFalse_flag() {
-        <span class="keyword">return</span> false_flag;
-    }
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setFalse_flag(<span class="built_in">int</span> false_flag) {
-        KPI.false_flag = false_flag;
-    }
-    <span class="keyword">public</span> IPLocation getIp1() {
-        <span class="keyword">return</span> ip1;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setIp1(IPLocation ip1) {
-        <span class="keyword">this</span>.ip1 = ip1;
-    }
-    <span class="keyword">public</span> Referer getReferer() {
-        <span class="keyword">return</span> referer;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setReferer(Referer referer) {
-        <span class="keyword">this</span>.referer = referer;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getBrowser_name() {
-        <span class="keyword">return</span> browser_name;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setBrowser_name(<span class="keyword">String</span> browser_name) {
-        <span class="keyword">this</span>.browser_name = browser_name;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getBrowser_version() {
-        <span class="keyword">return</span> browser_version;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setBrowser_version(<span class="keyword">String</span> browser_version) {
-        <span class="keyword">this</span>.browser_version = browser_version;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getBrowser_language() {
-        <span class="keyword">return</span> browser_language;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setBrowser_language(<span class="keyword">String</span> browser_language) {
-        <span class="keyword">this</span>.browser_language = browser_language;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getFlash_version() {
-        <span class="keyword">return</span> flash_version;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setFlash_version(<span class="keyword">String</span> flash_version) {
-        <span class="keyword">this</span>.flash_version = flash_version;
-    }
-    <span class="keyword">public</span> <span class="built_in">int</span> getSet_home_page() {
-        <span class="keyword">return</span> set_home_page;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setSet_home_page(<span class="built_in">int</span> set_home_page) {
-        <span class="keyword">this</span>.set_home_page = set_home_page;
-    }
-    <span class="keyword">public</span> <span class="built_in">int</span> getDisable_javascript() {
-        <span class="keyword">return</span> disable_javascript;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setDisable_javascript(<span class="built_in">int</span> disable_javascript) {
-        <span class="keyword">this</span>.disable_javascript = disable_javascript;
-    }
-    <span class="keyword">public</span> <span class="built_in">int</span> getPage_load_time() {
-        <span class="keyword">return</span> page_load_time;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setPage_load_time(<span class="built_in">int</span> page_load_time) {
-        <span class="keyword">this</span>.page_load_time = page_load_time;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getCookie_id() {
-        <span class="keyword">return</span> cookie_id;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setCookie_id(<span class="keyword">String</span> cookie_id) {
-        <span class="keyword">this</span>.cookie_id = cookie_id;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getScreen_color() {
-        <span class="keyword">return</span> screen_color;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setScreen_color(<span class="keyword">String</span> screen_color) {
-        <span class="keyword">this</span>.screen_color = screen_color;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getScreen_resolution() {
-        <span class="keyword">return</span> screen_resolution;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setScreen_resolution(<span class="keyword">String</span> screen_resolution) {
-        <span class="keyword">this</span>.screen_resolution = screen_resolution;
-    }
-    <span class="keyword">public</span> <span class="built_in">int</span> getScroll_height() {
-        <span class="keyword">return</span> scroll_height;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setScroll_height(<span class="built_in">int</span> scroll_height) {
-        <span class="keyword">this</span>.scroll_height = scroll_height;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getSession_id() {
-        <span class="keyword">return</span> session_id;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setSession_id(<span class="keyword">String</span> session_id) {
-        <span class="keyword">this</span>.session_id = session_id;
-    }
-    <span class="keyword">public</span> <span class="built_in">int</span> getTime_zone() {
-        <span class="keyword">return</span> time_zone;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setTime_zone(<span class="built_in">int</span> time_zone) {
-        <span class="keyword">this</span>.time_zone = time_zone;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getLogin_user_id() {
-        <span class="keyword">return</span> login_user_id;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setLogin_user_id(<span class="keyword">String</span> login_user_id) {
-        <span class="keyword">this</span>.login_user_id = login_user_id;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getUrl() {
-        <span class="keyword">return</span> url;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setUrl(<span class="keyword">String</span> url) {
-        <span class="keyword">this</span>.url = url;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getMouse_x() {
-        <span class="keyword">return</span> mouse_x;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setMouse_x(<span class="keyword">String</span> mouse_x) {
-        <span class="keyword">this</span>.mouse_x = mouse_x;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getMouse_y() {
-        <span class="keyword">return</span> mouse_y;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setMouse_y(<span class="keyword">String</span> mouse_y) {
-        <span class="keyword">this</span>.mouse_y = mouse_y;
-    }
-    <span class="keyword">public</span> <span class="built_in">int</span> getTime() {
-        <span class="keyword">return</span> time;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setTime(<span class="built_in">int</span> time) {
-        <span class="keyword">this</span>.time = time;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getIp(){
-        <span class="keyword">return</span> <span class="keyword">this</span>.ip;
-    }
-    <span class="keyword">public</span> KPI(<span class="keyword">String</span> <span class="built_in">str</span>[]) <span class="keyword">throws</span> UnsupportedEncodingException, ParseException{
-         <span class="keyword">String</span> ip     = <span class="built_in">str</span>[<span class="number">0</span>];
-         <span class="keyword">String</span> params = <span class="built_in">str</span>[<span class="number">6</span>];
-         <span class="keyword">String</span> s_time = <span class="built_in">str</span>[<span class="number">3</span>];
-         <span class="keyword">String</span> arr[] = <span class="keyword">null</span>;
-        <span class="keyword">try</span> {
-            arr = java.net.URLDecoder.decode(params,<span class="string">"utf-8"</span>).<span class="built_in">split</span>(<span class="string">"&amp;"</span>);
-        } <span class="keyword">catch</span> (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        KPI kpi=<span class="keyword">null</span>;
-        <span class="keyword">this</span>.ip = ip;
-        IPSeeker ipseeker=<span class="keyword">new</span> IPSeeker(<span class="string">"qqwry.dat"</span>,<span class="string">"d:/project"</span>);  
-        <span class="keyword">this</span>.ip1     =ipseeker.getIPLocation(ip);
-        url = arr[<span class="number">1</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        cookie_id=arr[<span class="number">3</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        session_id  = arr[<span class="number">4</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        screen_resolution=arr[<span class="number">5</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        screen_color=arr[<span class="number">6</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        disable_javascript=Integer.parseInt(arr[<span class="number">8</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>]);
-        time_zone=Integer.parseInt(arr[<span class="number">9</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>]);
-        flash_version=arr[<span class="number">10</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        system_name = arr[<span class="number">11</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        browser_name= arr[<span class="number">12</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        <span class="keyword">if</span>(arr[<span class="number">13</span>].<span class="built_in">split</span>(<span class="string">"="</span>).length&gt;<span class="number">1</span>){
-            page_load_time = Integer.parseInt(arr[<span class="number">13</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>]);
-        }
-        <span class="keyword">if</span>(arr[<span class="number">14</span>].<span class="built_in">split</span>(<span class="string">"="</span>).length&gt;<span class="number">1</span>){
-            login_user_id = arr[<span class="number">14</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-        }
-        scroll_height =Integer.parseInt(arr[<span class="number">14</span>].<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>]);
-         SimpleDateFormat df = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"dd/MMM/yyyy:HH:mm:ss"</span>, Locale.US);
-        Date d = df.parse(s_time.substring(<span class="number">1</span>));
-        time = (<span class="built_in">int</span>) (d.getTime()/<span class="number">1000</span>);
-        arr[<span class="number">2</span>]= arr[<span class="number">2</span>].length()!=<span class="number">5</span>?arr[<span class="number">2</span>]:<span class="keyword">null</span>;
-        <span class="keyword">this</span>.referer =<span class="keyword">new</span> Referer(arr[<span class="number">2</span>]); 
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getSystem_name() {
-        <span class="keyword">return</span> system_name;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setSystem_name(<span class="keyword">String</span> system_name) {
-        <span class="keyword">this</span>.system_name = system_name;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> toString(){
-           StringBuilder sb = <span class="keyword">new</span> StringBuilder();
-              sb.<span class="built_in">append</span>(<span class="keyword">this</span>.getCookie_id());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getSession_id());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span> + <span class="keyword">this</span>.getScreen_resolution());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getScreen_color());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getBrowser_language());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getDisable_javascript());    
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getTime_zone());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getFlash_version());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getBrowser_name());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getIp());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getPage_load_time());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getScroll_height());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getSystem_name());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getSet_home_page());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getArea());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getCity());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getCountry());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getIsp());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.ip1.getProvince());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getReferer_url());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getHost());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getPath());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getPort());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getProtocol());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getKey_word());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.referer.getQuery());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getTime());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getMouse_x());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getMouse_y());
-              sb.<span class="built_in">append</span>(<span class="string">"\t"</span>+<span class="keyword">this</span>.getUrl());
-              <span class="keyword">return</span> sb.toString();
-    }
-
-}
-</code></pre><ul>
-<li><p>Referer.java</p>
-<pre><code><span class="preprocessor"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span>
-<span class="preprocessor"><span class="keyword">import</span> java.net.MalformedURLException;</span>
-<span class="preprocessor"><span class="keyword">import</span> java.net.URL;</span>
-</code></pre></li>
-</ul>
-<pre><code><span class="keyword">public</span> class Referer {
-    <span class="keyword">private</span> <span class="keyword">String</span> referer_url;
-    <span class="keyword">private</span> <span class="keyword">String</span> host;
-    <span class="keyword">private</span> <span class="keyword">String</span> path;
-    <span class="keyword">private</span> <span class="keyword">String</span> protocol;
-    <span class="keyword">private</span> <span class="built_in">int</span>    port;
-    <span class="keyword">private</span> <span class="keyword">String</span> key_word;
-    <span class="keyword">private</span> <span class="keyword">String</span> query;
-    <span class="keyword">private</span> URL url;
-    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> local_site =<span class="string">"eastmoney.com"</span>;
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span>[][] search_engines ={
-        {<span class="string">"Google"</span>, <span class="string">"google.com"</span>,<span class="string">"q="</span> },
-        {<span class="string">"Bing"</span>,<span class="string">"bing.com"</span>,<span class="string">"q="</span> },
-        {<span class="string">"Yahoo"</span>,<span class="string">"search.yahoo"</span>,<span class="string">"p"</span> },
-        {<span class="string">"AOL"</span>, <span class="string">"search.aol"</span>, <span class="string">"q="</span> },
-        {<span class="string">"Ask"</span>,  <span class="string">"ask.com"</span>,  <span class="string">"q="</span> },
-        {<span class="string">"Baidu"</span>, <span class="string">"baidu.com"</span>, <span class="string">"wd="</span>},
-        {<span class="string">"360"</span>, <span class="string">"so.com"</span>, <span class="string">"q="</span>},
-        {<span class="string">"Soso"</span>,<span class="string">"soso.com"</span>,<span class="string">"query="</span>}
-    };
-    <span class="keyword">public</span> <span class="keyword">String</span> getPath() {
-        <span class="keyword">return</span> path;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setPath(<span class="keyword">String</span> path) {
-        <span class="keyword">this</span>.path = path;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getProtocol() {
-        <span class="keyword">return</span> protocol;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setProtocol(<span class="keyword">String</span> protocol) {
-        <span class="keyword">this</span>.protocol = protocol;
-    }
-    <span class="keyword">public</span> <span class="built_in">int</span> getPort() {
-        <span class="keyword">return</span> port;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setPort(<span class="built_in">int</span> port) {
-        <span class="keyword">this</span>.port = port;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getQuery() {
-        <span class="keyword">return</span> query;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setQuery(<span class="keyword">String</span> query) {
-        <span class="keyword">this</span>.query = query;
-    }
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">String</span> getLocalSite() {
-        <span class="keyword">return</span> local_site;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getHost(){
-        <span class="keyword">return</span> host;
-    }
-
-
-    <span class="keyword">public</span> <span class="keyword">String</span> getReferer_url() {
-        <span class="keyword">return</span> referer_url;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setReferer_url(<span class="keyword">String</span> referer_url) {
-        <span class="keyword">this</span>.referer_url = referer_url;
-    }
-    <span class="keyword">public</span> <span class="keyword">String</span> getKey_word() {
-        <span class="keyword">return</span> key_word;
-    }
-    <span class="keyword">public</span> <span class="keyword">void</span> setKey_word(<span class="keyword">String</span> key_word) {
-        <span class="keyword">this</span>.key_word = key_word;
-    }
-    <span class="keyword">public</span> Referer(<span class="keyword">String</span> referer_url) <span class="keyword">throws</span> UnsupportedEncodingException{
-        <span class="keyword">if</span>(referer_url!=<span class="keyword">null</span>){
-                <span class="keyword">this</span>.referer_url = referer_url;
-            <span class="keyword">try</span> {
-                <span class="keyword">this</span>.url = <span class="keyword">new</span> URL(referer_url);
-            } <span class="keyword">catch</span> (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            <span class="keyword">if</span>(<span class="keyword">this</span>.url.getHost().contains(local_site)){
-                <span class="keyword">this</span>.protocol = <span class="keyword">this</span>.url.getProtocol();
-                <span class="keyword">this</span>.host     = <span class="keyword">this</span>.url.getHost();
-                <span class="keyword">this</span>.path     = <span class="keyword">this</span>.host+<span class="keyword">this</span>.url.getPath();
-            }
-            <span class="built_in">int</span> i = <span class="number">0</span>;
-            <span class="keyword">String</span> domain = <span class="keyword">this</span>.url.getHost();
-             domain = domain.substring(domain.indexOf(<span class="string">"."</span>)+<span class="number">1</span>,domain.length());
-            <span class="keyword">while</span>(i&lt;=<span class="number">7</span> &amp;&amp; !domain.equals(search_engines[i][<span class="number">1</span>])){
-                    i++;
-            }
-            <span class="keyword">if</span>(i&lt;=<span class="number">7</span>){
-                <span class="keyword">if</span>(<span class="keyword">this</span>.url.getPort() == -<span class="number">1</span>){
-                    <span class="keyword">this</span>.port = <span class="number">80</span>;
-                }
-                <span class="keyword">this</span>.protocol = <span class="keyword">this</span>.url.getProtocol();
-                <span class="keyword">this</span>.host   = <span class="keyword">this</span>.url.getHost();
-                <span class="keyword">this</span>.path     = <span class="keyword">this</span>.host+<span class="keyword">this</span>.url.getPath();
-                <span class="keyword">String</span> query = java.net.URLDecoder.decode(<span class="keyword">this</span>.url.getQuery(),<span class="string">"utf-8"</span>);
-                <span class="keyword">this</span>.query = query;
-                <span class="keyword">String</span> arr[] = query.<span class="built_in">split</span>(<span class="string">"&amp;"</span>);
-                <span class="keyword">for</span>(<span class="keyword">String</span> i1:arr){
-                    <span class="keyword">if</span>(i1.contains(search_engines[i][<span class="number">2</span>])){
-                        <span class="keyword">this</span>.key_word = i1.<span class="built_in">split</span>(<span class="string">"="</span>)[<span class="number">1</span>];
-                    }
-                }
-            }
-        }
-    }
-}
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-ip-location/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-ip-location/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -1356,6 +1490,10 @@ message EchoResponse
 		
 			
 				<li><a href="/tags/大数据/" title="大数据">大数据<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android开发/" title="Android开发">Android开发<sup>4</sup></a></li>
 			
 		
 			
@@ -1393,6 +1531,12 @@ message EchoResponse
           <li>
             
             	<a href="http://wujindou.github.io" target="_blank" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://blog.csdn.net/wujindou" target="_blank" title="CSDN(以前博客)">CSDN(以前博客)</a>
             
           </li>
         

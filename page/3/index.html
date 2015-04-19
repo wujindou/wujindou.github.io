@@ -81,6 +81,453 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/17/big-data-hive/" title="Hive配置信息" itemprop="url">Hive配置信息</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T07:59:50.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <ol>
+<li>首先修改/etc/profile加入HADOOP_HOME参数设置</li>
+<li>修改~/.bashrc文件加入HIVE_HOME参数 </li>
+</ol>
+<pre><code><span class="built_in">export</span> HIVE_HOME=<span class="string">"/usr/local/share/hive"</span>
+<span class="built_in">export</span> PATH=<span class="variable">$HIVE_HOME</span>/bin:<span class="variable">$PATH</span>
+</code></pre><ol>
+<li>使用直接运行Hive即可以连接到数据库了….感觉so easy!</li>
+<li>使用</li>
+</ol>
+<pre><code><span class="operator"><span class="keyword">show</span> <span class="keyword">tables</span>;</span>
+#创建表
+<span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> test(id <span class="built_in">int</span>,name <span class="keyword">string</span>);</span>
+quit;
+#查看
+hdfs dfs -ls / #可以看到dfs中增加了/usr/hive/warehouse/test
+</code></pre><p>5.配置mysql存储元数据</p>
+<ul>
+<li>mysql的安装参考这里<a href="http://www.cnblogs.com/xiongpq/p/3384681.html" target="_blank" rel="external">mysql编译安装</a>的文章</li>
+<li>创建hive和授权</li>
+</ul>
+<pre><code>create database hive;
+grant <span class="literal">all</span> <span class="keyword">on</span> hive.* <span class="keyword">to</span> hive@'%'  identified by 'hive';
+flush privileges;
+hive-site.xml
+<span class="variable">&lt;property&gt;</span>
+  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionURL<span class="variable">&lt;/name&gt;</span>
+  <span class="variable">&lt;value&gt;</span>jdbc:mysql://localhost:<span class="number">3306</span>/hive<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;description&gt;</span>JDBC connect string <span class="keyword">for</span> a JDBC metastore<span class="variable">&lt;/description&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+
+<span class="variable">&lt;property&gt;</span>
+  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionDriverName<span class="variable">&lt;/name&gt;</span>
+  <span class="variable">&lt;value&gt;</span>com.mysql.jdbc.Driver<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;description&gt;</span>Driver class name <span class="keyword">for</span> a JDBC metastore<span class="variable">&lt;/description&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+<span class="variable">&lt;property&gt;</span>
+  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionUserName<span class="variable">&lt;/name&gt;</span>
+  <span class="variable">&lt;value&gt;</span>hive<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;description&gt;</span>username <span class="keyword">to</span> use against metastore database<span class="variable">&lt;/description&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+
+<span class="variable">&lt;property&gt;</span>
+  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionPassword<span class="variable">&lt;/name&gt;</span>
+  <span class="variable">&lt;value&gt;</span>hive<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;description&gt;</span>password <span class="keyword">to</span> use against metastore database<span class="variable">&lt;/description&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+</code></pre><ul>
+<li>由于mysql的源代码安装所以需要修改下my.cnf文件,修改/usr/local/mysql/下的my.cnf添加bind-address= 0.0.0.0之后重启mysql<br>运行创建table命令: create table test (key string);发现报错了<br><img src="/images/hadoop/hive_1.png" alt="Alt text"><br>需要修改hive字符集，alter database hive character set latin1;即可</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-hive/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hive/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-hadoop/" title="Hadoop2.2安装使用" itemprop="url">Hadoop2.2安装使用</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T07:53:44.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="配置ssh">配置ssh</h3><ul>
+<li><p>生成ssh-key 在</p>
+<pre><code>ssh-keygen -t rsa -P <span class="string">""</span>
+<span class="keyword">cd</span> ~/.ssh
+<span class="keyword">cat</span> id_rsa.pub&gt;&gt; authorized_keys
+</code></pre><h3 id="Jdk环境配置">Jdk环境配置</h3><p>Linux开发环境，可以删除系统原来的jdk,查找下载安装最新版本的jdk</p>
+<ul>
+<li>rpm -qa |grep jdk ,rpm -qa | grep gcj,</li>
+<li>删除执行：rpm -e —nodeps xxx</li>
+<li>下载最新版本的JDK.gz解压后放到/usr/local/java目录下</li>
+<li><p>修改配置/etc/profile文件</p>
+<pre><code>JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
+CLASSPATH=.:<span class="variable">$JAVA_HOME</span>/lib/tools.jar
+ PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin
+<span class="built_in">export</span> JAVA_HOME CLASSPATH PATH
+</code></pre></li>
+<li>配置生效后执行java -version 看是否和安装的java版本匹配<h3 id="Hadoop环境配置">Hadoop环境配置</h3></li>
+<li>配置~/.bashrc文件</li>
+</ul>
+</li>
+</ul>
+<pre><code><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
+<span class="built_in">export</span> HADOOP_INSTALL=~/hadoop/hadoop-<span class="number">2.2</span>.<span class="number">0</span>
+<span class="built_in">export</span> HADOOP_MAPRED_HOME=<span class="variable">$HADOOP_INSTALL</span>
+<span class="built_in">export</span> HADOOP_COMMON_HOME=<span class="variable">$HADOOP_INSTALL</span>
+<span class="built_in">export</span> HADOOP_HDFS_HOME=<span class="variable">$HADOOP_INSTALL</span>
+<span class="built_in">export</span> YARN_HOME=<span class="variable">$HADOOP_INSTALL</span>
+<span class="built_in">export</span> HADOOP_COMMON_LIB_NATIVE_DIR=<span class="variable">$HADOOP_INSTALL</span>/lib/native
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/sbin
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/bin
+</code></pre><ul>
+<li>配置core-site.xml </li>
+</ul>
+<pre><code><span class="variable">&lt;configuration&gt;</span>
+   <span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>fs.<span class="keyword">default</span>.name<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>hdfs://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9000</span><span class="variable">&lt;/value&gt;</span>
+    <span class="variable">&lt;final&gt;</span>true<span class="variable">&lt;/final&gt;</span>
+    <span class="variable">&lt;/property&gt;</span>
+    <span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>hadoop.tmp.dir<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>/home/hadoop/hadoop_tmp<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;/property&gt;</span>
+<span class="variable">&lt;/configuration&gt;</span>
+</code></pre><ul>
+<li>配置mapred.xml文件</li>
+</ul>
+<pre><code><span class="tag">&lt;<span class="title">configuration</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span>
+</code></pre><ul>
+<li>配置hdfs-site.xml文件</li>
+</ul>
+<pre><code><span class="tag">&lt;<span class="title">configuration</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+       <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>1<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span>
+</code></pre><ul>
+<li>配置Yarn-site.xml文件（默认就行了）</li>
+<li>启动</li>
+</ul>
+<pre><code>bin/hdfs namenode -format
+显示 ：SHUTDOWN_MSG: Shutting down NameNode at xxx表示成功
+启动namenode:
+sbin/hadoop-daemon<span class="class">.sh</span> start namenode
+sbin/hadoop-daemon<span class="class">.sh</span> start datanode
+启动Manage管理
+sbin/yarn-daemon<span class="class">.sh</span> start resourcemanager
+sbin/yarn-daemon<span class="class">.sh</span> start nodemanager
+测试：jps 通过：ip:<span class="number">50070</span>查看
+测试hdfs:
+mkdir <span class="tag">input</span>
+cd <span class="tag">input</span>
+echo <span class="string">"hello world"</span> &gt; test1<span class="class">.txt</span>
+echo <span class="string">"hello hadoop"</span> &gt; test2<span class="class">.txt</span>
+cd ..
+把input目录中的文件拷贝到dnfs上，并保存在<span class="keyword">in</span>目录中
+bin/hadoop dfs -put input/ /<span class="keyword">in</span>
+bin/hadoop dfs -ls /<span class="keyword">in</span>
+</code></pre><p>一个奇葩的问题<br>测试过程中有个问题让我很是头疼：<br><img src="/images/hadoop/hadoop_1.png" alt="Alt text"><br>最后发现竟然是hostname的问题，无奈不适用localhost之后问题就解决了,还有如果出现了Safe mode的话就使用： bin/hadoop dfsadmin -safemode leave 关闭就可以了。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-hadoop/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件" itemprop="url">Jquery简单封装插件</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T07:13:17.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>由于开发过程是需要使用fancybox，但是已有的结构需要每次都把html代码如下copy到需要添加文档，然后需要每次复制函数。重复早轮子，<br>于是考虑通过jquery进行简单的封装以避免重复的造轮子工作。<br>新建fancybox-widget.js </p>
+<pre><code>$(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
+        <span class="keyword">var</span> tbox =$(
+        <span class="string">'&lt;div id="show-message" style = "display:none"&gt;&lt;div class = "cb50" &gt;&lt;/div&gt;&lt;p class = "t_center ml_25 mr_25 f14 f_red"&gt;&lt;/p&gt;&lt;div class = "cb20" &gt;&lt;/div&gt;&lt;a href = "javascript:$.fancybox.close();" class = "f14 f_white fc t_center" style = "width:100px; height:30px; line-height:30px; display:block; background:#eb2f7b; border-radius:4px;" &gt; 确认 &lt;/a&gt; &lt;/div &gt;&lt;/div&gt;'</span>);
+    $(<span class="string">'body'</span>).prepend(tbox);
+
+    });
+    jQuery.showbox = <span class="function"><span class="keyword">function</span><span class="params">(data,that )</span></span>{
+
+    <span class="keyword">if</span> (data &amp;&amp; data.code == <span class="number">1</span>) {
+    $(<span class="string">"#show-message p"</span>).removeClass(<span class="string">'f_red'</span>);
+    $(<span class="string">"#show-message p"</span>).addClass(<span class="string">'f_green'</span>);
+    } <span class="keyword">else</span> {
+    $(<span class="string">"#show-message p"</span>).removeClass(<span class="string">'f_green'</span>);
+    $(<span class="string">"#show-message p"</span>).addClass(<span class="string">'f_red'</span>);
+    }
+    $(<span class="string">"#show-message p"</span>).html(data.message);
+    <span class="keyword">if</span> (data &amp;&amp; data.code == <span class="number">1</span>) {
+    $.fancybox.open({
+    <span class="string">'href'</span>: <span class="string">"#show-message"</span>,
+    <span class="string">'scrolling'</span>: <span class="string">'no'</span>,
+    <span class="string">'modal'</span>: <span class="literal">true</span>,
+    <span class="string">'closeBtn'</span>: <span class="literal">true</span>,
+    <span class="string">'afterClose'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+    <span class="built_in">window</span>.location.reload();
+    <span class="keyword">return</span>;
+    },
+    <span class="string">'autoSize'</span>: <span class="literal">false</span>,
+    <span class="string">'fitToView'</span>: <span class="literal">false</span>,
+    <span class="string">'width'</span>: <span class="number">300</span>,
+    <span class="string">'height'</span>: <span class="number">200</span>,
+    <span class="string">'padding'</span>: <span class="number">0</span>
+    });
+
+    } <span class="keyword">else</span> {
+    $.fancybox.open({
+    <span class="string">'href'</span>: <span class="string">"#show-message"</span>,
+    <span class="string">'scrolling'</span>: <span class="string">'no'</span>,
+    <span class="string">'modal'</span>: <span class="literal">true</span>,
+    <span class="string">'closeBtn'</span>: <span class="literal">true</span>,
+    <span class="string">'afterClose'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+    <span class="keyword">if</span> (that) {
+    $(that).attr(<span class="string">"data-tag"</span>, <span class="string">'0'</span>);
+    }
+    <span class="keyword">return</span>;
+    },
+    <span class="string">'autoSize'</span>: <span class="literal">false</span>,
+    <span class="string">'fitToView'</span>: <span class="literal">false</span>,
+    <span class="string">'width'</span>: <span class="number">300</span>,
+    <span class="string">'height'</span>: <span class="number">200</span>,
+    <span class="string">'padding'</span>: <span class="number">0</span>
+    });
+    }
+    }
+    在需要使用该插件的页面通过引入该js文件，然后调用也非常的简单： 
+    $(<span class="string">'#show'</span>).click(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+    <span class="keyword">var</span> data = { code: <span class="number">1</span>, message: <span class="string">'hello'</span> };
+    $.showbox(data);
+
+    });
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/js学习笔记/">js学习笔记</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/jquery-tool/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/jquery-tool/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
+<p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
+<pre><code><span class="comment">#! /usr/bin/python </span>
+ <span class="comment">#coding:utf-8</span>
+<span class="keyword">import</span> os,sys,re
+project_dir = <span class="string">"d:/project/aushop/application/views/show/ringsign"</span>
+php_dir =<span class="string">"d:/project/aushop/application/library/Active/RingSign"</span>
+<span class="function"><span class="keyword">def</span> <span class="title">replaceFile</span><span class="params">(infile,name)</span>:</span>
+<span class="keyword">if</span> os.path.isfile(project_dir+name+<span class="string">".phtml"</span>):
+<span class="keyword">print</span> <span class="string">u'文件已经存在'</span>
+sys.exit(<span class="number">1</span>)
+<span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(infile):
+<span class="keyword">print</span> <span class="string">u'文件不存在'</span>
+sys.exit(<span class="number">1</span>)
+<span class="keyword">try</span>:
+infile = open(infile, <span class="string">"r"</span>)
+outfile = open(project_dir+name+<span class="string">".phtml"</span>, <span class="string">"wb"</span>)
+<span class="keyword">except</span> IOError:
+<span class="keyword">print</span> <span class="string">"The file don't exist, Please double check!"</span>
+exit()
+all_the_lines = infile.readlines()
+infile.seek(<span class="number">0</span>)
+<span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/python-auto-tool/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/python-auto-tool/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/17/my-new-post/" title="Git重新上手" itemprop="url">Git重新上手</a>
   </h1>
   <p class="article-author">By
@@ -169,6 +616,10 @@
 			
 		
 			
+				<li><a href="/tags/Android开发/" title="Android开发">Android开发<sup>4</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
 			
 		
@@ -203,6 +654,12 @@
           <li>
             
             	<a href="http://wujindou.github.io" target="_blank" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://blog.csdn.net/wujindou" target="_blank" title="CSDN(以前博客)">CSDN(以前博客)</a>
             
           </li>
         

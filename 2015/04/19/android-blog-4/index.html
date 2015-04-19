@@ -4,31 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Jquery简单封装插件 | Jackie&#39;s Blog</title>
+    <title>Android应用开发四 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="由于开发过程是需要使用fancybox，但是已有的结构需要每次都把html代码如下copy到需要添加文档，然后需要每次复制函数。重复早轮子，于是考虑通过jquery进行简单的封装以避免重复的造轮子工作。新建fancybox-widget.js 
-$(function(){
-        var tbox =$(
-        &apos;&amp;lt;div id=&quot;show-message&quot; style =">
+    <meta name="description" content="首先关于上次遇到的问题，就是使用jsoup抓取网页时候一直报错，后来查找发现不能直接在Android的MainActivity线程中直接调用http请求，所以可以通过重新启动一个线程来完成，同时需要进行多线程之间的通讯使用Message和Handler类实现进程之间的通信传送数据。代码参考
+mHandler = new Handler() {    
+            @Override">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jquery简单封装插件">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/jquery-tool/index.html">
+<meta property="og:title" content="Android应用开发四">
+<meta property="og:url" content="http://yoursite.com/2015/04/19/android-blog-4/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="由于开发过程是需要使用fancybox，但是已有的结构需要每次都把html代码如下copy到需要添加文档，然后需要每次复制函数。重复早轮子，于是考虑通过jquery进行简单的封装以避免重复的造轮子工作。新建fancybox-widget.js 
-$(function(){
-        var tbox =$(
-        &apos;&amp;lt;div id=&quot;show-message&quot; style =">
+<meta property="og:description" content="首先关于上次遇到的问题，就是使用jsoup抓取网页时候一直报错，后来查找发现不能直接在Android的MainActivity线程中直接调用http请求，所以可以通过重新启动一个线程来完成，同时需要进行多线程之间的通讯使用Message和Handler类实现进程之间的通信传送数据。代码参考
+mHandler = new Handler() {    
+            @Override">
+<meta property="og:image" content="/images/android/android_blog_4_1.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jquery简单封装插件">
-<meta name="twitter:description" content="由于开发过程是需要使用fancybox，但是已有的结构需要每次都把html代码如下copy到需要添加文档，然后需要每次复制函数。重复早轮子，于是考虑通过jquery进行简单的封装以避免重复的造轮子工作。新建fancybox-widget.js 
-$(function(){
-        var tbox =$(
-        &apos;&amp;lt;div id=&quot;show-message&quot; style =">
+<meta name="twitter:title" content="Android应用开发四">
+<meta name="twitter:description" content="首先关于上次遇到的问题，就是使用jsoup抓取网页时候一直报错，后来查找发现不能直接在Android的MainActivity线程中直接调用http请求，所以可以通过重新启动一个线程来完成，同时需要进行多线程之间的通讯使用Message和Handler类实现进程之间的通信传送数据。代码参考
+mHandler = new Handler() {    
+            @Override">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -88,14 +86,14 @@ $(function(){
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件" itemprop="url">Jquery简单封装插件</a>
+      <a href="/2015/04/19/android-blog-4/" title="Android应用开发四" itemprop="url">Android应用开发四</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T07:13:17.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    <time datetime="2015-04-19T06:46:10.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
     
   </p>
 </header>
@@ -108,67 +106,60 @@ $(function(){
 		
 		</div>
 		
-		<p>由于开发过程是需要使用fancybox，但是已有的结构需要每次都把html代码如下copy到需要添加文档，然后需要每次复制函数。重复早轮子，<br>于是考虑通过jquery进行简单的封装以避免重复的造轮子工作。<br>新建fancybox-widget.js </p>
-<pre><code>$(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
-        <span class="keyword">var</span> tbox =$(
-        <span class="string">'&lt;div id="show-message" style = "display:none"&gt;&lt;div class = "cb50" &gt;&lt;/div&gt;&lt;p class = "t_center ml_25 mr_25 f14 f_red"&gt;&lt;/p&gt;&lt;div class = "cb20" &gt;&lt;/div&gt;&lt;a href = "javascript:$.fancybox.close();" class = "f14 f_white fc t_center" style = "width:100px; height:30px; line-height:30px; display:block; background:#eb2f7b; border-radius:4px;" &gt; 确认 &lt;/a&gt; &lt;/div &gt;&lt;/div&gt;'</span>);
-    $(<span class="string">'body'</span>).prepend(tbox);
+		<p>首先关于上次遇到的问题，就是使用jsoup抓取网页时候一直报错，后来查找发现<br>不能直接在Android的MainActivity线程中直接调用http请求，所以可以通过重新启动一个线程<br>来完成，同时需要进行多线程之间的通讯使用Message和Handler类实现进程之间的通信传送数据。代码参考</p>
+<pre><code>mHandler = <span class="keyword">new</span> Handler() {    
+            @Override    
+            <span class="keyword">public</span> <span class="keyword">void</span> handleMessage(Message msg) {    
+                myadapter=<span class="keyword">new</span>  MySimpleAdapter(MainActivity.<span class="keyword">this</span>,newsDataList,R.layout.data_list);
+                listView.setAdapter(myadapter);  
 
-    });
-    jQuery.showbox = <span class="function"><span class="keyword">function</span><span class="params">(data,that )</span></span>{
+                listView.setOnItemClickListener(<span class="keyword">new</span> OnItemClickListener(){
 
-    <span class="keyword">if</span> (data &amp;&amp; data.code == <span class="number">1</span>) {
-    $(<span class="string">"#show-message p"</span>).removeClass(<span class="string">'f_red'</span>);
-    $(<span class="string">"#show-message p"</span>).addClass(<span class="string">'f_green'</span>);
-    } <span class="keyword">else</span> {
-    $(<span class="string">"#show-message p"</span>).removeClass(<span class="string">'f_green'</span>);
-    $(<span class="string">"#show-message p"</span>).addClass(<span class="string">'f_red'</span>);
-    }
-    $(<span class="string">"#show-message p"</span>).html(data.message);
-    <span class="keyword">if</span> (data &amp;&amp; data.code == <span class="number">1</span>) {
-    $.fancybox.open({
-    <span class="string">'href'</span>: <span class="string">"#show-message"</span>,
-    <span class="string">'scrolling'</span>: <span class="string">'no'</span>,
-    <span class="string">'modal'</span>: <span class="literal">true</span>,
-    <span class="string">'closeBtn'</span>: <span class="literal">true</span>,
-    <span class="string">'afterClose'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
-    <span class="built_in">window</span>.location.reload();
-    <span class="keyword">return</span>;
-    },
-    <span class="string">'autoSize'</span>: <span class="literal">false</span>,
-    <span class="string">'fitToView'</span>: <span class="literal">false</span>,
-    <span class="string">'width'</span>: <span class="number">300</span>,
-    <span class="string">'height'</span>: <span class="number">200</span>,
-    <span class="string">'padding'</span>: <span class="number">0</span>
-    });
+                    @Override
+                    <span class="keyword">public</span> <span class="keyword">void</span> onItemClick(AdapterView&lt;?&gt; adapter, View v, <span class="built_in">int</span> position,
+                            <span class="keyword">long</span> id) {
+                        System.out.<span class="built_in">println</span>(v);
+                        Item t = (Item)newsDataList.<span class="built_in">get</span>(position);
+                        Intent it = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>,ItemDetail.class) ;
+                        it.putExtra(<span class="string">"blog_id"</span>, t.getId());
+                        MainActivity.<span class="keyword">this</span>.startActivity(it) ;
 
-    } <span class="keyword">else</span> {
-    $.fancybox.open({
-    <span class="string">'href'</span>: <span class="string">"#show-message"</span>,
-    <span class="string">'scrolling'</span>: <span class="string">'no'</span>,
-    <span class="string">'modal'</span>: <span class="literal">true</span>,
-    <span class="string">'closeBtn'</span>: <span class="literal">true</span>,
-    <span class="string">'afterClose'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
-    <span class="keyword">if</span> (that) {
-    $(that).attr(<span class="string">"data-tag"</span>, <span class="string">'0'</span>);
-    }
-    <span class="keyword">return</span>;
-    },
-    <span class="string">'autoSize'</span>: <span class="literal">false</span>,
-    <span class="string">'fitToView'</span>: <span class="literal">false</span>,
-    <span class="string">'width'</span>: <span class="number">300</span>,
-    <span class="string">'height'</span>: <span class="number">200</span>,
-    <span class="string">'padding'</span>: <span class="number">0</span>
-    });
-    }
-    }
-    在需要使用该插件的页面通过引入该js文件，然后调用也非常的简单： 
-    $(<span class="string">'#show'</span>).click(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
-    <span class="keyword">var</span> data = { code: <span class="number">1</span>, message: <span class="string">'hello'</span> };
-    $.showbox(data);
+                    }
 
-    });
-</code></pre>  
+                });
+            }    
+        };    
+        <span class="keyword">new</span> Thread(runnable).start();
+Runnable runnable = <span class="keyword">new</span> Runnable(){
+@Override
+<span class="keyword">public</span> <span class="keyword">void</span> run() {
+    <span class="keyword">String</span> blog_url = <span class="string">"http://blog.csdn.net/xxxx"</span>;
+    Document doc =<span class="keyword">null</span>;
+    <span class="keyword">try</span> {
+        doc = Jsoup.connect(blog_url).userAgent(<span class="string">"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36"</span>).timeout(<span class="number">5000</span>).<span class="built_in">get</span>();
+    } <span class="keyword">catch</span> (IOException e) {
+        e.printStackTrace();
+    }
+    <span class="keyword">if</span>(doc !=<span class="keyword">null</span>){
+        Elements news = doc.select(<span class="string">"#article_list span.link_title a"</span>);
+        List&lt;Item&gt; blogs = <span class="keyword">new</span> ArrayList&lt;Item&gt;();
+        <span class="keyword">for</span>(Element link: news){
+            <span class="keyword">String</span> href = link.attr(<span class="string">"href"</span>);
+
+            <span class="keyword">String</span> id = href.substring(href.length()-<span class="number">8</span>,href.length());
+            Log.i(<span class="string">"id="</span>,id);
+            Item item = <span class="keyword">new</span> Item(id,link.<span class="built_in">text</span>());
+            newsDataList.<span class="built_in">add</span>(item);
+        }
+         mHandler.sendEmptyMessage(<span class="number">0</span>); 
+    }<span class="keyword">else</span>{
+        Log.i(<span class="string">"data="</span>, <span class="keyword">String</span>.valueOf(<span class="number">1234124</span>));
+    }
+}
+};
+</code></pre><p>然后把以前的进入主页面的Splash程序和使用ActionBar创建下拉菜单的操作也加进去,这个练手程序就到此为止了。上张图片吧。。<br><img src="/images/android/android_blog_4_1.png" alt="Alt text"></p>
+<p><a href="http://pan.baidu.com/s/1jGA3oSA" target="_blank" rel="external">代码下载</a></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -176,7 +167,7 @@ $(function(){
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/js学习笔记/">js学习笔记</a>
+  <span></span> <a href="/tags/Android开发/">Android开发</a>
   </div>
 
 </div>
@@ -185,7 +176,7 @@ $(function(){
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/jquery-tool/" data-title="Jquery简单封装插件 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/19/android-blog-4/" data-title="Android应用开发四 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -198,19 +189,11 @@ $(function(){
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/17/big-data-hadoop/" title="Hadoop2.2安装使用">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Hadoop2.2安装使用</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/17/python-auto-tool/"  title="python自动化工具">
+<a href="/2015/04/19/android-blog-3/"  title="Android应用开发三">
  <strong>下一篇：</strong><br/> 
- <span>python自动化工具
+ <span>Android应用开发三
 </span>
 </a>
 </div>
@@ -219,7 +202,7 @@ $(function(){
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/jquery-tool/" data-title="Jquery简单封装插件" data-url="http://yoursite.com/2015/04/17/jquery-tool/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/19/android-blog-4/" data-title="Android应用开发四" data-url="http://yoursite.com/2015/04/19/android-blog-4/"></div>
 </section>
 
 
