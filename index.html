@@ -144,58 +144,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/17/collective-intelligence/" title="&#39;collective-intelligence&#39;" itemprop="url">&#39;collective-intelligence&#39;</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-17T07:21:07.000Z" itemprop="datePublished"> 发表于 2015-05-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/17/collective-intelligence/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/17/collective-intelligence/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/04/19/android-blog-4/" title="Android应用开发四" itemprop="url">Android应用开发四</a>
   </h1>
   <p class="article-author">By
@@ -1449,6 +1397,65 @@ message EchoResponse
 	
 	  	<span></span>
 		<a href="/2015/04/17/php-learn/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/php-learn/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/php-yaf/" title="yaf学习笔记" itemprop="url">yaf学习笔记</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:48:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>1.按照官网给的信息搭建环境，总是报告404错误后来修改<br>default.conf<br>if (!-e $request_filename) {<br>rewrite ^/(.*)  /public/index.php/$1 last;<br>}<br>总算可以访问了。yaf文件找不到问题：<br> 参考官方文档有很多问题：<br>首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample<br>设置： index.php</p>
+<p>&lt;?php<br>define(“APP<em>PATH”, realpath(dirname(<em>_FILE</em></em>) . ‘/../‘)); /<em> 指向public的上一级 </em>/<br>$app = new Yaf_Application(APP_PATH . “/application/conf/application.ini”);<br>$app-&gt;run();<br>设置：application.ini<br>application.directory=APP_PATH “/application/“</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/php/">php</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/php-yaf/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/php-yaf/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 

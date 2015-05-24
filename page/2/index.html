@@ -81,65 +81,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/php-yaf/" title="yaf学习笔记" itemprop="url">yaf学习笔记</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:48:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>1.按照官网给的信息搭建环境，总是报告404错误后来修改<br>default.conf<br>if (!-e $request_filename) {<br>rewrite ^/(.*)  /public/index.php/$1 last;<br>}<br>总算可以访问了。yaf文件找不到问题：<br> 参考官方文档有很多问题：<br>首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample<br>设置： index.php</p>
-<p>&lt;?php<br>define(“APP<em>PATH”, realpath(dirname(<em>_FILE</em></em>) . ‘/../‘)); /<em> 指向public的上一级 </em>/<br>$app = new Yaf_Application(APP_PATH . “/application/conf/application.ini”);<br>$app-&gt;run();<br>设置：application.ini<br>application.directory=APP_PATH “/application/“</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/php/">php</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/php-yaf/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/php-yaf/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/04/17/big-data-flume-kafaka/" title="Flume 1.4整合kafka消息系统" itemprop="url">Flume 1.4整合kafka消息系统</a>
   </h1>
   <p class="article-author">By
@@ -1393,6 +1334,106 @@ scp authorized_keys <span class="string">slave01:</span><span class="regexp">/ro
 	
 	  	<span></span>
 		<a href="/2015/04/17/big-data-hadoop-cluster/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-cluster/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-sqoop/" title="Sqoop配置" itemprop="url">Sqoop配置</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:17:28.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <ul>
+<li>首先从<a href="http://apache.dataguru.cn/sqoop/1.4.4/" target="_blank" rel="external">官网</a>下载对应的sqoop版本。</li>
+<li>配置 tar -zxvf 下载包</li>
+<li>复制mysql-connector-5.x.jar到sqoop的lib目录下</li>
+<li>mysql授权 </li>
+</ul>
+<pre><code><span class="operator"><span class="keyword">create</span> <span class="keyword">database</span> workflow;</span>
+<span class="operator"><span class="keyword">grant</span> <span class="keyword">all</span> <span class="keyword">on</span> workflow.* <span class="keyword">to</span> sqoop_user@<span class="string">'localhost'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'123456'</span>;</span>
+<span class="operator"><span class="keyword">flush</span> privilges;</span>
+</code></pre><ul>
+<li>测试： </li>
+</ul>
+<pre><code><span class="comment">bin/sqoop</span> <span class="comment">list</span><span class="literal">-</span><span class="comment">tables</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">connect</span> <span class="comment">jdbc:mysql://localhost:3306/workflow</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">username</span> <span class="comment">sqoop_user</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">password</span> <span class="comment">123456</span>
+</code></pre><p>如果成功会显示workflow中的所有表：<br><img src="/images/hadoop/sqoop.png" alt="Alt text"><br>本想把hive中的数据表导入到mysql中但是发现通过load的数据，而且自定义了inputformat所以格式上有很大不同于是<br>－　创建了另一个临时表</p>
+<pre><code> <span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> kpilog2 (
+remote_addr <span class="keyword">STRING</span>, 
+remote_user <span class="keyword">STRING</span>,
+time_local <span class="keyword">STRING</span>,
+request <span class="keyword">STRING</span>,
+<span class="keyword">status</span> <span class="built_in">INT</span>,
+<span class="keyword">size</span> <span class="built_in">INT</span>,
+referer <span class="keyword">STRING</span>,
+http_user_agent <span class="keyword">STRING</span>);</span>
+</code></pre><p>－　插入数据</p>
+<pre><code><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> kpilog2 <span class="keyword">select</span> *<span class="keyword">from</span> kpilog1;</span>
+</code></pre><ul>
+<li>创建hive_to_mysql的数据表（mysql中)</li>
+</ul>
+<pre><code>    <span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`hive_to_mysql`</span> (
+  <span class="string">`remote_addr`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
+  <span class="string">`remote_user`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
+  <span class="string">`time_local`</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
+  <span class="string">`request`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
+  <span class="string">`status`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
+  <span class="string">`size`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
+  <span class="string">`referer`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,
+  <span class="string">`http_user_agent`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>
+) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span>
+</code></pre><ul>
+<li>执行导入</li>
+</ul>
+<pre><code><span class="string">.</span><span class="comment">/bin/sqoop</span> <span class="comment">export</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">connect</span> <span class="comment">jdbc:mysql://localhost:3306/workflow</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">username</span> <span class="comment">sqoop_user</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">password</span> <span class="comment">123456</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">table</span> <span class="comment">hive_to_mysql</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">export</span><span class="literal">-</span><span class="comment">dir</span> <span class="comment">/user/hive/warehouse/kpilog2</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">input</span><span class="literal">-</span><span class="comment">fields</span><span class="literal">-</span><span class="comment">terminated</span><span class="literal">-</span><span class="comment">by</span> <span class="comment">'\001'</span>
+</code></pre><p>参考文章：<br>1.<a href="http://shiyanjun.cn/archives/624.html" target="_blank" rel="external">Sqoop-1.4.4工具import和export使用详解</a>;</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-sqoop/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-sqoop/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
