@@ -81,6 +81,121 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/05/24/scrapy/" title="Scrapy����ץȡ" itemprop="url">Scrapy����ץȡ</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-24T13:01:01.000Z" itemprop="datePublished"> 发表于 2015-05-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>   �������ݷ�����Ҫʹ��twitter�������ݷ��������ǿ���ʹ��python���������ܴTwitter������ץȡ���ܣ�����scrapy��ʹ�úͽ̳�<a href="http://doc.scrapy.org/en/latest/intro/tutorial.html" target="_blank" rel="external">�ο�</a><br>  Scrapy�Ļ�����ο��̳�ʹ��</p>
+<pre><code>pip <span class="keyword">install</span> scrapy 
+</code></pre><p> ���֮���ο��̳̽���һ��startup����Ŀ���м�ȴ����</p>
+<pre><code><span class="constant">ImportError</span><span class="symbol">:</span> <span class="constant">Error</span> loading object <span class="string">'scrapy.core.downloader.handlers.s3.S3DownloadHandler'</span><span class="symbol">:</span> <span class="constant">No</span> <span class="class"><span class="keyword">module</span> <span class="title">named</span> <span class="title">win32api</span></span>
+����ȷʵpywin32���˰����������ý��򷽷���
+</code></pre><p>����������ַ������Ӧ��pywin32��win32��������python��װĿ¼��Scripts��ִ��:<br>��  easy_install.exe  easy_install.exe pywin32-219.win32-py2.7.exe<br>���ɺ���������scrapy crawl dmoz���гɹ���</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/��������/">��������</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/24/scrapy/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/24/scrapy/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/17/collective-intelligence/" title="&#39;collective-intelligence&#39;" itemprop="url">&#39;collective-intelligence&#39;</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-17T07:21:07.000Z" itemprop="datePublished"> 发表于 2015-05-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/17/collective-intelligence/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/17/collective-intelligence/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/19/android-blog-4/" title="Android应用开发四" itemprop="url">Android应用开发四</a>
   </h1>
   <p class="article-author">By
@@ -1347,128 +1462,6 @@ message EchoResponse
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/php-yaf/" title="yaf学习笔记" itemprop="url">yaf学习笔记</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:48:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>1.按照官网给的信息搭建环境，总是报告404错误后来修改<br>default.conf<br>if (!-e $request_filename) {<br>rewrite ^/(.*)  /public/index.php/$1 last;<br>}<br>总算可以访问了。yaf文件找不到问题：<br> 参考官方文档有很多问题：<br>首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample<br>设置： index.php</p>
-<p>&lt;?php<br>define(“APP<em>PATH”, realpath(dirname(<em>_FILE</em></em>) . ‘/../‘)); /<em> 指向public的上一级 </em>/<br>$app = new Yaf_Application(APP_PATH . “/application/conf/application.ini”);<br>$app-&gt;run();<br>设置：application.ini<br>application.directory=APP_PATH “/application/“</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/php/">php</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/php-yaf/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/php-yaf/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-flume-kafaka/" title="Flume 1.4整合kafka消息系统" itemprop="url">Flume 1.4整合kafka消息系统</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:45:58.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：<br>简单记录下自己整合的过程吧：参考<a href="http://www.tuicool.com/articles/mMrQnu7" target="_blank" rel="external">文章</a>里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。</p>
-<ul>
-<li>复制插件下的lib下的所有jar文件到flume/lib下</li>
-<li>复制插件下的package下的flumeng-kafka-plugin.jar文件到flume/lib下</li>
-<li>修改插件下的flume-conf.properties文件，并复制到flume/conf下<br>启动：<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/flume-ng agent --conf conf --conf-file conf/flume-conf<span class="class">.properties</span> --name producer -Dflume<span class="class">.root</span><span class="class">.logger</span>=INFO,console</span><br><span class="line"><span class="comment">//启动zookeeper</span></span><br><span class="line">bin/zookeeper-server-start<span class="class">.sh</span> config/zookeeper<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动kafka</span></span><br><span class="line">bin/kafka-server-start<span class="class">.sh</span> config/server<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动consumer</span></span><br><span class="line">bin/kafka-console-consumer<span class="class">.sh</span> --zookeeper localhost:<span class="number">2181</span> --topic test2 --from-beginning</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-flume-kafaka/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-flume-kafaka/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -1518,6 +1511,10 @@ message EchoResponse
 		
 			
 				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/��������/" title="��������">��������<sup>1</sup></a></li>
 			
 		
 		</ul>
