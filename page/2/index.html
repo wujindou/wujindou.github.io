@@ -1,158 +1,98 @@
-
- <!DOCTYPE HTML>
-<html lang="zh-CN">
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   
-    <title>Jackie&#39;s Blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="Jackie wu">
-    
+  <title>第 2 页 | Jackie&#39;s Blog</title>
+  <meta name="author" content="Jackie wu">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    
-    <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jackie's Blog">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
-<meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jackie's Blog">
-<meta name="twitter:description">
+  
+  <meta property="og:site_name" content="Jackie&#39;s Blog"/>
 
-    
-    <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
-    
-    
-    <link rel="icon" href="/img/favicon.ico">
-    
-    
-    <link rel="apple-touch-icon" href="/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
 </head>
 
-  <body>
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Jackie&#39;s Blog</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
     <header>
       
-<div>
-		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="Jackie&#39;s Blog" title="Jackie&#39;s Blog"/></a>
-			</div>
-			
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/archives">归档</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
-						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
-						<input type="hidden" name="q" value="site:yoursite.com">
-					</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
-    </header>
-    <div id="container">
-      <div id="main">
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:48:57.000Z"><a href="/2015/04/17/php-yaf/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/php-yaf/">yaf学习笔记</a></h1>
+  
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/php-yaf/" title="yaf学习笔记" itemprop="url">yaf学习笔记</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:48:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
+    </header>
+    <div class="entry">
+      
         <p>1.按照官网给的信息搭建环境，总是报告404错误后来修改<br>default.conf<br>if (!-e $request_filename) {<br>rewrite ^/(.*)  /public/index.php/$1 last;<br>}<br>总算可以访问了。yaf文件找不到问题：<br> 参考官方文档有很多问题：<br>首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample<br>设置： index.php</p>
 <p>&lt;?php<br>define(“APP<em>PATH”, realpath(dirname(<em>_FILE</em></em>) . ‘/../‘)); /<em> 指向public的上一级 </em>/<br>$app = new Yaf_Application(APP_PATH . “/application/conf/application.ini”);<br>$app-&gt;run();<br>设置：application.ini<br>application.directory=APP_PATH “/application/“</p>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/php/">php</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/php-yaf/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/php-yaf/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-flume-kafaka/" title="Flume 1.4整合kafka消息系统" itemprop="url">Flume 1.4整合kafka消息系统</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:45:58.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:45:58.000Z"><a href="/2015/04/17/big-data-flume-kafaka/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-flume-kafaka/">Flume 1.4整合kafka消息系统</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p>Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：<br>简单记录下自己整合的过程吧：参考<a href="http://www.tuicool.com/articles/mMrQnu7" target="_blank" rel="external">文章</a>里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。</p>
 <ul>
 <li>复制插件下的lib下的所有jar文件到flume/lib下</li>
@@ -160,62 +100,37 @@
 <li>修改插件下的flume-conf.properties文件，并复制到flume/conf下<br>启动：<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/flume-ng agent --conf conf --conf-file conf/flume-conf<span class="class">.properties</span> --name producer -Dflume<span class="class">.root</span><span class="class">.logger</span>=INFO,console</span><br><span class="line"><span class="comment">//启动zookeeper</span></span><br><span class="line">bin/zookeeper-server-start<span class="class">.sh</span> config/zookeeper<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动kafka</span></span><br><span class="line">bin/kafka-server-start<span class="class">.sh</span> config/server<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动consumer</span></span><br><span class="line">bin/kafka-console-consumer<span class="class">.sh</span> --zookeeper localhost:<span class="number">2181</span> --topic test2 --from-beginning</span><br></pre></td></tr></table></figure></li>
 </ul>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-flume-kafaka/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-flume-kafaka/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hadoop-online/" title="hadoop线上环境搭建" itemprop="url">hadoop线上环境搭建</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:43:29.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:43:29.000Z"><a href="/2015/04/17/big-data-hadoop-online/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-hadoop-online/">hadoop线上环境搭建</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p>由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。</p>
 <ul>
 <li>调整系统时间</li>
@@ -233,120 +148,70 @@
 <p>问题原因hadoop2.2采用依赖jar，所以应该吧jar文件放到hdfs上去解决方法：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> ./bin/hdfs dfs -mkdir -p /root/hadoop/hive/lib/&#10;./bin/hdfs dfs  -copyFromLocal /root/hadoop/hive/lib/test_kpi.jar /root/hadoop/hive/lib/&#10;./bin/hdfs dfs  -copyFromLocal /root/hadoop/hive/lib/IP2Location.jar /root/hadoop/hive/lib/</span><br></pre></td></tr></table></figure></p>
 <p>原来的由于输入文件数量太少，所以mapreduce使用本地模式来执行，所以当线上环境的时候，老是提示NginxInputFormat.java和IPSeeker找不到，几次尝试发现只有通过绝对路径加进去才可以。。。坑爹到家了<br>```java<br>    String sql1=”add jar /root/hadoop/hadoop-2.2.0/lib/test_kpi.jar”;<br>            String sql2=”add jar /root/hadoop/hadoop-2.2.0/lib/IP2Location.jar”;<br>            String sql=”select sum(dis_url),count(ip),sum(dis_domain) from (select ip,count(distinct url) as dis_url,count(distinct request_domain) as dis_domain from nginx_log where time&gt;=”+start_time+” and time&lt;=”+end_time+”  group by ip) temp”;<br>            //System.out.println(sql1);<br>            System.out.println(sql);<br>            stmt.execute(sql1);<br>            stmt.execute(sql2);</p>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hadoop-online/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-online/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hadoop-advice/" title="Hadoop线上环境整合须知：&#39;" itemprop="url">Hadoop线上环境整合须知：&#39;</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:41:22.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:41:22.000Z"><a href="/2015/04/17/big-data-hadoop-advice/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-hadoop-advice/">Hadoop线上环境整合须知：&#39;</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p>﻿由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。<br>调整系统时间<br>安装新版jdk<br>打通master和slave的ssh连接。<br>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)<br>启动测试访问，线上环境注意防火墙是否关闭。<br>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja<br>load数据计划任务：2,12,22,32,42,52 <em>  </em> <em> </em>  /root/hadoop/exec_jar.sh  &gt; /root/hadoop/test/test.txt  2&gt;&amp;1<br>mv日志文件移动任务</p>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hadoop-advice/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-advice/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hive-java/" title="Hive连接java" itemprop="url">Hive连接java</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:39:46.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:39:46.000Z"><a href="/2015/04/17/big-data-hive-java/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-hive-java/">Hive连接java</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <h4 id="参考文章">参考<a href="http://blog.csdn.net/wypblog/article/details/17390333" target="_blank" rel="external">文章</a></h4><h4 id="环境整合">环境整合</h4><p>线上的环境已经可以收集日志了，所以考虑使用flume来整合把线上的日志，收集到测试环境中进行处理！<br>编译：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">    javac -classpath /root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/etc/hadoop:/root/hadoop/hadoop-2.2.0/share/hadoop/common/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/common/*:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/hdfs/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/*:/root/hadoop/hadoop-2.2.0/share/hadoop/mapreduce/lib/*:/root/hadoop/hadoop-2.2.0/share/hadoop/mapreduce/*:/root/hadoop/hadoop-2.2.0/contrib/capacity-scheduler/*.jar:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/*:/root/hadoop/hadoop-2.2.0/share/hadoop/yarn/lib/*:/root/hadoop/IP2Location.jar -d class NginxLogInputFormat.java &#10;    cd class &#10;    jar -cvf test_kpi.jar *&#10;`</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>问题一<br>sbustr StringIndexOutOfBoundsException: String index out of range: -1，执行hive查询的时候总是失败，查看job执行情况，在/tmp/root/下面类似root_20140520131818_880f8b00-3d49-4534-b1ba-783dd55c2c08.log的文件中查看定位问题是因为IP2Location.java执行时候截取字符串的问题。修改IP2Location.java中相关文件定位信息：<br>cat main_bak.log|awk ‘{print $1}’&gt;ip.txt(提取ip地址检查类方法是否正确)<br>每隔十分钟计算pv值：<br>sql语句：</li>
@@ -358,57 +223,37 @@
 <li>从零点开始到现在pv值</li>
 </ol>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hive-java/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hive-java/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-ip-location/" title="纯真数据库获取location" itemprop="url">纯真数据库获取location</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:38:17.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:38:17.000Z"><a href="/2015/04/17/big-data-ip-location/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-ip-location/">纯真数据库获取location</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p>参考<a href="http://www.blogjava.net/libin2722/articles/338316.html" target="_blank" rel="external">文章</a><br>写好后打包成jar文件放在hive的lib中配置classpath包含jar所在的文件，可以本地中调试引入jar文件是否成功！之后其他的还是按照hive的NginxLogInputFormat的写jar文件方法！</p>
 <ul>
 <li><p>KPI.java</p>
@@ -773,62 +618,37 @@
     }
 }
 </code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-ip-location/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-ip-location/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-log/" title="日志收集系统环境整合" itemprop="url">日志收集系统环境整合</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:34:18.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:34:18.000Z"><a href="/2015/04/17/big-data-log/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-log/">日志收集系统环境整合</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p>=========</p>
 <ul>
 <li>首先创建数据表：</li>
@@ -908,62 +728,37 @@ export HADOOP_HOME=~<span class="regexp">/hadoop/</span>hadoop-<span class="numb
 <pre><code>30 15 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span>  /root/hadoop/load_data.sh
 </code></pre><p>最后的资源：<a href="http://pan.baidu.com/s/1eQeNXrs" target="_blank" rel="external">nginx.jar</a>和测试的<a href="http://pan.baidu.com/s/1mgJnr2g" target="_blank" rel="external">log</a>文件，有个参考的文章也记下吧<a href="http://m.blog.csdn.net/blog/xueliang1029/24039459" target="_blank" rel="external">文章</a></p>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-log/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-log/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-flume/" title="Flume安装配置" itemprop="url">Flume安装配置</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:26:06.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:26:06.000Z"><a href="/2015/04/17/big-data-flume/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-flume/">Flume安装配置</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p><a href="http://f.dataguru.cn/thread-48324-1-1.html" target="_blank" rel="external">参考文章</a></p>
 <h4 id="下载Flume1-4-0">下载Flume1.4.0</h4><pre><code>wget <span class="symbol">http:</span>/<span class="regexp">/mirrors.cnnic.cn/apache</span><span class="regexp">/flume/</span><span class="number">1.4</span>.<span class="number">0</span>/apache-flume-<span class="number">1.4</span>.<span class="number">0</span>-bin.tar.gz
 </code></pre><h4 id="配置及测试参考Apache文章Flume">配置及测试参考Apache文章<a href="https://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="external">Flume</a></h4><ul>
@@ -1145,62 +940,37 @@ agent<span class="class">.sinks</span><span class="class">.sink1</span><span cla
 agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
 agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
 </code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-flume/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-flume/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-haoop-cluster2/" title="Hadoop完全分布式集群安装" itemprop="url">Hadoop完全分布式集群安装</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:22:01.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:22:01.000Z"><a href="/2015/04/17/big-data-haoop-cluster2/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-haoop-cluster2/">Hadoop完全分布式集群安装</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <ul>
 <li>首先定义master 和 slave 我这里只有2台vim/etc/hosts</li>
 </ul>
@@ -1297,62 +1067,37 @@ scp authorized_keys <span class="string">slave01:</span><span class="regexp">/ro
 </code></pre><p>最后问题： 服务器时间不同步，TMD这么大的坑啊。。。。</p>
 <pre><code>ntpdate <span class="tag">time</span><span class="class">.nist</span><span class="class">.gov</span>（每台服务器运行即可）
 </code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-haoop-cluster2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-haoop-cluster2/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hadoop-cluster/" title="Hadoop完全分布式集群安装" itemprop="url">Hadoop完全分布式集群安装</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:18:54.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:18:54.000Z"><a href="/2015/04/17/big-data-hadoop-cluster/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-hadoop-cluster/">Hadoop完全分布式集群安装</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <ol>
 <li>首先定义master 和 slave 我这里只有2台vim/etc/hosts</li>
 </ol>
@@ -1369,205 +1114,81 @@ scp authorized_keys <span class="string">slave01:</span><span class="regexp">/ro
 <li>配置JDK</li>
 </ol>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
   </div>
+</article>
 
+
+
+
+
+<nav id="pagination">
+  
+    <a href="/" class="alignleft prev">上一页</a>
+  
+  
+    <a href="/page/3/" class="alignright next">下一页</a>
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yoursite.com">
+  </form>
 </div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hadoop-cluster/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-cluster/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
-  </nav>
-
-</div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
 
   
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/大数据/" title="大数据">大数据<sup>12</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Android开发/" title="Android开发">Android开发<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://wujindou.github.io" target="_blank" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a>
-            
-          </li>
-        
-          <li>
-            
-            	<a href="http://blog.csdn.net/wujindou" target="_blank" title="CSDN(以前博客)">CSDN(以前博客)</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
   
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+    <li><a href="/tags/Android开发/">Android开发</a><small>4</small></li>
+  
+    <li><a href="/tags/Python/">Python</a><small>1</small></li>
+  
+    <li><a href="/tags/c-学习/">c++学习</a><small>2</small></li>
+  
+    <li><a href="/tags/git使用/">git使用</a><small>1</small></li>
+  
+    <li><a href="/tags/js学习笔记/">js学习笔记</a><small>1</small></li>
+  
+    <li><a href="/tags/php/">php</a><small>2</small></li>
+  
+    <li><a href="/tags/storm/">storm</a><small>1</small></li>
+  
+    <li><a href="/tags/大数据/">大数据</a><small>12</small></li>
+  
+    <li><a href="/tags/数据库/">数据库</a><small>1</small></li>
+  
+    <li><a href="/tags/网络爬虫/">网络爬虫</a><small>1</small></li>
+  
+  </ul>
 </div>
 
 </aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 Jackie wu
+  
 </div>
-    </div>
-    <footer><div id="footer" >
-
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
 <script src="/js/gallery.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wujindou"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
 
 
 
@@ -1575,52 +1196,10 @@ $(document).ready(function(){
 <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
 <script src="/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
 </script>
 
-
-
-<!-- Analytics Begin -->
-
-
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
-  </body>
- </html>
+</body>
+</html>

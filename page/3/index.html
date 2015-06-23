@@ -1,99 +1,64 @@
-
- <!DOCTYPE HTML>
-<html lang="zh-CN">
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   
-    <title>Jackie&#39;s Blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="Jackie wu">
-    
+  <title>第 3 页 | Jackie&#39;s Blog</title>
+  <meta name="author" content="Jackie wu">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    
-    <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jackie's Blog">
-<meta property="og:url" content="http://yoursite.com/page/3/index.html">
-<meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jackie's Blog">
-<meta name="twitter:description">
+  
+  <meta property="og:site_name" content="Jackie&#39;s Blog"/>
 
-    
-    <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
-    
-    
-    <link rel="icon" href="/img/favicon.ico">
-    
-    
-    <link rel="apple-touch-icon" href="/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
 </head>
 
-  <body>
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Jackie&#39;s Blog</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
     <header>
       
-<div>
-		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="Jackie&#39;s Blog" title="Jackie&#39;s Blog"/></a>
-			</div>
-			
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/archives">归档</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
-						<label>Search</label>
-						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
-						<input type="hidden" name="q" value="site:yoursite.com">
-					</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
-    </header>
-    <div id="container">
-      <div id="main">
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:17:28.000Z"><a href="/2015/04/17/big-data-sqoop/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-sqoop/">Sqoop配置</a></h1>
+  
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-sqoop/" title="Sqoop配置" itemprop="url">Sqoop配置</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:17:28.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
+    </header>
+    <div class="entry">
+      
         <ul>
 <li>首先从<a href="http://apache.dataguru.cn/sqoop/1.4.4/" target="_blank" rel="external">官网</a>下载对应的sqoop版本。</li>
 <li>配置 tar -zxvf 下载包</li>
@@ -138,62 +103,37 @@ http_user_agent <span class="keyword">STRING</span>);</span>
 <pre><code><span class="string">.</span><span class="comment">/bin/sqoop</span> <span class="comment">export</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">connect</span> <span class="comment">jdbc:mysql://localhost:3306/workflow</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">username</span> <span class="comment">sqoop_user</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">password</span> <span class="comment">123456</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">table</span> <span class="comment">hive_to_mysql</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">export</span><span class="literal">-</span><span class="comment">dir</span> <span class="comment">/user/hive/warehouse/kpilog2</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">input</span><span class="literal">-</span><span class="comment">fields</span><span class="literal">-</span><span class="comment">terminated</span><span class="literal">-</span><span class="comment">by</span> <span class="comment">'\001'</span>
 </code></pre><p>参考文章：<br>1.<a href="http://shiyanjun.cn/archives/624.html" target="_blank" rel="external">Sqoop-1.4.4工具import和export使用详解</a>;</p>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-sqoop/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-sqoop/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hive-nginx/" title="Hive分析Nginx文档" itemprop="url">Hive分析Nginx文档</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:12:44.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T08:12:44.000Z"><a href="/2015/04/17/big-data-hive-nginx/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-hive-nginx/">Hive分析Nginx文档</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <ol>
 <li><p>定义日志格式修改nginx.conf文件定义访问日志格式：</p>
 <pre><code><span class="title">log_format</span> chat <span class="string">'$ remote_addr - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] "$ request" '</span>   
@@ -714,62 +654,37 @@ class NginxLogInputFormat extends TextInputFormat {
     }  
 </code></pre><p>编译<br>javac -classpath (xxxxyarn classpath下所有内容) -d  class(目录) java文件<br>生成jar文件<br>jar -cf nginx.jar 目录<br>至此，终于自定义的格式生效了。。放在结果图：<br><img src="/images/hadoop/hive_nginx.png" alt="Alt text"></p>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hive-nginx/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hive-nginx/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hive/" title="Hive配置信息" itemprop="url">Hive配置信息</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T07:59:50.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T07:59:50.000Z"><a href="/2015/04/17/big-data-hive/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-hive/">Hive配置信息</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <ol>
 <li>首先修改/etc/profile加入HADOOP_HOME参数设置</li>
 <li>修改~/.bashrc文件加入HIVE_HOME参数 </li>
@@ -821,62 +736,37 @@ hive-site.xml
 <li>由于mysql的源代码安装所以需要修改下my.cnf文件,修改/usr/local/mysql/下的my.cnf添加bind-address= 0.0.0.0之后重启mysql<br>运行创建table命令: create table test (key string);发现报错了<br><img src="/images/hadoop/hive_1.png" alt="Alt text"><br>需要修改hive字符集，alter database hive character set latin1;即可</li>
 </ul>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hive/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hive/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hadoop/" title="Hadoop2.2安装使用" itemprop="url">Hadoop2.2安装使用</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T07:53:44.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T07:53:44.000Z"><a href="/2015/04/17/big-data-hadoop/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/big-data-hadoop/">Hadoop2.2安装使用</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <h3 id="配置ssh">配置ssh</h3><ul>
 <li><p>生成ssh-key 在</p>
 <pre><code>ssh-keygen -t rsa -P <span class="string">""</span>
@@ -964,62 +854,37 @@ bin/hadoop dfs -put input/ /<span class="keyword">in</span>
 bin/hadoop dfs -ls /<span class="keyword">in</span>
 </code></pre><p>一个奇葩的问题<br>测试过程中有个问题让我很是头疼：<br><img src="/images/hadoop/hadoop_1.png" alt="Alt text"><br>最后发现竟然是hostname的问题，无奈不适用localhost之后问题就解决了,还有如果出现了Safe mode的话就使用： bin/hadoop dfsadmin -safemode leave 关闭就可以了。</p>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hadoop/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件" itemprop="url">Jquery简单封装插件</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T07:13:17.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T07:13:17.000Z"><a href="/2015/04/17/jquery-tool/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/jquery-tool/">Jquery简单封装插件</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p>由于开发过程是需要使用fancybox，但是已有的结构需要每次都把html代码如下copy到需要添加文档，然后需要每次复制函数。重复早轮子，<br>于是考虑通过jquery进行简单的封装以避免重复的造轮子工作。<br>新建fancybox-widget.js </p>
 <pre><code>$(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
         <span class="keyword">var</span> tbox =$(
@@ -1081,62 +946,37 @@ bin/hadoop dfs -ls /<span class="keyword">in</span>
 
     });
 </code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/js学习笔记/">js学习笔记</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/jquery-tool/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/jquery-tool/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T07:09:39.000Z"><a href="/2015/04/17/python-auto-tool/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/python-auto-tool/">python自动化工具</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
 <p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
 <pre><code><span class="comment">#! /usr/bin/python </span>
@@ -1161,62 +1001,37 @@ all_the_lines = infile.readlines()
 infile.seek(<span class="number">0</span>)
 <span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
 </code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Python/">Python</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/python-auto-tool/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/python-auto-tool/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/my-new-post/" title="Git重新上手" itemprop="url">Git重新上手</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T05:36:10.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
+    <footer>
+      
         
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-17T05:36:10.000Z"><a href="/2015/04/17/my-new-post/">2015-04-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/17/my-new-post/">Git重新上手</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
         <p> 好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。<br>直接图示吧：</p>
 <ol>
 <li>生成public key ,然后添加到ssh key中<br><img src="images/20150417/1429236487575.png" alt="图片"></li>
@@ -1231,205 +1046,79 @@ infile.seek(<span class="number">0</span>)
 </ol>
 <p>done！！！！<br>        <img src="images/20150417/1429236830303.png" alt="Alt text"></p>
 
-        
-        
-        <p class="article-more-link">
-          
-       </p>
+      
     </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/git使用/">git使用</a>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
   </div>
+</article>
 
+
+
+
+
+<nav id="pagination">
+  
+    <a href="/page/2/" class="alignleft prev">上一页</a>
+  
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yoursite.com">
+  </form>
 </div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/my-new-post/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/my-new-post/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
-  </nav>
-
-</div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
 
   
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/大数据/" title="大数据">大数据<sup>12</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Android开发/" title="Android开发">Android开发<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://wujindou.github.io" target="_blank" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a>
-            
-          </li>
-        
-          <li>
-            
-            	<a href="http://blog.csdn.net/wujindou" target="_blank" title="CSDN(以前博客)">CSDN(以前博客)</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
   
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+    <li><a href="/tags/Android开发/">Android开发</a><small>4</small></li>
+  
+    <li><a href="/tags/Python/">Python</a><small>1</small></li>
+  
+    <li><a href="/tags/c-学习/">c++学习</a><small>2</small></li>
+  
+    <li><a href="/tags/git使用/">git使用</a><small>1</small></li>
+  
+    <li><a href="/tags/js学习笔记/">js学习笔记</a><small>1</small></li>
+  
+    <li><a href="/tags/php/">php</a><small>2</small></li>
+  
+    <li><a href="/tags/storm/">storm</a><small>1</small></li>
+  
+    <li><a href="/tags/大数据/">大数据</a><small>12</small></li>
+  
+    <li><a href="/tags/数据库/">数据库</a><small>1</small></li>
+  
+    <li><a href="/tags/网络爬虫/">网络爬虫</a><small>1</small></li>
+  
+  </ul>
 </div>
 
 </aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 Jackie wu
+  
 </div>
-    </div>
-    <footer><div id="footer" >
-
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
 <script src="/js/gallery.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wujindou"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
 
 
 
@@ -1437,52 +1126,10 @@ $(document).ready(function(){
 <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
 <script src="/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
 </script>
 
-
-
-<!-- Analytics Begin -->
-
-
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
-  </body>
- </html>
+</body>
+</html>
