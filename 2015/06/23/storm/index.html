@@ -4,44 +4,31 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Libevent整合protobuf （二） | Jackie&#39;s Blog</title>
+    <title>Storm����������װ | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的代码定义一个简单的EchoMessage.proto内容如下： 
-message EchoRequest
-{
-    required string message = 1; //请求字符串
-};
-message EchoResponse
-{
-    required string res">
+    <meta name="description" content="Stormα�ֲ�ʽ����������װ�����ݲο�Storm�ֲ�ʽʵʱ����ģʽ�������ݣ����д����CentosZookeeper��װ�ܼ򵥲ο������������أ�����Zookeeper��ʹ��Ҳ�ܼ򵥲ο��������ĵ����е�����Standalone���á�
+
+��װ������
+ yum install uuid* yum instal">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Libevent整合protobuf （二）">
-<meta property="og:url" content="http://yoursite.com/2015/04/18/libevent-c-2/index.html">
+<meta property="og:title" content="Storm����������װ">
+<meta property="og:url" content="http://yoursite.com/2015/06/23/storm/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的代码定义一个简单的EchoMessage.proto内容如下： 
-message EchoRequest
-{
-    required string message = 1; //请求字符串
-};
-message EchoResponse
-{
-    required string res">
-<meta property="og:image" content="/images/c++/libevent.png">
+<meta property="og:description" content="Stormα�ֲ�ʽ����������װ�����ݲο�Storm�ֲ�ʽʵʱ����ģʽ�������ݣ����д����CentosZookeeper��װ�ܼ򵥲ο������������أ�����Zookeeper��ʹ��Ҳ�ܼ򵥲ο��������ĵ����е�����Standalone���á�
+
+��װ������
+ yum install uuid* yum instal">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Libevent整合protobuf （二）">
-<meta name="twitter:description" content="Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的代码定义一个简单的EchoMessage.proto内容如下： 
-message EchoRequest
-{
-    required string message = 1; //请求字符串
-};
-message EchoResponse
-{
-    required string res">
+<meta name="twitter:title" content="Storm����������װ">
+<meta name="twitter:description" content="Stormα�ֲ�ʽ����������װ�����ݲο�Storm�ֲ�ʽʵʱ����ģʽ�������ݣ����д����CentosZookeeper��װ�ܼ򵥲ο������������أ�����Zookeeper��ʹ��Ҳ�ܼ򵥲ο��������ĵ����е�����Standalone���á�
+
+��װ������
+ yum install uuid* yum instal">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -101,14 +88,14 @@ message EchoResponse
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/18/libevent-c-2/" title="Libevent整合protobuf （二）" itemprop="url">Libevent整合protobuf （二）</a>
+      <a href="/2015/06/23/storm/" title="Storm����������װ" itemprop="url">Storm����������װ</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-18T02:01:47.000Z" itemprop="datePublished"> 发表于 2015-04-18</time>
+    <time datetime="2015-06-23T14:03:24.000Z" itemprop="datePublished"> 发表于 2015-06-23</time>
     
   </p>
 </header>
@@ -121,91 +108,27 @@ message EchoResponse
 		
 		</div>
 		
-		<p>Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的<a href="https://developers.google.com/protocol-buffers/docs/cpptutorial?hl=zh-cn" target="_blank" rel="external">代码</a><br>定义一个简单的EchoMessage.proto<br>内容如下： </p>
-<pre><code>message EchoRequest
-{
-    <span class="keyword">required</span> <span class="built_in">string</span> message = <span class="number">1</span>; <span class="comment">//请求字符串</span>
-};
-message EchoResponse
-{
-    <span class="keyword">required</span> <span class="built_in">string</span> response = <span class="number">1</span>; <span class="comment">//回应字符串</span>
-};
-</code></pre><p>测试：<br>test.cpp </p>
-<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;string&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
-<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>
-</span>{
-    <span class="built_in">string</span> s=<span class="string">"hello request"</span>;
-    EchoRequest request ;
-    request.set_message(s);
-    <span class="built_in">cout</span>&lt;&lt;request.message()&lt;&lt;endl;
-    <span class="keyword">return</span> <span class="number">1</span>;
-}
-</code></pre><p>编译：<br> g++ echo.pb.cc testecho.cpp -o testecho -lprotobuf<br>问题：<br>./testecho: error while loading shared libraries: libprotobuf.so.8: cannot open shared object file: No such file or directory<br>export<br>LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib<br>最后：<br>client.cpp </p>
-<pre><code>    <span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;stdlib.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;string.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;unistd.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/types.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/socket.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;netinet/in.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;arpa/inet.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
-
-<span class="preprocessor">#<span class="keyword">define</span> oops(msg) {\
-    perror(msg); \
-    exit(1); \
-}  </span>
-<span class="preprocessor">#<span class="keyword">define</span> SIZE 256  </span>
-
-<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999  </span>
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
-
-<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span>
-</span>{
-
-
-    <span class="keyword">int</span> socket_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>);
-    <span class="keyword">if</span>(socket_fd == -<span class="number">1</span>)
-        oops(<span class="string">"socket initiating error..."</span>);
-
-
-    <span class="keyword">struct</span> sockaddr_in address;
-    bzero(&amp;address, <span class="keyword">sizeof</span>(address));
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);
-    address.sin_port =  htons(LISTEN_PORT);
-
-    <span class="keyword">int</span> connect_result = connect(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;address, <span class="keyword">sizeof</span>(address));
-    <span class="keyword">if</span>(connect_result == -<span class="number">1</span>)
-        oops(<span class="string">"connect error..."</span>);
-
-
-         <span class="built_in">string</span> data;
-         EchoRequest req;
-         req.set_message(<span class="string">"wwwww"</span>);
-         req.SerializeToString(&amp;data);
-        <span class="keyword">char</span> bts[data.length()];
-        <span class="built_in">strcpy</span>(bts, data.c_str());
-        ssize_t write_length = write(socket_fd, bts, <span class="keyword">sizeof</span>(bts));
-        <span class="keyword">if</span>(write_length &lt;= <span class="number">0</span> )
-            oops(<span class="string">"error: write ..."</span>);
-
-
-        <span class="keyword">char</span> buf[<span class="number">512</span>];
-        bzero(buf, <span class="number">0</span>);
-        ssize_t read_length = read(socket_fd, buf, <span class="keyword">sizeof</span>(buf));
-        <span class="keyword">if</span>(read_length == -<span class="number">1</span>)
-            oops(<span class="string">"error: read data from socket..."</span>);
-
-        <span class="built_in">printf</span>(<span class="string">"the ret msg is: %s\n"</span>, buf);
-    close(socket_fd);
-    <span class="keyword">return</span> EXIT_SUCCESS;
-}
-</code></pre><p>最后介绍我看到过的一个架构吧：<br><img src="/images/c++/libevent.png" alt="Alt text"></p>
+		<p>Stormα�ֲ�ʽ����������װ�����ݲο�<em>Storm�ֲ�ʽʵʱ����ģʽ</em>�������ݣ����д����CentosZookeeper��װ�ܼ򵥲ο������������أ�<a href="http://www.apache.org/dyn/closer.cgi/zookeeper/" target="_blank" rel="external">����</a>Zookeeper��ʹ��Ҳ�ܼ򵥲ο���<a href="http://zookeeper.apache.org/doc/r3.4.6/zookeeperStarted.html#sc_InstallingSingleMode" target="_blank" rel="external">�����ĵ�</a>���е�����Standalone���á�</p>
+<ol>
+<li><p>��װ������</p>
+<p> yum install uuid*<br> yum install libtool<br> yum install libuuid<br> yum install libuuid-devel  </p>
+</li>
+<li><p>��װGit��Maven���°�װ����Դ</p>
+<p> [root@git ~]# cd src/<br> [root@git src]# wget <a href="http://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm" target="_blank" rel="external">http://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm</a><br> [root@git src]# rpm -ivh epel-release-5-4.noarch.rpm<br> Preparing…                ########################################### [100%]</p>
+<pre><code><span class="keyword">package</span> epel-<span class="keyword">release</span>-<span class="number">5</span>-<span class="number">4</span>.noarch <span class="keyword">is</span> already installed
+</code></pre><p> [root@git ~]# yum list<br> [root@git ~]# yum install -y git<br>maven��yum��װ�ο�Stackoverflow<a href="http://stackoverflow.com/questions/7532928/how-do-i-install-maven-with-yum" target="_blank" rel="external">����</a></p>
+<p> wget <a href="http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo" target="_blank" rel="external">http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo</a> -O /etc/yum.repos.d/epel-apache-maven.repo<br> yum install apache-maven<br>��װ������mvn��û�м��뵽���������� </p>
+<p> rpm -ql  apache������rpm���İ�װ·����<br>export PATH=$PATH:/user/share/apache-maven/bin<br>����Storm�������⣺<br>(ע��yaml��ʽ��Ҫ��,�ո�tab,:��-ǰ�����пո�) ���涼�����������ļ�û����ȷ�������ɵ�</p>
+<p>  in ‘reader’, line 27, column 1:<br> ����- 6701<br>Storm���У�</p>
+<ol>
+<li>����zookeeper<br> ./zkServer.sh start </li>
+<li>����nimbus ��Supervisor<br> storm nimbus &amp;<br> storm supervisor &amp; </li>
+</ol>
+</li>
+<li><p>��־�鿴<br>zookeeper��־�ļ�����bin/ cat zookeeper.out �鿴������־<br>storm������־��storm/logs ������nimbus��supervisor��־������Ϣ<br>������������Ϣʱnimbus���Ѿ��𶯳ɹ� </p>
+<p> 3534 nimbus<br> 3514 QuorumPeerMain<br> 3591 Jps<br>���ŷ��ʱ��ص�ַ�� localhost:8080<br>���ֲ��ܷ��ʣ����� netstat -ano |grep 8080����8080�˿����������У����Ի����Ƿ���ǽ<br>����iptables -F���رշ���ǽ�����·���,һ���������ʣ���ɹ���</p>
+</li>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -214,7 +137,7 @@ message EchoResponse
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/c-学习/">c++学习</a>
+  <span></span> <a href="/tags/storm/">storm</a>
   </div>
 
 </div>
@@ -223,7 +146,7 @@ message EchoResponse
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/18/libevent-c-2/" data-title="Libevent整合protobuf （二） | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/06/23/storm/" data-title="Storm����������װ | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -236,19 +159,11 @@ message EchoResponse
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/19/android-blog-1/" title="Android应用开发一">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Android应用开发一</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/18/libevent-c-1/"  title="Libevent整合protobuf（一)">
+<a href="/2015/05/24/scrapy/"  title="scrapy学习">
  <strong>下一篇：</strong><br/> 
- <span>Libevent整合protobuf（一)
+ <span>scrapy学习
 </span>
 </a>
 </div>
@@ -257,7 +172,7 @@ message EchoResponse
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/18/libevent-c-2/" data-title="Libevent整合protobuf （二）" data-url="http://yoursite.com/2015/04/18/libevent-c-2/"></div>
+	<div class="ds-thread" data-thread-key="2015/06/23/storm/" data-title="Storm����������װ" data-url="http://yoursite.com/2015/06/23/storm/"></div>
 </section>
 
 
