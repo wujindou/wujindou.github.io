@@ -4,22 +4,34 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>&#39;file-upload-iframe&#39; | Jackie&#39;s Blog</title>
+    <title>Iframe实现文件上传 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description">
+    <meta name="description" content="文件上传有很多方式，原生的php或者使用jQuery文件上传插件，本文就介绍下一个最近Get的使用Iframe进行文件上传的方式： 
+
+首先定义iframe，Iframe指定另一个页面在另一个页面中实现文件的上传功能这里的export/img会渲染应为一个文件选择和上传的页面 
+文件选择和上传页面
+ &amp;lt;form action=&quot;&quot; method=&quot;post&quot; enctype=&quot;multipa">
 <meta property="og:type" content="article">
-<meta property="og:title" content="'file-upload-iframe'">
+<meta property="og:title" content="Iframe实现文件上传">
 <meta property="og:url" content="http://yoursite.com/2015/07/25/file-upload-iframe/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description">
+<meta property="og:description" content="文件上传有很多方式，原生的php或者使用jQuery文件上传插件，本文就介绍下一个最近Get的使用Iframe进行文件上传的方式： 
+
+首先定义iframe，Iframe指定另一个页面在另一个页面中实现文件的上传功能这里的export/img会渲染应为一个文件选择和上传的页面 
+文件选择和上传页面
+ &amp;lt;form action=&quot;&quot; method=&quot;post&quot; enctype=&quot;multipa">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="'file-upload-iframe'">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Iframe实现文件上传">
+<meta name="twitter:description" content="文件上传有很多方式，原生的php或者使用jQuery文件上传插件，本文就介绍下一个最近Get的使用Iframe进行文件上传的方式： 
+
+首先定义iframe，Iframe指定另一个页面在另一个页面中实现文件的上传功能这里的export/img会渲染应为一个文件选择和上传的页面 
+文件选择和上传页面
+ &amp;lt;form action=&quot;&quot; method=&quot;post&quot; enctype=&quot;multipa">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -79,7 +91,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/25/file-upload-iframe/" title="&#39;file-upload-iframe&#39;" itemprop="url">&#39;file-upload-iframe&#39;</a>
+      <a href="/2015/07/25/file-upload-iframe/" title="Iframe实现文件上传" itemprop="url">Iframe实现文件上传</a>
   </h1>
   <p class="article-author">By
        
@@ -99,11 +111,107 @@
 		
 		</div>
 		
-		  
+		<p>  文件上传有很多方式，原生的php或者使用jQuery文件上传插件，本文就介绍下一个最近Get的使用Iframe进行文件上传的方式： </p>
+<ol>
+<li>首先定义iframe，Iframe指定另一个页面在另一个页面中实现文件的上传功能这里的export/img会渲染应为一个文件选择和上传的页面 <iframe id="zyj_upload" src="/export/img" allowtransparency="true" width="200" height="35" frameborder="0" scrolling="no" style="vertical-align:bottom;"></iframe></li>
+<li><p>文件选择和上传页面</p>
+<pre><code> <span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">""</span> <span class="attribute">method</span>=<span class="value">"post"</span> <span class="attribute">enctype</span>=<span class="value">"multipart/form-data"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"file"</span> <span class="attribute">name</span>=<span class="value">"f_file"</span> <span class="attribute">id</span>=<span class="value">"f_file"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">id</span>=<span class="value">"f_submit"</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">form</span>&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"./js/jquery.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript">
+    <span class="built_in">document</span>.domain = <span class="string">'9you.com'</span>;
+    $(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+        $(<span class="string">'#f_file'</span>).change(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{
+            $(<span class="string">'#f_submit'</span>).trigger(<span class="string">'click'</span>);
+        });
+    });
+</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</code></pre></li>
+<li><p>文件上传后的后台处理</p>
+<pre><code>     <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">fileUploadAction</span><span class="params">()</span> </span>{
+       <span class="keyword">if</span> (<span class="variable">$_FILES</span>) {
+    <span class="variable">$uploadConfig</span> = <span class="keyword">array</span>(
+        <span class="string">'allowed_ext'</span> =&gt; <span class="string">'jpg|png'</span>,
+        <span class="string">'ftp'</span> =&gt; <span class="keyword">array</span>(
+            <span class="string">'host'</span> =&gt; <span class="string">'180.153.121.62'</span>,
+            <span class="string">'user'</span> =&gt; <span class="string">'uploadfile'</span>,
+            <span class="string">'pass'</span> =&gt; <span class="string">'gxN!iBMxV2sdYdS3kB2Q58n'</span>,
+            <span class="string">'path'</span> =&gt; <span class="string">'/msteam/'</span>,
+            <span class="string">'url'</span> =&gt; <span class="string">'http://xxx.com/uploadfile/msteam/'</span> <span class="comment">//(http://static.9you.com/uploadfile/zhibo/%27) </span>
+        ),
+        <span class="string">'field_name'</span> =&gt; <span class="string">'f_file'</span>,
+        <span class="string">'max_size'</span> =&gt; <span class="string">'2M'</span>,
+        <span class="string">'upload_dir'</span> =&gt; APP_PATH . <span class="string">'../public/upload/'</span> . date(<span class="string">'Ymd'</span>) . <span class="string">'/'</span>,
+        <span class="string">'upload_url'</span> =&gt; <span class="string">'http://xxx.com/'</span>, <span class="comment">//(http://static.9you.com/%27) </span>
+        <span class="string">'thumbnails'</span> =&gt; <span class="keyword">array</span>(
+            <span class="number">0</span> =&gt; <span class="keyword">array</span>(
+                <span class="string">'width'</span> =&gt; <span class="number">150</span>,
+                <span class="string">'height'</span> =&gt; <span class="number">150</span>,
+                <span class="string">'cut'</span> =&gt; <span class="number">1</span>,
+                <span class="string">'path'</span> =&gt; <span class="string">'/150/'</span>
+            )
+        )
+    );
+    <span class="keyword">if</span> (Yaf_Application::app()-&gt;environ() != <span class="string">'develop'</span>) {
+        <span class="variable">$uploadConfig</span>[<span class="string">'ftp'</span>][<span class="string">'host'</span>] = <span class="string">'180.153.121.62'</span>;
+    }
+
+    <span class="variable">$fileUploader</span> = <span class="keyword">new</span> \FileUploader(<span class="variable">$uploadConfig</span>);
+
+    <span class="keyword">try</span> {
+        <span class="variable">$result</span> = <span class="variable">$fileUploader</span>-&gt;handleUpload();
+        Yaf_Registry::get(<span class="string">'logger'</span>)-&gt;debug(<span class="variable">$result</span>);
+    } <span class="keyword">catch</span> (<span class="keyword">Exception</span> <span class="variable">$e</span>) {
+
+        Yaf_Registry::get(<span class="string">'logger'</span>)-&gt;debug(<span class="variable">$e</span>);
+    }
+    <span class="variable">$returnArr</span> = <span class="keyword">array</span>(
+        <span class="string">'success'</span> =&gt; <span class="keyword">false</span>,
+        <span class="string">'errmsg'</span> =&gt; <span class="string">'文件上传失败'</span>
+    );
+
+    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$result</span>[<span class="string">'success'</span>]) &amp;&amp; <span class="variable">$result</span>[<span class="string">'success'</span>]) {
+        <span class="variable">$returnArr</span> = <span class="keyword">array</span>(
+            <span class="string">'success'</span> =&gt; <span class="keyword">true</span>,
+            <span class="comment">//'url' =&gt; $result['file_url'],</span>
+            <span class="string">'url'</span> =&gt; <span class="variable">$result</span>[<span class="string">'thumb'</span>][<span class="string">'/150x150/'</span>],
+        );
+    } <span class="keyword">else</span> {
+        <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$result</span>[<span class="string">'error'</span>])) {
+            <span class="variable">$returnArr</span>[<span class="string">'errmsg'</span>] = <span class="variable">$result</span>[<span class="string">'error'</span>];
+        }
+    }
+
+    <span class="comment">//建立结果回调</span>
+    <span class="variable">$return</span> = <span class="string">''</span>;
+    <span class="variable">$return</span> .= <span class="string">'&lt;script type="text/javascript"&gt;'</span>;
+    <span class="variable">$return</span> .= <span class="string">'document.domain = "9you.com";'</span>;
+    <span class="variable">$return</span> .= <span class="string">'parent.acrossupload('</span> . json_encode(<span class="variable">$returnArr</span>) . <span class="string">');'</span>;
+    <span class="variable">$return</span> .= <span class="string">'&lt;/script&gt;'</span>;
+    <span class="keyword">echo</span> <span class="variable">$return</span>;
+
+    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$result</span>[<span class="string">'success'</span>]) &amp;&amp; <span class="variable">$result</span>[<span class="string">'success'</span>]) {
+
+    }
+}
+}
+</code></pre></li>
+<li><p>结果显示在调用Iframe的页面中添加结果处理方法： </p>
+<p> document.domain = ‘xxx.com’;<br>function acrossupload(res) {<br> console.log(res);<br> $(‘.touxiang2’).attr(‘src’, res.url);<br> $(‘#hidden_logo’).val(res.url);<br>}<br>至此，使用Iframe进行文件上传的功能已经完成！</p>
+</li>
+</ol>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/fitleupload/">fitleupload</a><a href="/tags/js/">js</a>
+  </div>
 
 </div>
 
@@ -111,7 +219,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/07/25/file-upload-iframe/" data-title="&#39;file-upload-iframe&#39; | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/07/25/file-upload-iframe/" data-title="Iframe实现文件上传 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -137,7 +245,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/25/file-upload-iframe/" data-title="'file-upload-iframe'" data-url="http://yoursite.com/2015/07/25/file-upload-iframe/"></div>
+	<div class="ds-thread" data-thread-key="2015/07/25/file-upload-iframe/" data-title="Iframe实现文件上传" data-url="http://yoursite.com/2015/07/25/file-upload-iframe/"></div>
 </section>
 
 
@@ -179,10 +287,6 @@
 			
 		
 			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
 			
 		
@@ -195,11 +299,23 @@
 			
 		
 			
-				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fitleupload/" title="fitleupload">fitleupload<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
 			
 		
 		</ul>
