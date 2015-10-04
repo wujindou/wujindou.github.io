@@ -1,0 +1,481 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>elasticsearch学习 | Jackie&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jackie wu">
+    
+
+    
+    <meta name="description" content="ElasticSearch学习笔记在使用了Mongodb之后发现，Mongodb差强人意的查询，还有令人发指的Skip在面对大数据，查询时候的查询速度地下的问题，将方向投向了ElasticSearch搜索引擎上，ElasticSearch虽然说在数据的导入和建立索引的过程十分缓慢，但是查询速度相比Mongodb确实有10倍的提交。
+简单记录下搭建和学习的一些内容： 
+
+ElasticSearch环">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elasticsearch学习">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/elasticsearch/index.html">
+<meta property="og:site_name" content="Jackie's Blog">
+<meta property="og:description" content="ElasticSearch学习笔记在使用了Mongodb之后发现，Mongodb差强人意的查询，还有令人发指的Skip在面对大数据，查询时候的查询速度地下的问题，将方向投向了ElasticSearch搜索引擎上，ElasticSearch虽然说在数据的导入和建立索引的过程十分缓慢，但是查询速度相比Mongodb确实有10倍的提交。
+简单记录下搭建和学习的一些内容： 
+
+ElasticSearch环">
+<meta property="og:image" content="/images/php/mongodvses.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elasticsearch学习">
+<meta name="twitter:description" content="ElasticSearch学习笔记在使用了Mongodb之后发现，Mongodb差强人意的查询，还有令人发指的Skip在面对大数据，查询时候的查询速度地下的问题，将方向投向了ElasticSearch搜索引擎上，ElasticSearch虽然说在数据的导入和建立索引的过程十分缓慢，但是查询速度相比Mongodb确实有10倍的提交。
+简单记录下搭建和学习的一些内容： 
+
+ElasticSearch环">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Jackie&#39;s Blog" title="Jackie&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/04/elasticsearch/" title="elasticsearch学习" itemprop="url">elasticsearch学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-04T02:32:35.000Z" itemprop="datePublished"> 发表于 2015-10-04</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ElasticSearch学习笔记"><span class="toc-number">1.</span> <span class="toc-text">ElasticSearch学习笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#查询名字为test100的记录"><span class="toc-number">1.0.0.0.1.</span> <span class="toc-text">查询名字为test100的记录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查询test10%的记录"><span class="toc-number">1.0.0.0.2.</span> <span class="toc-text">查询test10%的记录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#建立DateMapping"><span class="toc-number">1.0.0.0.3.</span> <span class="toc-text">建立DateMapping</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#添加记录"><span class="toc-number">1.0.0.0.4.</span> <span class="toc-text">添加记录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#日期范围查询："><span class="toc-number">1.0.0.0.5.</span> <span class="toc-text">日期范围查询：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查看索引建立信息"><span class="toc-number">1.0.0.0.6.</span> <span class="toc-text">查看索引建立信息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ElasticSearch_php组合复杂查询"><span class="toc-number">1.0.0.0.7.</span> <span class="toc-text">ElasticSearch php组合复杂查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#批量更新和删除操作使用ElasticSearch封装的bulk"><span class="toc-number">1.0.0.0.8.</span> <span class="toc-text">批量更新和删除操作使用ElasticSearch封装的bulk</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#更新一条"><span class="toc-number">1.0.0.0.9.</span> <span class="toc-text">更新一条</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#关闭Selinux"><span class="toc-number">1.0.0.0.10.</span> <span class="toc-text">关闭Selinux</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#结果输出"><span class="toc-number">1.0.0.0.11.</span> <span class="toc-text">结果输出</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Mongodb和ElasticSearch对比"><span class="toc-number">1.0.0.0.12.</span> <span class="toc-text">Mongodb和ElasticSearch对比</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+		
+		</div>
+		
+		<h1 id="ElasticSearch学习笔记">ElasticSearch学习笔记</h1><pre><code>在使用了Mongodb之后发现，Mongodb差强人意的查询，还有令人发指的<span class="keyword">Skip</span>在面对大数据，查询时候的查询速度地下的问题，将方向投向了ElasticSearch搜索引擎上，ElasticSearch虽然说在数据的导入和建立索引的过程十分缓慢，但是查询速度相比Mongodb确实有<span class="number">10</span>倍的提交。
+</code></pre><p>简单记录下搭建和学习的一些内容： </p>
+<ol>
+<li>ElasticSearch环境搭建这个不再赘述了，官方的安装十分的方便</li>
+<li>ElasticSearch环境访问 <a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a>    就能访问看到</li>
+<li><p>建立索引可以导入数据一条一条的建立，索引页可以直接全部load数据建立索引<br>代码： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">i = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> i&lt; <span class="number">100000000</span>:</span><br><span class="line">     user = &#123;&#125; </span><br><span class="line">     user[<span class="string">'name'</span>] = <span class="string">'test'</span>+str(random.randint(<span class="number">0</span>, i))</span><br><span class="line">     user[<span class="string">'text'</span>] = <span class="string">'daffadsfadsfa da jia hao '</span> + <span class="string">'test'</span>+str(random.randint(<span class="number">0</span>, i))+<span class="string">' This is a Text'</span></span><br><span class="line">     user[<span class="string">'created_at'</span>] = time.strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)</span><br><span class="line">  user[<span class="string">'id'</span>] = i</span><br><span class="line">     user[<span class="string">'random'</span>] = random.randint(<span class="number">0</span>,i) </span><br><span class="line">    i = i + <span class="number">1</span></span><br><span class="line">   es.index(index=<span class="string">'microblogs'</span>, doc_type=<span class="string">'tweets'</span>, body=user)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Api使用</p>
+<h5 id="查询名字为test100的记录">查询名字为test100的记录</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">result = es.search(index=<span class="string">'microblogs'</span>, body=&#123;</span><br><span class="line">          <span class="string">"query"</span>: &#123;<span class="string">"match"</span>: &#123;<span class="string">'name'</span>:<span class="string">'test100'</span>&#125;&#125; </span><br><span class="line">   &#125;, timeout=<span class="number">120</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="查询test10%的记录">查询test10%的记录</h5> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">result = es.search(index=<span class="string">'microblogs'</span>,  body=&#123;</span><br><span class="line"><span class="string">"query"</span>:&#123;<span class="string">"fuzzy_like_this_field"</span> : &#123; <span class="string">"name"</span> : &#123;<span class="string">"like_text"</span>: <span class="string">"test10"</span>, <span class="string">"max_query_terms"</span>:<span class="number">5</span>&#125;&#125;&#125;&#125;,  </span><br><span class="line">timeout=<span class="number">120</span>)</span><br><span class="line">``` </span><br><span class="line"><span class="comment">#####范围查询</span></span><br><span class="line">```python</span><br><span class="line"><span class="string">"query"</span> : &#123;</span><br><span class="line"><span class="string">"filtered"</span> : &#123;</span><br><span class="line">    <span class="string">"filter"</span> : &#123;</span><br><span class="line">	<span class="string">"range"</span> : &#123;</span><br><span class="line">	    <span class="string">"price"</span> : &#123;</span><br><span class="line">		<span class="string">"gte"</span> : <span class="number">20</span>,</span><br><span class="line">		<span class="string">"lt"</span>  : <span class="number">40</span></span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="建立DateMapping">建立DateMapping</h5><p> ElasticSearch默认会把字符串当成String处理，类似’created_at’:’2015-08-16 20:00:’也会被当成字符串处理，所以不能使用时间的范围查询</p>
+ <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">    curl -XPUT "http://10.141.201.96:9200/twitter" -d'</span><br><span class="line">&#123;</span><br><span class="line">   "mappings": &#123;</span><br><span class="line">      "tweet": &#123;</span><br><span class="line">            "date_detection": false, #不加上查询的时候还是会报错，ES默认会转换为local</span><br><span class="line">            "properties" : &#123;</span><br><span class="line">                "postDate" : &#123;</span><br><span class="line">                    "type" : "date",</span><br><span class="line">                    "format" : "YYYY-MM-dd HH:mm:ss"</span><br><span class="line">                &#125;,</span><br><span class="line">                "message":&#123;</span><br><span class="line">                "type":"string"</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+<h5 id="添加记录">添加记录</h5> <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    curl -XPOST "http://10.141.201.96:9200/twitter/tweet/" -d'</span><br><span class="line">&#123;</span><br><span class="line">    "content": "Hello World!",</span><br><span class="line">    "postDate": "2015-09-16 15:00:00"</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+<h5 id="日期范围查询：">日期范围查询：</h5> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">    result = es.search(index=<span class="string">'twitter'</span>,body= &#123;<span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"range"</span>:&#123; </span><br><span class="line">        <span class="string">"postDate"</span>:&#123;</span><br><span class="line">                <span class="string">"gte"</span>:<span class="string">'2015-09-16 11:10:00'</span>,</span><br><span class="line">                <span class="string">"lte"</span>:<span class="string">'2015-09-16 15:01:00'</span></span><br><span class="line">        &#125;   </span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;&#125;) </span><br><span class="line"><span class="keyword">print</span> result</span><br></pre></td></tr></table></figure>
+<h5 id="查看索引建立信息">查看索引建立信息</h5> <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/10.141.201.96:9200/twitter</span><span class="regexp">/tweet/</span><span class="constant">_mapping</span></span><br><span class="line">&#123;<span class="string">"twitter"</span><span class="symbol">:</span>&#123;<span class="string">"mappings"</span><span class="symbol">:</span>&#123;<span class="string">"tweet"</span><span class="symbol">:</span>&#123;<span class="string">"date_detection"</span><span class="symbol">:false</span>,<span class="string">"properties"</span><span class="symbol">:</span>&#123;<span class="string">"content"</span><span class="symbol">:</span>&#123;<span class="string">"type"</span><span class="symbol">:<span class="string">"string"</span></span>&#125;,<span class="string">"message"</span><span class="symbol">:</span>&#123;<span class="string">"type"</span><span class="symbol">:<span class="string">"string"</span></span>&#125;,<span class="string">"postDate"</span><span class="symbol">:</span>&#123;<span class="string">"type"</span><span class="symbol">:<span class="string">"date"</span></span>,<span class="string">"format"</span><span class="symbol">:<span class="string">"YYYY-MM-dd HH:mm:ss"</span></span>&#125;&#125;&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="ElasticSearch_php组合复杂查询">ElasticSearch php组合复杂查询</h5> <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$params</span>[<span class="string">'body'</span>][<span class="string">'query'</span>][<span class="string">'bool'</span>][<span class="string">'must'</span>][]= <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'0'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'range'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'starttime'</span> =&gt; <span class="keyword">array</span>(<span class="string">'gte'</span> =&gt; <span class="variable">$start_begin</span>, <span class="string">'lte'</span> =&gt; <span class="variable">$start_end</span>)))<span class="comment">//匹配时间范围</span></span><br><span class="line">     );</span><br><span class="line"><span class="variable">$params</span>[<span class="string">'body'</span>][<span class="string">'query'</span>][<span class="string">'bool'</span>][<span class="string">'must'</span>][] = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'multi_match'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'query'</span> =&gt; ’query text<span class="string">', </span><br><span class="line">    '</span>fields<span class="string">' =&gt; array('</span>fields1,<span class="string">'fields2'</span>),</span><br><span class="line">    <span class="string">'operator'</span> =&gt; <span class="string">'and'</span>)</span><br><span class="line">    );   <span class="comment">//查询匹配查询字符串的字段，某一个字段匹配就会查找出来</span></span><br><span class="line">    <span class="variable">$params</span>[<span class="string">'body'</span>][<span class="string">'query'</span>][<span class="string">'bool'</span>][<span class="string">'must'</span>][] = <span class="keyword">array</span>(<span class="string">'term'</span> =&gt; <span class="keyword">array</span>(<span class="string">'type'</span> =&gt; <span class="variable">$query</span>[<span class="string">'type'</span>])); <span class="comment">//查询type字段必须匹配内容</span></span><br></pre></td></tr></table></figure>
+<h5 id="批量更新和删除操作使用ElasticSearch封装的bulk">批量更新和删除操作使用ElasticSearch封装的bulk</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line">* 批量更新</span><br><span class="line">*<span class="phpdoc"> @params</span> = array(</span><br><span class="line">*     '0'=&gt;array('id'=&gt;xxx,'filed_naem'=&gt;'type','value'=&gt;xxxx)</span><br><span class="line">*   );</span><br><span class="line">*/</span></span><br><span class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">updateDocs</span><span class="params">(<span class="variable">$params</span>)</span> </span>&#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="variable">$this</span>-&gt;data;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$params</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>) &#123;</span><br><span class="line">            <span class="variable">$data</span>[<span class="string">'body'</span>][] = <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">'update'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">                    <span class="string">'_id'</span> =&gt; <span class="variable">$v</span>[<span class="string">'id'</span>]</span><br><span class="line">                )</span><br><span class="line">            );</span><br><span class="line">            <span class="variable">$data</span>[<span class="string">'body'</span>][][<span class="string">'doc'</span>][<span class="variable">$v</span>[<span class="string">'field_name'</span>]] = <span class="variable">$v</span>[<span class="string">'value'</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$res</span> = <span class="variable">$this</span>-&gt;client-&gt;bulk(<span class="variable">$data</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$res</span>[<span class="string">'errors'</span>] == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//批量删除 </span></span><br><span class="line">    <span class="comment">/*</span><br><span class="line">    *<span class="phpdoc"> @ids</span> = array()</span><br><span class="line">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delDocs</span><span class="params">(<span class="variable">$ids</span>)</span> </span>&#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="variable">$this</span>-&gt;data;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$ids</span> <span class="keyword">as</span> <span class="variable">$id</span>) &#123;</span><br><span class="line">            <span class="variable">$data</span>[<span class="string">'body'</span>][] = <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">'delete'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">                    <span class="string">'_id'</span> =&gt; <span class="variable">$id</span></span><br><span class="line">                )</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$res</span> = <span class="variable">$this</span>-&gt;client-&gt;bulk(<span class="variable">$data</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$res</span>[<span class="string">'errors'</span>] === <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="更新一条">更新一条</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">(<span class="variable">$doc</span>)</span> </span>&#123;</span><br><span class="line">    <span class="variable">$data</span> = <span class="variable">$this</span>-&gt;data;</span><br><span class="line">    <span class="variable">$data</span>[<span class="string">'id'</span>] = <span class="variable">$doc</span>[<span class="string">'id'</span>];</span><br><span class="line">      <span class="variable">$data</span>[<span class="string">'body'</span>][<span class="string">'doc'</span>] =<span class="variable">$doc</span>; </span><br><span class="line">  </span><br><span class="line">    <span class="variable">$response</span> = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$this</span>-&gt;client-&gt;update(<span class="variable">$data</span>)) &#123;</span><br><span class="line">            <span class="variable">$response</span> = <span class="keyword">true</span>;</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$response</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="关闭Selinux">关闭Selinux</h5><p> linux使用iptables关闭防火墙，但是访问ElasticServer的使用还是报Permission denie错误，最后发现原来<br>Selinx还是开着，原来iptables -F 有时候不能关闭所有的防火墙策略，使用下面命令关闭selinux </p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setenforce <span class="number">0</span> <span class="comment">#不需要重启</span></span><br></pre></td></tr></table></figure>
+<h5 id="结果输出">结果输出</h5><pre><code>data = [doc <span class="keyword">for</span> doc <span class="keyword">in</span> <span class="literal">result</span>['hits']['hits']]
+print data
+</code></pre><h5 id="Mongodb和ElasticSearch对比">Mongodb和ElasticSearch对比</h5><p>Mongodb在数据量很大时候查询速度很慢即使添加了索引，所以对使用skip来获取分页信息，官方强烈建议是使用<br>条件过滤，es使用倒排索引，虽然在索引建立的时候需要花费些时间，但是对于数据的查询速度却表现非常的好!<br><img src="/images/php/mongodvses.png" alt="Alt text"></p>
+</li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/php/">php</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/10/04/elasticsearch/" data-title="elasticsearch学习 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/10/04/sklearn/"  title="sklearn文本分类学习">
+ <strong>下一篇：</strong><br/> 
+ <span>sklearn文本分类学习
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/10/04/elasticsearch/" data-title="elasticsearch学习" data-url="http://yoursite.com/2015/10/04/elasticsearch/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ElasticSearch学习笔记"><span class="toc-number">1.</span> <span class="toc-text">ElasticSearch学习笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#查询名字为test100的记录"><span class="toc-number">1.0.0.0.1.</span> <span class="toc-text">查询名字为test100的记录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查询test10%的记录"><span class="toc-number">1.0.0.0.2.</span> <span class="toc-text">查询test10%的记录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#建立DateMapping"><span class="toc-number">1.0.0.0.3.</span> <span class="toc-text">建立DateMapping</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#添加记录"><span class="toc-number">1.0.0.0.4.</span> <span class="toc-text">添加记录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#日期范围查询："><span class="toc-number">1.0.0.0.5.</span> <span class="toc-text">日期范围查询：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查看索引建立信息"><span class="toc-number">1.0.0.0.6.</span> <span class="toc-text">查看索引建立信息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ElasticSearch_php组合复杂查询"><span class="toc-number">1.0.0.0.7.</span> <span class="toc-text">ElasticSearch php组合复杂查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#批量更新和删除操作使用ElasticSearch封装的bulk"><span class="toc-number">1.0.0.0.8.</span> <span class="toc-text">批量更新和删除操作使用ElasticSearch封装的bulk</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#更新一条"><span class="toc-number">1.0.0.0.9.</span> <span class="toc-text">更新一条</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#关闭Selinux"><span class="toc-number">1.0.0.0.10.</span> <span class="toc-text">关闭Selinux</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#结果输出"><span class="toc-number">1.0.0.0.11.</span> <span class="toc-text">结果输出</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Mongodb和ElasticSearch对比"><span class="toc-number">1.0.0.0.12.</span> <span class="toc-text">Mongodb和ElasticSearch对比</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/大数据/" title="大数据">大数据<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android开发/" title="Android开发">Android开发<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fitleupload/" title="fitleupload">fitleupload<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://wujindou.github.io" target="_blank" title="Jackie&#39;s Blog">Jackie&#39;s Blog</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://blog.csdn.net/wujindou" target="_blank" title="CSDN(以前博客)">CSDN(以前博客)</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wujindou"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

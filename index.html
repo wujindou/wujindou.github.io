@@ -81,6 +81,153 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/04/elasticsearch/" title="elasticsearch学习" itemprop="url">elasticsearch学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-04T02:32:35.000Z" itemprop="datePublished"> 发表于 2015-10-04</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="ElasticSearch学习笔记">ElasticSearch学习笔记</h1><pre><code>在使用了Mongodb之后发现，Mongodb差强人意的查询，还有令人发指的<span class="keyword">Skip</span>在面对大数据，查询时候的查询速度地下的问题，将方向投向了ElasticSearch搜索引擎上，ElasticSearch虽然说在数据的导入和建立索引的过程十分缓慢，但是查询速度相比Mongodb确实有<span class="number">10</span>倍的提交。
+</code></pre><p>简单记录下搭建和学习的一些内容： </p>
+<ol>
+<li>ElasticSearch环境搭建这个不再赘述了，官方的安装十分的方便</li>
+<li>ElasticSearch环境访问 <a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a>    就能访问看到</li>
+<li><p>建立索引可以导入数据一条一条的建立，索引页可以直接全部load数据建立索引<br>代码： </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">i = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> i&lt; <span class="number">100000000</span>:</span><br><span class="line">     user = &#123;&#125; </span><br><span class="line">     user[<span class="string">'name'</span>] = <span class="string">'test'</span>+str(random.randint(<span class="number">0</span>, i))</span><br><span class="line">     user[<span class="string">'text'</span>] = <span class="string">'daffadsfadsfa da jia hao '</span> + <span class="string">'test'</span>+str(random.randint(<span class="number">0</span>, i))+<span class="string">' This is a Text'</span></span><br><span class="line">     user[<span class="string">'created_at'</span>] = time.strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)</span><br><span class="line">  user[<span class="string">'id'</span>] = i</span><br><span class="line">     user[<span class="string">'random'</span>] = random.randint(<span class="number">0</span>,i) </span><br><span class="line">    i = i + <span class="number">1</span></span><br><span class="line">   es.index(index=<span class="string">'microblogs'</span>, doc_type=<span class="string">'tweets'</span>, body=user)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Api使用</p>
+<h5 id="查询名字为test100的记录">查询名字为test100的记录</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">result = es.search(index=<span class="string">'microblogs'</span>, body=&#123;</span><br><span class="line">          <span class="string">"query"</span>: &#123;<span class="string">"match"</span>: &#123;<span class="string">'name'</span>:<span class="string">'test100'</span>&#125;&#125; </span><br><span class="line">   &#125;, timeout=<span class="number">120</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="查询test10%的记录">查询test10%的记录</h5> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">result = es.search(index=<span class="string">'microblogs'</span>,  body=&#123;</span><br><span class="line"><span class="string">"query"</span>:&#123;<span class="string">"fuzzy_like_this_field"</span> : &#123; <span class="string">"name"</span> : &#123;<span class="string">"like_text"</span>: <span class="string">"test10"</span>, <span class="string">"max_query_terms"</span>:<span class="number">5</span>&#125;&#125;&#125;&#125;,  </span><br><span class="line">timeout=<span class="number">120</span>)</span><br><span class="line">``` </span><br><span class="line"><span class="comment">#####范围查询</span></span><br><span class="line">```python</span><br><span class="line"><span class="string">"query"</span> : &#123;</span><br><span class="line"><span class="string">"filtered"</span> : &#123;</span><br><span class="line">    <span class="string">"filter"</span> : &#123;</span><br><span class="line">	<span class="string">"range"</span> : &#123;</span><br><span class="line">	    <span class="string">"price"</span> : &#123;</span><br><span class="line">		<span class="string">"gte"</span> : <span class="number">20</span>,</span><br><span class="line">		<span class="string">"lt"</span>  : <span class="number">40</span></span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="建立DateMapping">建立DateMapping</h5><p> ElasticSearch默认会把字符串当成String处理，类似’created_at’:’2015-08-16 20:00:’也会被当成字符串处理，所以不能使用时间的范围查询</p>
+ <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">    curl -XPUT "http://10.141.201.96:9200/twitter" -d'</span><br><span class="line">&#123;</span><br><span class="line">   "mappings": &#123;</span><br><span class="line">      "tweet": &#123;</span><br><span class="line">            "date_detection": false, #不加上查询的时候还是会报错，ES默认会转换为local</span><br><span class="line">            "properties" : &#123;</span><br><span class="line">                "postDate" : &#123;</span><br><span class="line">                    "type" : "date",</span><br><span class="line">                    "format" : "YYYY-MM-dd HH:mm:ss"</span><br><span class="line">                &#125;,</span><br><span class="line">                "message":&#123;</span><br><span class="line">                "type":"string"</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+<h5 id="添加记录">添加记录</h5> <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    curl -XPOST "http://10.141.201.96:9200/twitter/tweet/" -d'</span><br><span class="line">&#123;</span><br><span class="line">    "content": "Hello World!",</span><br><span class="line">    "postDate": "2015-09-16 15:00:00"</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+<h5 id="日期范围查询：">日期范围查询：</h5> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">    result = es.search(index=<span class="string">'twitter'</span>,body= &#123;<span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"range"</span>:&#123; </span><br><span class="line">        <span class="string">"postDate"</span>:&#123;</span><br><span class="line">                <span class="string">"gte"</span>:<span class="string">'2015-09-16 11:10:00'</span>,</span><br><span class="line">                <span class="string">"lte"</span>:<span class="string">'2015-09-16 15:01:00'</span></span><br><span class="line">        &#125;   </span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;&#125;) </span><br><span class="line"><span class="keyword">print</span> result</span><br></pre></td></tr></table></figure>
+<h5 id="查看索引建立信息">查看索引建立信息</h5> <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/10.141.201.96:9200/twitter</span><span class="regexp">/tweet/</span><span class="constant">_mapping</span></span><br><span class="line">&#123;<span class="string">"twitter"</span><span class="symbol">:</span>&#123;<span class="string">"mappings"</span><span class="symbol">:</span>&#123;<span class="string">"tweet"</span><span class="symbol">:</span>&#123;<span class="string">"date_detection"</span><span class="symbol">:false</span>,<span class="string">"properties"</span><span class="symbol">:</span>&#123;<span class="string">"content"</span><span class="symbol">:</span>&#123;<span class="string">"type"</span><span class="symbol">:<span class="string">"string"</span></span>&#125;,<span class="string">"message"</span><span class="symbol">:</span>&#123;<span class="string">"type"</span><span class="symbol">:<span class="string">"string"</span></span>&#125;,<span class="string">"postDate"</span><span class="symbol">:</span>&#123;<span class="string">"type"</span><span class="symbol">:<span class="string">"date"</span></span>,<span class="string">"format"</span><span class="symbol">:<span class="string">"YYYY-MM-dd HH:mm:ss"</span></span>&#125;&#125;&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="ElasticSearch_php组合复杂查询">ElasticSearch php组合复杂查询</h5> <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$params</span>[<span class="string">'body'</span>][<span class="string">'query'</span>][<span class="string">'bool'</span>][<span class="string">'must'</span>][]= <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'0'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'range'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'starttime'</span> =&gt; <span class="keyword">array</span>(<span class="string">'gte'</span> =&gt; <span class="variable">$start_begin</span>, <span class="string">'lte'</span> =&gt; <span class="variable">$start_end</span>)))<span class="comment">//匹配时间范围</span></span><br><span class="line">     );</span><br><span class="line"><span class="variable">$params</span>[<span class="string">'body'</span>][<span class="string">'query'</span>][<span class="string">'bool'</span>][<span class="string">'must'</span>][] = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'multi_match'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'query'</span> =&gt; ’query text<span class="string">', </span><br><span class="line">    '</span>fields<span class="string">' =&gt; array('</span>fields1,<span class="string">'fields2'</span>),</span><br><span class="line">    <span class="string">'operator'</span> =&gt; <span class="string">'and'</span>)</span><br><span class="line">    );   <span class="comment">//查询匹配查询字符串的字段，某一个字段匹配就会查找出来</span></span><br><span class="line">    <span class="variable">$params</span>[<span class="string">'body'</span>][<span class="string">'query'</span>][<span class="string">'bool'</span>][<span class="string">'must'</span>][] = <span class="keyword">array</span>(<span class="string">'term'</span> =&gt; <span class="keyword">array</span>(<span class="string">'type'</span> =&gt; <span class="variable">$query</span>[<span class="string">'type'</span>])); <span class="comment">//查询type字段必须匹配内容</span></span><br></pre></td></tr></table></figure>
+<h5 id="批量更新和删除操作使用ElasticSearch封装的bulk">批量更新和删除操作使用ElasticSearch封装的bulk</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line">* 批量更新</span><br><span class="line">*<span class="phpdoc"> @params</span> = array(</span><br><span class="line">*     '0'=&gt;array('id'=&gt;xxx,'filed_naem'=&gt;'type','value'=&gt;xxxx)</span><br><span class="line">*   );</span><br><span class="line">*/</span></span><br><span class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">updateDocs</span><span class="params">(<span class="variable">$params</span>)</span> </span>&#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="variable">$this</span>-&gt;data;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$params</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>) &#123;</span><br><span class="line">            <span class="variable">$data</span>[<span class="string">'body'</span>][] = <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">'update'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">                    <span class="string">'_id'</span> =&gt; <span class="variable">$v</span>[<span class="string">'id'</span>]</span><br><span class="line">                )</span><br><span class="line">            );</span><br><span class="line">            <span class="variable">$data</span>[<span class="string">'body'</span>][][<span class="string">'doc'</span>][<span class="variable">$v</span>[<span class="string">'field_name'</span>]] = <span class="variable">$v</span>[<span class="string">'value'</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$res</span> = <span class="variable">$this</span>-&gt;client-&gt;bulk(<span class="variable">$data</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$res</span>[<span class="string">'errors'</span>] == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//批量删除 </span></span><br><span class="line">    <span class="comment">/*</span><br><span class="line">    *<span class="phpdoc"> @ids</span> = array()</span><br><span class="line">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delDocs</span><span class="params">(<span class="variable">$ids</span>)</span> </span>&#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="variable">$this</span>-&gt;data;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$ids</span> <span class="keyword">as</span> <span class="variable">$id</span>) &#123;</span><br><span class="line">            <span class="variable">$data</span>[<span class="string">'body'</span>][] = <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">'delete'</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">                    <span class="string">'_id'</span> =&gt; <span class="variable">$id</span></span><br><span class="line">                )</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$res</span> = <span class="variable">$this</span>-&gt;client-&gt;bulk(<span class="variable">$data</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$res</span>[<span class="string">'errors'</span>] === <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="更新一条">更新一条</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">(<span class="variable">$doc</span>)</span> </span>&#123;</span><br><span class="line">    <span class="variable">$data</span> = <span class="variable">$this</span>-&gt;data;</span><br><span class="line">    <span class="variable">$data</span>[<span class="string">'id'</span>] = <span class="variable">$doc</span>[<span class="string">'id'</span>];</span><br><span class="line">      <span class="variable">$data</span>[<span class="string">'body'</span>][<span class="string">'doc'</span>] =<span class="variable">$doc</span>; </span><br><span class="line">  </span><br><span class="line">    <span class="variable">$response</span> = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$this</span>-&gt;client-&gt;update(<span class="variable">$data</span>)) &#123;</span><br><span class="line">            <span class="variable">$response</span> = <span class="keyword">true</span>;</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$response</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="关闭Selinux">关闭Selinux</h5><p> linux使用iptables关闭防火墙，但是访问ElasticServer的使用还是报Permission denie错误，最后发现原来<br>Selinx还是开着，原来iptables -F 有时候不能关闭所有的防火墙策略，使用下面命令关闭selinux </p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setenforce <span class="number">0</span> <span class="comment">#不需要重启</span></span><br></pre></td></tr></table></figure>
+<h5 id="结果输出">结果输出</h5><pre><code>data = [doc <span class="keyword">for</span> doc <span class="keyword">in</span> <span class="literal">result</span>['hits']['hits']]
+print data
+</code></pre><h5 id="Mongodb和ElasticSearch对比">Mongodb和ElasticSearch对比</h5><p>Mongodb在数据量很大时候查询速度很慢即使添加了索引，所以对使用skip来获取分页信息，官方强烈建议是使用<br>条件过滤，es使用倒排索引，虽然在索引建立的时候需要花费些时间，但是对于数据的查询速度却表现非常的好!<br><img src="/images/php/mongodvses.png" alt="Alt text"></p>
+</li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/php/">php</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/04/elasticsearch/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/04/elasticsearch/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/04/sklearn/" title="sklearn文本分类学习" itemprop="url">sklearn文本分类学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-04T02:27:28.000Z" itemprop="datePublished"> 发表于 2015-10-04</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h6 id="文本分类数据加载">文本分类数据加载</h6><pre><code>开始学习NLP了，想使用实验室的微博数据做个文本分类但是在使用Scikit-learn的时候，总是没有思路，不知道如何把自己的数据转换为训练分类器所能运行的格式，后来看学长的解释，Scikit-learn的输入都是2维的数组，于是考虑直接把数据转换为2维数组然后传入分类器查看结果。
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfTransformer</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    categories_dict = &#123;<span class="string">'1'</span> : <span class="string">'饮食'</span>,<span class="string">'2'</span> : <span class="string">'新闻'</span>&#125;</span><br><span class="line"></span><br><span class="line">    X = [</span><br><span class="line">        <span class="string">'我爱吃大米'</span>,</span><br><span class="line">        <span class="string">'喜欢馒头'</span>,</span><br><span class="line">        <span class="string">'喜欢盖浇饭'</span>,</span><br><span class="line">        <span class="string">'烧鸡'</span>,</span><br><span class="line">        <span class="string">'番茄炒蛋'</span>,</span><br><span class="line">        <span class="string">'拉面'</span>,</span><br><span class="line">        <span class="string">'本报记者陈雪频实习记者唐翔发自上海'</span>,</span><br><span class="line">        <span class="string">'记者消息来自北京'</span>,</span><br><span class="line">        <span class="string">'北京台报道'</span>,</span><br><span class="line">        <span class="string">'记者消息来自北京'</span>,</span><br><span class="line">        <span class="string">'记者消息来自北京'</span>,</span><br><span class="line">        <span class="string">'记者消息来自北京'</span>,</span><br><span class="line"></span><br><span class="line">    ]</span><br><span class="line">    categories= [<span class="string">'1'</span>,<span class="string">'1'</span>,<span class="string">'1'</span>,<span class="string">'1'</span>,<span class="string">'1'</span>,<span class="string">'1'</span>,<span class="string">'2'</span>,<span class="string">'2'</span>,<span class="string">'2'</span>,<span class="string">'2'</span>,<span class="string">'2'</span>,<span class="string">'2'</span>]</span><br><span class="line">    dataset = []</span><br><span class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> X:</span><br><span class="line">        dataset.append(<span class="string">" "</span>.join(jieba.cut(data.split(<span class="string">','</span>)[<span class="number">0</span>], cut_all=<span class="keyword">False</span>)))</span><br><span class="line">    count_vect = CountVectorizer()</span><br><span class="line">    X_train_counts = count_vect.fit_transform(dataset)</span><br><span class="line">    tfidf_transformer = TfidfTransformer()</span><br><span class="line">    X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)</span><br><span class="line">    vect = TfidfVectorizer()</span><br><span class="line">    clf = MultinomialNB().fit(X_train_tfidf, categories)</span><br><span class="line">    docs_new = [<span class="string">'记者'</span>,<span class="string">'大米'</span>]</span><br><span class="line">    X_new_counts = count_vect.transform(docs_new)</span><br><span class="line">    X_new_tfidf = tfidf_transformer.transform(X_new_counts)</span><br><span class="line">    <span class="keyword">print</span> X_new_tfidf</span><br><span class="line">    predicted = clf.predict(X_new_tfidf)</span><br><span class="line">    <span class="keyword">print</span> predicted</span><br><span class="line">    <span class="keyword">for</span> doc, category <span class="keyword">in</span> zip(docs_new, predicted):</span><br><span class="line">        print(<span class="string">'%r =&gt; %s'</span> % (doc, categories_dict[category]))</span><br><span class="line"><span class="keyword">if</span> __name__ ==<span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>补充一点再做分类器的时候，数据的大小会直接影响分类器的结果，如果数据量不够或者太少会造成数据的分类错误，所以尽可能使用更多的数据。</p>
+<h6 id="交叉验证">交叉验证</h6><p> 交叉验证是一种统计学上将数据样本切割成较小子集的实用方法。于是可以先在一个子集上做分析， 而其它子集则用来做后续对此分析的确认及验证。交叉验证首先要做的就是划分样本集为样本集和测试集两部分，随后使用样本集训练分类器，然后使用测试集验证分类器的正确性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfTransformer</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB</span><br><span class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_curve</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score</span><br><span class="line">TEST_SIZE = <span class="number">0.2</span></span><br><span class="line">RANDOM_STATE = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    categories_dict = &#123;<span class="number">1</span> : <span class="string">'饮食'</span>,<span class="number">2</span> : <span class="string">'新闻'</span>&#125;</span><br><span class="line"></span><br><span class="line">    X = [</span><br><span class="line">        <span class="string">'我爱吃大米'</span>,</span><br><span class="line">        <span class="string">'喜欢馒头'</span>,</span><br><span class="line">        <span class="string">'喜欢盖浇饭'</span>,</span><br><span class="line">        <span class="string">'烧鸡'</span>,</span><br><span class="line">        <span class="string">'番茄炒蛋'</span>,</span><br><span class="line">        <span class="string">'拉面'</span>,</span><br><span class="line">        <span class="string">'本报记者陈雪频实习记者唐翔发自上海'</span>,</span><br><span class="line">        <span class="string">'记者消息来自北京'</span>,</span><br><span class="line">        <span class="string">'北京台报道'</span>,</span><br><span class="line">        <span class="string">'记者消息来自北京'</span>,</span><br><span class="line">        <span class="string">'记者消息来自北京'</span>,</span><br><span class="line">        <span class="string">'记者消息来自北京'</span>,</span><br><span class="line"></span><br><span class="line">    ]</span><br><span class="line">    categories= [<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>]</span><br><span class="line">    X_train, X_val, y_train, y_val = train_test_split(X, categories, test_size=TEST_SIZE, random_state=RANDOM_STATE)  //样本集划分</span><br><span class="line">    dataset = []</span><br><span class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> X_train:</span><br><span class="line">        dataset.append(<span class="string">" "</span>.join(jieba.cut(data.split(<span class="string">','</span>)[<span class="number">0</span>], cut_all=<span class="keyword">False</span>)))</span><br><span class="line">    count_vect = CountVectorizer()</span><br><span class="line">    X_train_counts = count_vect.fit_transform(dataset)</span><br><span class="line">    tfidf_transformer = TfidfTransformer()</span><br><span class="line">    X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)</span><br><span class="line">    vect = TfidfVectorizer()</span><br><span class="line">    clf = MultinomialNB(alpha=<span class="number">0.1</span>).fit(X_train_tfidf, y_train)</span><br><span class="line">    joblib.dump(clf, <span class="string">"train_model.m"</span>)</span><br><span class="line">    X_train_test = []</span><br><span class="line">    doc_new_set = []</span><br><span class="line">    <span class="keyword">for</span> data <span class="keyword">in</span>  X_val:</span><br><span class="line">        doc_new_set.append(<span class="string">" "</span>.join(jieba.cut(data.split(<span class="string">','</span>)[<span class="number">0</span>], cut_all=<span class="keyword">False</span>)))</span><br><span class="line">    X_new_counts = count_vect.transform(doc_new_set)</span><br><span class="line">    X_new_tfidf = tfidf_transformer.transform(X_new_counts)</span><br><span class="line">    <span class="comment">#print clf.predict(X_new_tfidf)</span></span><br><span class="line">    y_pred = clf.predict_proba(X_new_tfidf)[:, <span class="number">1</span>] //分类可能性预测</span><br><span class="line">    new_pred = []</span><br><span class="line">    <span class="keyword">for</span> d <span class="keyword">in</span>  y_pred:</span><br><span class="line">        new_pred.append(d)</span><br><span class="line">    fpr, tpr, thresholds = roc_curve(y_val,new_pred, pos_label=<span class="number">2</span>) //roc曲线</span><br><span class="line">    <span class="keyword">print</span> fpr,tpr,thresholds</span><br><span class="line">    docs_new = [<span class="string">'记者'</span>,<span class="string">'米饭'</span>]</span><br><span class="line">    X_new_counts = count_vect.transform(docs_new)</span><br><span class="line">    X_new_tfidf = tfidf_transformer.transform(X_new_counts)</span><br><span class="line">    <span class="comment">#print X_new_tfidf</span></span><br><span class="line">    predicted = clf.predict(X_new_tfidf)  //分类预测</span><br><span class="line">    <span class="comment">#print predicted</span></span><br><span class="line">    <span class="keyword">for</span> doc, category <span class="keyword">in</span> zip(docs_new, predicted):</span><br><span class="line">        <span class="keyword">print</span> doc, categories_dict[category]</span><br><span class="line"><span class="keyword">if</span> __name__ ==<span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<h6 id="分类器的保存和恢复">分类器的保存和恢复</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">joblib.dump(clf, <span class="string">"train_model.m"</span>)</span><br><span class="line">clf = joblib.load(<span class="string">"train_model.m"</span>)</span><br></pre></td></tr></table></figure>
+<h6 id="几个分类器测试">几个分类器测试</h6><p>分别使用NB、SVM、LogisticRegression、KNN分类器，： 对于文本分类问题来说，数据的特征可以是：词频特征、TF-IDF特征等. 由于词袋的规模非常的大，我们可以使用Hashing Trick 技巧来进行降维操作。当然，Hashing Trick的参数选择非常重要，太大了会导致运行缓慢甚至内存溢出，太低了会导致碰撞的几率加大，降低模型准确性。HashingTrick<a href="http://myg0u.com/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/2015/05/06/use-sklearn-jieba.html" target="_blank" rel="external">参考文章</a><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">     <span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfTransformer</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB</span><br><span class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_curve</span><br><span class="line"><span class="keyword">from</span> sklearn.grid_search <span class="keyword">import</span> GridSearchCV</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> chi2</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction <span class="keyword">import</span> FeatureHasher</span><br><span class="line">TEST_SIZE = <span class="number">0.2</span></span><br><span class="line">RANDOM_STATE = <span class="number">0</span></span><br><span class="line">X = []</span><br><span class="line">categories = []</span><br><span class="line"><span class="keyword">with</span> open( <span class="string">'data.csv'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    reader = csv.reader(f)</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> reader:</span><br><span class="line">        X.append(row[<span class="number">0</span>])</span><br><span class="line">        categories.append(row[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">categories_dict = &#123;<span class="number">1</span> : <span class="string">'男'</span>, <span class="number">0</span>: <span class="string">'女'</span>&#125;</span><br><span class="line">dataset = []</span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> X:</span><br><span class="line">    dataset.append(<span class="string">" "</span>.join(jieba.cut(data.split(<span class="string">','</span>)[<span class="number">0</span>], cut_all=<span class="keyword">False</span>)))</span><br><span class="line">count_vect = CountVectorizer()</span><br><span class="line">X_train_counts = count_vect.fit_transform(dataset)</span><br><span class="line">tfidf_transformer = TfidfTransformer()</span><br><span class="line">X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SVM</span><span class="params">()</span>:</span></span><br><span class="line">    clf = SVC(kernel=<span class="string">'linear'</span>)</span><br><span class="line">    clf.fit(X_train_tfidf, categories)</span><br><span class="line">    joblib.dump(clf, <span class="string">"svm_model.m"</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">MultionmialNB</span><span class="params">()</span>:</span></span><br><span class="line">    clf = MultinomialNB(alpha=<span class="number">0.1</span>).fit(X_train_tfidf, categories)</span><br><span class="line">    joblib.dump(clf,<span class="string">'multionmialnb.m'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Hashing</span><span class="params">()</span>:</span></span><br><span class="line">    X = []</span><br><span class="line">    categories = []</span><br><span class="line">    <span class="keyword">with</span> open( <span class="string">'data.csv'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        reader = csv.reader(f)</span><br><span class="line">        <span class="keyword">for</span> row <span class="keyword">in</span> reader:</span><br><span class="line">            X.append(row[<span class="number">0</span>])</span><br><span class="line">            categories.append(row[<span class="number">1</span>])</span><br><span class="line">    fh = FeatureHasher(n_features=<span class="number">30000</span>,non_negative=<span class="keyword">True</span>,input_type=<span class="string">'string'</span>)</span><br><span class="line">    docset = []</span><br><span class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> X:</span><br><span class="line">        docset += [jieba.cut(d)]</span><br><span class="line">    X_train =  fh.fit_transform(docset)</span><br><span class="line">    clf = MultinomialNB(alpha=<span class="number">0.1</span>).fit(X_train, categories)</span><br><span class="line">    str =<span class="string">'最喜欢冰淇淋了'</span></span><br><span class="line">    <span class="keyword">print</span> clf.predict(fh.fit_transform(jieba.cut(str)))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">LinerClassifer</span><span class="params">()</span>:</span> //Logistic regression </span><br><span class="line"></span><br><span class="line">    lr =LogisticRegression()</span><br><span class="line">    lr.fit(X_train_tfidf,categories)</span><br><span class="line">    joblib.dump(lr, <span class="string">"logisticregression_model.m"</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">KNN</span><span class="params">()</span>:</span>   //KNN</span><br><span class="line">    knnclf = KNeighborsClassifier()</span><br><span class="line">    knnclf.fit(X_train_tfidf,categories)</span><br><span class="line">    joblib.dump(knnclf, <span class="string">"knn_model.m"</span>)</span><br><span class="line"><span class="keyword">if</span> __name__ ==<span class="string">"__main__"</span>:</span><br><span class="line">    <span class="comment"># MultionmialNB()</span></span><br><span class="line">    <span class="comment"># SVM()</span></span><br><span class="line">    <span class="comment"># LinerClassifer()</span></span><br><span class="line">    clf = joblib.load(<span class="string">'multionmialnb.m'</span>)</span><br><span class="line">    str =[<span class="string">'宝宝乖啊'</span>]</span><br><span class="line">    doc_new_set = []</span><br><span class="line">    <span class="keyword">for</span> data <span class="keyword">in</span>  str:</span><br><span class="line">        doc_new_set.append(<span class="string">" "</span>.join(jieba.cut(data.split(<span class="string">','</span>)[<span class="number">0</span>], cut_all=<span class="keyword">False</span>)))</span><br><span class="line">    X_new_counts = count_vect.transform(doc_new_set)</span><br><span class="line">    X_new_tfidf = tfidf_transformer.transform(X_new_counts)</span><br><span class="line">    <span class="keyword">print</span> clf.predict(X_new_tfidf)</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/sklearn/">sklearn</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/04/sklearn/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/04/sklearn/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/07/25/file-upload-iframe/" title="Iframe实现文件上传" itemprop="url">Iframe实现文件上传</a>
   </h1>
   <p class="article-author">By
@@ -1253,320 +1400,6 @@ message EchoResponse
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/18/libevent-c-1/" title="Libevent整合protobuf（一)" itemprop="url">Libevent整合protobuf（一)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-18T01:57:53.000Z" itemprop="datePublished"> 发表于 2015-04-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>ProtocolBuffer是用于结构化数据串行化的灵活、高效、自动的方法，有如XML，不过它更小、更快、也更简单。你可以定义自己的数据结构，然后使用代码生成器生成的代码来读写这个数据结构。你甚至可以在无需</p>
-<ul>
-<li>下载protobuf<a href="http://code.google.com/p/protobuf/downloads/list" target="_blank" rel="external">地址</a>安装也比较简单，就不赘述。</li>
-<li>当执行protoc —version成功后就表示已经安装成功了。<br>libevent是一个强大的网络库，网上的网络库有很多，想libev、boost、muduo（陈硕）写的网络库，之所以考虑libevent作为学习对象是发现公司内部好像用的很多。<br>例子代码：<br>server.cpp </li>
-</ul>
-<pre><code><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;errno.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;assert.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;event2/event.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;event2/bufferevent.h&gt; </span>
-<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999</span>
-<span class="preprocessor">#<span class="keyword">define</span> LISTEN_BACKLOG 32</span>
-
-<span class="function"><span class="keyword">void</span> <span class="title">do_accept</span><span class="params">(evutil_socket_t listener, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span></span>;
-<span class="function"><span class="keyword">void</span> <span class="title">read_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span></span>;
-<span class="function"><span class="keyword">void</span> <span class="title">error_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span></span>;
-<span class="function"><span class="keyword">void</span> <span class="title">write_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span></span>;
-
-<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span>
-</span>{
-
-    <span class="keyword">int</span> ret;
-    evutil_socket_t listener;
-    listener = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>); 
-    assert(listener &gt; <span class="number">0</span>); 
-    evutil_make_listen_socket_reuseable(listener);
-
-    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;
-    <span class="built_in">sin</span>.sin_family = AF_INET;
-    <span class="built_in">sin</span>.sin_addr.s_addr = <span class="number">0</span>;
-    <span class="built_in">sin</span>.sin_port = htons(LISTEN_PORT);
-
-    <span class="keyword">if</span> (bind(listener, (<span class="keyword">struct</span> sockaddr *)&amp;<span class="built_in">sin</span>, <span class="keyword">sizeof</span>(<span class="built_in">sin</span>)) &lt; <span class="number">0</span>) {
-
-        perror(<span class="string">"bind"</span>);
-        <span class="keyword">return</span> <span class="number">1</span>;
-    }
-    <span class="keyword">if</span> (listen(listener, LISTEN_BACKLOG) &lt; <span class="number">0</span>) {
-
-        perror(<span class="string">"listen"</span>);
-        <span class="keyword">return</span> <span class="number">1</span>;
-    }
-    <span class="built_in">printf</span> (<span class="string">"Listening...\n"</span>);
-
-    evutil_make_socket_nonblocking(listener);
-
-    <span class="keyword">struct</span> event_base *base = event_base_new();
-    assert(base != NULL);
-    <span class="keyword">struct</span> event *listen_event;
-    listen_event = event_new(base, listener, EV_READ|EV_PERSIST, do_accept, (<span class="keyword">void</span>*)base);
-    event_add(listen_event, NULL);
-    event_base_dispatch(base);
-
-    <span class="built_in">printf</span>(<span class="string">"The End."</span>);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}
-
-<span class="function"><span class="keyword">void</span> <span class="title">do_accept</span><span class="params">(evutil_socket_t listener, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span>
-</span>{
-
-    <span class="keyword">struct</span> event_base *base = (<span class="keyword">struct</span> event_base *)arg;
-    evutil_socket_t fd;
-    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;
-    socklen_t slen;
-    fd = accept(listener, (<span class="keyword">struct</span> sockaddr *)&amp;<span class="built_in">sin</span>, &amp;slen);
-    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) {
-
-        perror(<span class="string">"accept"</span>);
-        <span class="keyword">return</span>;
-    }
-    <span class="keyword">if</span> (fd &gt; FD_SETSIZE) {
-
-        perror(<span class="string">"fd &gt; FD_SETSIZE\n"</span>);
-        <span class="keyword">return</span>;
-    }
-
-    <span class="built_in">printf</span>(<span class="string">"ACCEPT: fd = %u\n"</span>, fd);
-
-    <span class="keyword">struct</span> bufferevent *bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
-    bufferevent_setcb(bev, read_cb, NULL, error_cb, arg);
-    bufferevent_enable(bev, EV_READ|EV_WRITE|EV_PERSIST);
-}
-
-<span class="function"><span class="keyword">void</span> <span class="title">read_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span>
-</span>{
-
-<span class="preprocessor">#<span class="keyword">define</span> MAX_LINE    256</span>
-    <span class="keyword">char</span> line[MAX_LINE+<span class="number">1</span>];
-    <span class="keyword">int</span> n;
-    evutil_socket_t fd = bufferevent_getfd(bev);
-
-    <span class="keyword">while</span> (n = bufferevent_read(bev, line, MAX_LINE), n &gt; <span class="number">0</span>) {
-
-        line[n] = <span class="string">'\0'</span>;
-        <span class="built_in">printf</span>(<span class="string">"fd=%u, read line: %s\n"</span>, fd, line);
-
-        bufferevent_write(bev, line, n);
-    }
-}
-<span class="function"><span class="keyword">void</span> <span class="title">write_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span> </span>{
-}
-<span class="function"><span class="keyword">void</span> <span class="title">error_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span>
-</span>{
-    evutil_socket_t fd = bufferevent_getfd(bev);
-    <span class="built_in">printf</span>(<span class="string">"fd = %u, "</span>, fd);
-    <span class="keyword">if</span> (event &amp; BEV_EVENT_TIMEOUT) {
-
-        <span class="built_in">printf</span>(<span class="string">"Timed out\n"</span>);
-    }
-    <span class="keyword">else</span> <span class="keyword">if</span> (event &amp; BEV_EVENT_EOF) {
-
-        <span class="built_in">printf</span>(<span class="string">"connection closed\n"</span>);
-    }
-    <span class="keyword">else</span> <span class="keyword">if</span> (event &amp; BEV_EVENT_ERROR) {
-
-        <span class="built_in">printf</span>(<span class="string">"some other error\n"</span>);
-    }
-    bufferevent_free(bev);
-</code></pre><p>````<br>client.cpp<br>参考代码： </p>
-<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;stdlib.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;string.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;unistd.h&gt;</span>
-
-<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/types.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/socket.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;netinet/in.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;arpa/inet.h&gt;</span>
-
-<span class="preprocessor">#<span class="keyword">define</span> oops(msg) {\
-    perror(msg); \
-    exit(1); \
-}  </span>
-<span class="preprocessor">#<span class="keyword">define</span> SIZE 256  </span>
-
-<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999  </span>
-
-<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span>
-</span>{
-
-
-    <span class="keyword">int</span> socket_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>); 
-    <span class="keyword">if</span>(socket_fd == -<span class="number">1</span>) 
-        oops(<span class="string">"socket initiating error..."</span>);
-    <span class="keyword">struct</span> sockaddr_in address;
-    bzero(&amp;address, <span class="keyword">sizeof</span>(address));
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);
-    address.sin_port =  htons(LISTEN_PORT);
-
-    <span class="keyword">int</span> connect_result = connect(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;address, <span class="keyword">sizeof</span>(address));
-    <span class="keyword">if</span>(connect_result == -<span class="number">1</span>)
-        oops(<span class="string">"connect error..."</span>);
-
-    <span class="keyword">while</span>(<span class="number">1</span>)
-    {
-
-        <span class="keyword">char</span> buffer[<span class="number">256</span>] ={
-            <span class="number">0</span>};
-        <span class="built_in">printf</span>(<span class="string">"pls enter a string, or enter 'q' exit:\n"</span>);
-        <span class="built_in">scanf</span>(<span class="string">"%s"</span>, buffer);
-        <span class="keyword">if</span>(<span class="built_in">strcmp</span>(buffer, <span class="string">"q"</span>) == <span class="number">0</span>)
-        {
-
-            <span class="built_in">printf</span>(<span class="string">"You exit!"</span>);
-            <span class="keyword">return</span> <span class="number">0</span>;
-        }
-        <span class="built_in">printf</span>(<span class="string">"your enter is %s\n"</span>, buffer);
-        ssize_t write_length = write(socket_fd, buffer, <span class="built_in">strlen</span>(buffer)+<span class="number">1</span>);
-        <span class="keyword">if</span>(write_length &lt;= <span class="number">0</span> || write_length != (<span class="built_in">strlen</span>(buffer)+<span class="number">1</span>))
-            oops(<span class="string">"error: write ..."</span>);
-
-
-        <span class="keyword">char</span> buf[<span class="number">512</span>];
-        bzero(buf, <span class="number">0</span>);
-        ssize_t read_length = read(socket_fd, buf, <span class="keyword">sizeof</span>(buf));
-        <span class="keyword">if</span>(read_length == -<span class="number">1</span>)
-            oops(<span class="string">"error: read data from socket..."</span>);
-
-        <span class="built_in">printf</span>(<span class="string">"the ret msg is: %s\n"</span>, buf);
-    }
-    close(socket_fd);
-    <span class="keyword">return</span> EXIT_SUCCESS;
-}
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/c-学习/">c++学习</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/18/libevent-c-1/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/18/libevent-c-1/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/mysql-learn/" title="MySQL触发器学习" itemprop="url">MySQL触发器学习</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T12:39:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h4 id="MySQL触发器学习">MySQL触发器学习</h4><p>mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：<br>触发器：<br>修改 分隔符<br>delimiter $…<br>create trigger triggerName </p>
-<p>before /after </p>
-<p>insert/update/delete </p>
-<p>on tableName #待监视表</p>
-<p>for each row #监视每一行变化</p>
-<p>begin </p>
-<h4 id="进行相关的触发事件的操作的处理">进行相关的触发事件的操作的处理</h4><p>declare rnum<br>set rnum </p>
-<h4 id="insert_使用new取得插入新行元素">insert 使用new取得插入新行元素</h4><h4 id="delete_使用old取得待删除行元素">delete 使用old取得待删除行元素</h4><p>end $</p>
-<h4 id="查看触发器：">查看触发器：</h4><p>show triggers;</p>
-<h4 id="删除触发器">删除触发器</h4><h3 id="MySQL存储过程学习">MySQL存储过程学习</h3><h4 id="存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。">存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。</h4><h4 id="创建：">创建：</h4><p>create procedure name()</p>
-<p>begin </p>
-<h4 id="引入变量">引入变量</h4><p>declare age int default 80;</p>
-<h4 id="变量运算">变量运算</h4><p>select age from dual;<br>set age := age+20;<br>select concat(‘20年后年龄’,age) from dual </p>
-<h4 id="if_age_&gt;70_then">if age &gt;70 then</h4><p>select ‘古稀之年’<br>end$</p>
-<h4 id="存储过程传递参数语法：[in/out/inout]_参数名_参数类型">存储过程传递参数语法：[in/out/inout] 参数名 参数类型</h4><p>create procedure p2(width int , height int )<br>begin </p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/数据库/">数据库</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/mysql-learn/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/mysql-learn/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -1595,7 +1428,7 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
+				<li><a href="/tags/php/" title="php">php<sup>3</sup></a></li>
 			
 		
 			
@@ -1603,7 +1436,7 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
 			
 		
 			
@@ -1611,11 +1444,19 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
 			
 		
 			
@@ -1631,7 +1472,11 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
 			
 		
 		</ul>

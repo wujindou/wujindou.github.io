@@ -81,6 +81,395 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/17/big-data-flume/" title="Flume安装配置" itemprop="url">Flume安装配置</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:26:06.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="http://f.dataguru.cn/thread-48324-1-1.html" target="_blank" rel="external">参考文章</a></p>
+<h4 id="下载Flume1-4-0">下载Flume1.4.0</h4><pre><code>wget <span class="symbol">http:</span>/<span class="regexp">/mirrors.cnnic.cn/apache</span><span class="regexp">/flume/</span><span class="number">1.4</span>.<span class="number">0</span>/apache-flume-<span class="number">1.4</span>.<span class="number">0</span>-bin.tar.gz
+</code></pre><h4 id="配置及测试参考Apache文章Flume">配置及测试参考Apache文章<a href="https://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="external">Flume</a></h4><ul>
+<li>新建文件example-conf.properties</li>
+</ul>
+<pre><code> <span class="comment"># example.conf: A single-node Flume configuration</span>
+
+<span class="comment"># Name the components on this agent</span>
+a1.<span class="variable">sources =</span> r1
+a1.<span class="variable">sinks =</span> k1
+a1.<span class="variable">channels =</span> c1
+
+<span class="comment"># Describe/configure the source</span>
+a1.sources.r1.<span class="variable">type =</span> netcat
+a1.sources.r1.<span class="variable">bind =</span> localhost
+a1.sources.r1.<span class="variable">port =</span> <span class="number">44444</span>
+
+<span class="comment"># Describe the sink</span>
+a1.sinks.k1.<span class="variable">type =</span> logger
+
+<span class="comment"># Use a channel which buffers events in memory</span>
+a1.channels.c1.<span class="variable">type =</span> memory
+a1.channels.c1.<span class="variable">capacity =</span> <span class="number">1000</span>
+a1.channels.c1.<span class="variable">transactionCapacity =</span> <span class="number">100</span> 
+
+<span class="comment"># Bind the source and sink to the channel</span>
+a1.sources.r1.<span class="variable">channels =</span> c1
+a1.sinks.k1.<span class="variable">channel =</span> c1
+</code></pre><ul>
+<li>启动</li>
+</ul>
+<pre><code>flume-ng agent --<span class="keyword">conf</span> <span class="keyword">conf</span> --<span class="keyword">conf</span>-<span class="keyword">file</span> example-<span class="keyword">conf</span>.properties --name a1                      -Dflume.root.logger=INFO,console
+</code></pre><ul>
+<li>测试 : 新建终端测试 telnet localhost 44444 在终端可以输入内容可以看到如下结果<br><img src="/images/hadoop/flume.png" alt="Alt text"><h4 id="本地hdfs测试">本地hdfs测试</h4></li>
+<li>配置文件</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = avrosrc
+agent<span class="class">.sinks</span> =hdfs-write 
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.type</span> =exec 
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.command</span> =tail -F  /root/hadoop/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> =<span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.type</span> = hdfs
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.path</span> =hdfs:<span class="comment">//172.16.86.38:9000/flume/webdata</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.rollInterval</span> = <span class="number">30</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.channel</span>=memoryChannel
+</code></pre><ul>
+<li>问题</li>
+</ul>
+<pre><code><span class="number">14</span>/<span class="number">05</span>/<span class="number">06</span> <span class="number">15</span>:<span class="number">32</span>:<span class="number">28</span> <span class="type">ERROR</span> hdfs.<span class="type">HDFSEventSink</span>: process failed
+java.lang.<span class="type">VerifyError</span>: class org.apache.hadoop.hdfs.protocol.proto.<span class="type">ClientNamenodeProtocolProtos</span>$<span class="type">RecoverLeaseRequestProto</span> overrides final <span class="keyword">method</span> getUnknownFields.()<span class="type">Lcom</span>/google/protobuf/<span class="type">UnknownFieldSet</span>;
+
+<span class="type">Exception</span> <span class="keyword">in</span> thread <span class="string">"SinkRunner-PollingRunner-DefaultSinkProcessor"</span> java.lang.<span class="type">VerifyError</span>: class org.apache.hadoop.hdfs.protocol.proto.<span class="type">ClientNamenodeProtocolProtos</span>$<span class="type">RecoverLeaseRequestProto</span> overrides final <span class="keyword">method</span> getUnknownFields.()<span class="type">Lcom</span>/google/protobuf/<span class="type">UnknownFieldSet</span>;
+</code></pre><p> 解决方法：mv {protobuf-java-2.4.1.jar,guava-10.0.1.jar} ~/<br>－ master  example-conf.properties</p>
+<pre><code>    agent<span class="class">.sources</span> = avrosrc
+agent<span class="class">.sinks</span> =hdfs-write 
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.type</span> =avro
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.bind</span> =master
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.port</span> =<span class="number">23004</span>
+agent<span class="class">.sources</span><span class="class">.avrosrc</span><span class="class">.channels</span>=memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> =<span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.type</span> = hdfs
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.path</span> =hdfs:<span class="comment">//172.16.86.38:9000/flume/webdata</span>
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.hdfs</span><span class="class">.rollInterval</span> = <span class="number">0</span>   
+agent<span class="class">.sinks</span><span class="class">.hdfs-write</span><span class="class">.channel</span>=memoryChannel
+</code></pre><ul>
+<li>slave01 example-conf.properties</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = baksrc
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =avro-forward-sink 
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.type</span> = exec
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.command</span> =tail -F /root/hadoo/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.checkperiodic</span> = <span class="number">1000</span>
+agent<span class="class">.sources</span><span class="class">.baksrc</span><span class="class">.channels</span> =memoryChannel 
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">30</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">10000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.transactionCapacity</span> = <span class="number">10000</span>
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.hostname</span> = master
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.avro-forward-sink</span><span class="class">.channel</span> = memoryChannel
+</code></pre><ul>
+<li><p>master:<br>flume-ng agent —conf conf —conf-file example-conf.properties —name agent -Dflume.root.logger=DEBUG,console</p>
+</li>
+<li><p>slave:<br>flume-ng avro-client -c conf  -H master -p 23004  -F /root/hadoop/test/data.txt -Dflume.root.logger=DEBUG,console<br>竟然成功了。。接下来研究如何使用配置文件或者使用tail -f </p>
+<h4 id="收集目录下面的文件内容">收集目录下面的文件内容</h4></li>
+<li>master</li>
+</ul>
+<pre><code>agent.<span class="variable">sources =</span> source1
+agent.<span class="variable">channels =</span> memoryChannel
+agent.<span class="variable">sinks =</span> sink1
+agent.sources.source1.<span class="variable">type =</span> avro
+agent.sources.source1.<span class="variable">bind =</span> master 
+agent.sources.source1.<span class="variable">port =</span> <span class="number">23004</span>
+agent.sources.source1.<span class="variable">channels =</span> memoryChannel
+<span class="comment"># Each channel's type is defined.</span>
+agent.channels.memoryChannel.<span class="variable">type =</span> memory
+agent.channels.memoryChannel.<span class="variable">capacity =</span> <span class="number">100</span> 
+agent.channels.memoryChannel.<span class="variable">keep-alive =</span> <span class="number">100</span> 
+agent.sinks.sink1.<span class="variable">type=</span>hdfs
+agent.sinks.sink1.hdfs.<span class="variable">path=</span>hdfs://master:<span class="number">9000</span>/hmbbs/%y-%m-%d/%H%M%S
+agent.sinks.sink1.hdfs.<span class="variable">fileType=</span>DataStream
+agent.sinks.sink1.hdfs.<span class="variable">writeFormat=</span>TEXT
+agent.sinks.sink1.hdfs.<span class="variable">round=</span><span class="constant">true</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundValue=</span><span class="number">5</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundUnit=</span>minute
+<span class="comment">#agent.sinks.sink1.hdfs.rollInterval=1</span>
+agent.sinks.sink1.hdfs.<span class="variable">useLocalTimeStamp=</span><span class="constant">true</span>
+agent.sinks.sink1.<span class="variable">channel =</span> memoryChannel
+agent.sinks.sink1.hdfs.<span class="variable">filePrefix=</span>events-
+</code></pre><ul>
+<li>slave 文件</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = source1
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =sink1
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> = spooldir
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.spoolDir</span>=/root/hmbbs
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
+</code></pre><h3 id="使用tail_-F">使用tail -F</h3><p>修改下 /root/hadoop/test/目录和文件的权限 chmod 777 /root/hadoop/test 和 chmod 777 /root/hadoop/test/data.txt</p>
+<ul>
+<li>master</li>
+</ul>
+<pre><code>agent.<span class="variable">sources =</span> source1
+agent.<span class="variable">channels =</span> memoryChannel
+agent.<span class="variable">sinks =</span> sink1
+agent.sources.source1.<span class="variable">type =</span> avro
+agent.sources.source1.<span class="variable">bind =</span> master 
+agent.sources.source1.<span class="variable">port =</span> <span class="number">23004</span>
+agent.sources.source1.<span class="variable">channels =</span> memoryChannel
+<span class="comment"># Each channel's type is defined.</span>
+agent.channels.memoryChannel.<span class="variable">type =</span> memory
+agent.channels.memoryChannel.<span class="variable">capacity =</span> <span class="number">100</span> 
+agent.channels.memoryChannel.<span class="variable">keep-alive =</span> <span class="number">100</span> 
+agent.sinks.sink1.<span class="variable">type=</span>hdfs
+agent.sinks.sink1.hdfs.<span class="variable">path=</span>hdfs://master:<span class="number">9000</span>/hmbbs/%y-%m-%d/%H%M%S
+agent.sinks.sink1.hdfs.<span class="variable">fileType=</span>DataStream
+agent.sinks.sink1.hdfs.<span class="variable">writeFormat=</span>TEXT
+agent.sinks.sink1.hdfs.<span class="variable">round=</span><span class="constant">true</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundValue=</span><span class="number">5</span>
+agent.sinks.sink1.hdfs.<span class="variable">roundUnit=</span>minute
+<span class="comment">#agent.sinks.sink1.hdfs.rollInterval=1</span>
+agent.sinks.sink1.hdfs.<span class="variable">useLocalTimeStamp=</span><span class="constant">true</span>
+agent.sinks.sink1.<span class="variable">channel =</span> memoryChannel
+agent.sinks.sink1.hdfs.<span class="variable">filePrefix=</span>events-
+</code></pre><ul>
+<li>slave01</li>
+</ul>
+<pre><code>agent<span class="class">.sources</span> = source1
+agent<span class="class">.channels</span> = memoryChannel
+agent<span class="class">.sinks</span> =sink1
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> =exec 
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.command</span>=tail -F /root/hadoop/test/data<span class="class">.txt</span>
+agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
+agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
+agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-flume/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-flume/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/big-data-haoop-cluster2/" title="Hadoop完全分布式集群安装" itemprop="url">Hadoop完全分布式集群安装</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:22:01.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <ul>
+<li>首先定义master 和 slave 我这里只有2台vim/etc/hosts</li>
+</ul>
+<pre><code>172.16.86.38 master
+172.16.86.39 slave01
+</code></pre><ul>
+<li>修改hostname slave01和hostname master只是临时修改</li>
+<li>打通各自的ssh和相互的ssh<br>ssh-keygen -t rsa<br>cat id_rsa.pub &gt; ./authorized_keys</li>
+</ul>
+<pre><code>#相互之间的ssh打通命令
+scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
+然后把 cat id_rsa.pub &gt;&gt;authoried_keys中，再把authorized_keys复制到其他机器
+scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
+</code></pre><ul>
+<li>以上次设置的为分布式机子为主机，需要复制一些文件到slave集群中设置。</li>
+<li>配置JDK复制master下的/usr/local/java目录到slave01，修改~/.bashrc</li>
+</ul>
+<pre><code><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
+<span class="built_in">export</span> JRE_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05/jre
+<span class="built_in">export</span> CLASSPATH=.:<span class="variable">$CLASSPATH</span>:<span class="variable">$JAVA_HOME</span>/lib:<span class="variable">$JRE_HOME</span>/lib  
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$JRE_HOME</span>/bin  
+</code></pre><p>执行source ~/.bashrc文件使配置生效,检查 java　-version </p>
+<ul>
+<li>参考<a href="http://going.blog.51cto.com/7876557/1365883" target="_blank" rel="external">文章</a><br>找不到jps命令问题：</li>
+</ul>
+<pre><code>vim ~/.bashrc文件
+<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/sbin:<span class="variable">$HIVE_HOME</span>/bin:<span class="variable">$JAVA_HOME</span>/bin
+</code></pre><p>最后结果：<br>salve:jps</p>
+<p><img src="/images/hadoop/cluster_1.png" alt="Alt text"></p>
+<p>master: jps </p>
+<p><img src="/images/hadoop/cluster_2.png" alt="Alt text"><br>在启动后发现最后没有发现liveNode，着实郁闷了很久最后发现，查看hadoop/logs的datanode文件日志返现，原来datanode连接不到namenode,试着使用telnet也不行，发现原来监听的是localhost的9000端口于是改回来就好了。<br>最后的配置文件</p>
+<ul>
+<li>core-site.xml </li>
+</ul>
+<pre><code>    <span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>fs.<span class="keyword">default</span>.name<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>hdfs://master:<span class="number">9000</span><span class="variable">&lt;/value&gt;</span>
+    <span class="variable">&lt;final&gt;</span>true<span class="variable">&lt;/final&gt;</span>
+<span class="variable">&lt;/property&gt;</span>
+<span class="variable">&lt;property&gt;</span>
+    <span class="variable">&lt;name&gt;</span>hadoop.tmp.dir<span class="variable">&lt;/name&gt;</span>
+    <span class="variable">&lt;value&gt;</span>/home/hadoop/hadoop_tmp<span class="variable">&lt;/value&gt;</span>
+  <span class="variable">&lt;/property&gt;</span>
+</code></pre><ul>
+<li>hdfs-site.xml</li>
+</ul>
+<pre><code>    <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">value</span>&gt;</span>2<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.permissions<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">value</span>&gt;</span>false<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre><ul>
+<li><p>yarn-site.xml</p>
+<pre><code> <span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8025<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.scheduler.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8030<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.resourcemanager.address<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">value</span>&gt;</span>master:8040<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre></li>
+<li><p>mapred-site.xml</p>
+</li>
+</ul>
+<pre><code><span class="tag">&lt;<span class="title">property</span>&gt;</span>
+<span class="tag">&lt;<span class="title">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
+<span class="tag">&lt;<span class="title">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+</code></pre><ul>
+<li>差点忘了 /etc/hosts了</li>
+</ul>
+<pre><code><span class="number">127.0</span>.<span class="number">0.1</span>      localhost
+::<span class="number">1</span>     localhost6<span class="class">.localdomain6</span> localhost6
+<span class="number">172.16</span>.<span class="number">86.38</span> master 
+<span class="number">172.16</span>.<span class="number">86.39</span> slave01
+</code></pre><p>问题转移，map任务一直处于停止状态，不知道日志信息在哪里<br>解决方法：打开调试信息：</p>
+<pre><code><span class="reserved">export</span> HADOOP_ROOT_LOGGER=DEBUG,<span class="built_in">console</span>
+</code></pre><p>最后问题： 服务器时间不同步，TMD这么大的坑啊。。。。</p>
+<pre><code>ntpdate <span class="tag">time</span><span class="class">.nist</span><span class="class">.gov</span>（每台服务器运行即可）
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-haoop-cluster2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-haoop-cluster2/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/17/big-data-hadoop-cluster/" title="Hadoop完全分布式集群安装" itemprop="url">Hadoop完全分布式集群安装</a>
   </h1>
   <p class="article-author">By
@@ -1368,7 +1757,7 @@ infile.seek(<span class="number">0</span>)
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>2</sup></a></li>
+				<li><a href="/tags/php/" title="php">php<sup>3</sup></a></li>
 			
 		
 			
@@ -1376,7 +1765,7 @@ infile.seek(<span class="number">0</span>)
 			
 		
 			
-				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
 			
 		
 			
@@ -1384,11 +1773,19 @@ infile.seek(<span class="number">0</span>)
 			
 		
 			
-				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
 			
 		
 			
@@ -1404,7 +1801,11 @@ infile.seek(<span class="number">0</span>)
 			
 		
 			
-				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
 			
 		
 		</ul>
