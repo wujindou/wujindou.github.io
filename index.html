@@ -81,6 +81,69 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/05/springmvc/" title="SpringMvc学习" itemprop="url">SpringMvc学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-05T08:24:34.000Z" itemprop="datePublished"> 发表于 2015-10-05</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p> 由于开发需要所以重新学习使用SpringMVC,以前本科的时候倒是真的看过Spring3和Structs2，不过但是Struct2有着很舒服，Spring也做过简单的了解了下AOP和IOC的知识，但是当时真没有使用过SpringMVC开发项目，SpringMVC目前发展很好，注解功能也完善很多，所以J2EE中SpringMVC的流行程度貌似也不错！<br>   J2EE的比较蛋疼的东西就是环境的搭建，所以免不了会有各种的问题。IDE也是不断的在演化和完善，以前使用MyEclipse感觉很好用，唯一的不足是这个东西有点太重了，基本上开着就不能使用其他的程序，所以考虑使用Eclipse和Maven来进行环境搭建。</p>
+<h5 id="Java环境搭建">Java环境搭建</h5><h5 id="下载安装Eclipse_luna地址">下载安装Eclipse luna<a href="https://eclipse.org/luna/" target="_blank" rel="external">地址</a></h5><pre><code>选择这个版本是因为这个版本很好的支持Web项目的开发，并且内置了maven所以不需要再安装maven插件，
+</code></pre><p>之后内容<a href="http://arloz.me/spring/2014/12/30/eclipse_maven_springmvc.html" target="_blank" rel="external">参考文章</a>,其他的版本我也试了下，网上没找到合适的教程或者可能自己没有配置好，总之是各种问题，网上的很多的教程也是选择这个版本的，所以照着做的时候会发现如果版本不对根本没法继续做下去！。。。教程也挖坑啊！</p>
+<h5 id="遇到的问题：">遇到的问题：</h5><p>参考上面教程，但是页面的变量显示不出来一直显示${comman}解决方法在jsp页面添加<br><figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span>&lt;%<span class="ruby"><span class="variable">@page</span> isELIgnored=<span class="string">"false"</span> </span>%&gt;<span class="xml"></span></span><br></pre></td></tr></table></figure></p>
+<h6 id="SpringMVC">SpringMVC</h6><p>太坑了。。有木有，搞个环境搞了一天了有木有…话不多说了。。直接把demo放在github上吧。。以后就用来作为一个模板来创建项目，只是使用SpringMVC，不整合Mybiats和Hibernate这些orm的东西会更繁琐。。哎！真是伤啊……说多了都是泪啊<br>结果：<br>  <img src="/images/java/spring-mvc.png" alt="Alt text"></p>
+<p>  Github<a href="https://github.com/wujindou/SpringMVC" target="_blank" rel="external">地址</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/J2EE/">J2EE</a><a href="/tags/JAVA/">JAVA</a><a href="/tags/SpringMVC/">SpringMVC</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/05/springmvc/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/05/springmvc/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/04/elasticsearch/" title="elasticsearch学习" itemprop="url">elasticsearch学习</a>
   </h1>
   <p class="article-author">By
@@ -1258,151 +1321,9 @@ Elements news = doc.select(<span class="string">"#article_list span.link_title a
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/18/libevent-c-2/" title="Libevent整合protobuf （二）" itemprop="url">Libevent整合protobuf （二）</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-18T02:01:47.000Z" itemprop="datePublished"> 发表于 2015-04-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的<a href="https://developers.google.com/protocol-buffers/docs/cpptutorial?hl=zh-cn" target="_blank" rel="external">代码</a><br>定义一个简单的EchoMessage.proto<br>内容如下： </p>
-<pre><code>message EchoRequest
-{
-    <span class="keyword">required</span> <span class="built_in">string</span> message = <span class="number">1</span>; <span class="comment">//请求字符串</span>
-};
-message EchoResponse
-{
-    <span class="keyword">required</span> <span class="built_in">string</span> response = <span class="number">1</span>; <span class="comment">//回应字符串</span>
-};
-</code></pre><p>测试：<br>test.cpp </p>
-<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;string&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
-<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>
-</span>{
-    <span class="built_in">string</span> s=<span class="string">"hello request"</span>;
-    EchoRequest request ;
-    request.set_message(s);
-    <span class="built_in">cout</span>&lt;&lt;request.message()&lt;&lt;endl;
-    <span class="keyword">return</span> <span class="number">1</span>;
-}
-</code></pre><p>编译：<br> g++ echo.pb.cc testecho.cpp -o testecho -lprotobuf<br>问题：<br>./testecho: error while loading shared libraries: libprotobuf.so.8: cannot open shared object file: No such file or directory<br>export<br>LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib<br>最后：<br>client.cpp </p>
-<pre><code>    <span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;stdlib.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;string.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;unistd.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/types.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/socket.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span>&lt;netinet/in.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;arpa/inet.h&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
-
-<span class="preprocessor">#<span class="keyword">define</span> oops(msg) {\
-    perror(msg); \
-    exit(1); \
-}  </span>
-<span class="preprocessor">#<span class="keyword">define</span> SIZE 256  </span>
-
-<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999  </span>
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
-
-<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span>
-</span>{
-
-
-    <span class="keyword">int</span> socket_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>);
-    <span class="keyword">if</span>(socket_fd == -<span class="number">1</span>)
-        oops(<span class="string">"socket initiating error..."</span>);
-
-
-    <span class="keyword">struct</span> sockaddr_in address;
-    bzero(&amp;address, <span class="keyword">sizeof</span>(address));
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);
-    address.sin_port =  htons(LISTEN_PORT);
-
-    <span class="keyword">int</span> connect_result = connect(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;address, <span class="keyword">sizeof</span>(address));
-    <span class="keyword">if</span>(connect_result == -<span class="number">1</span>)
-        oops(<span class="string">"connect error..."</span>);
-
-
-         <span class="built_in">string</span> data;
-         EchoRequest req;
-         req.set_message(<span class="string">"wwwww"</span>);
-         req.SerializeToString(&amp;data);
-        <span class="keyword">char</span> bts[data.length()];
-        <span class="built_in">strcpy</span>(bts, data.c_str());
-        ssize_t write_length = write(socket_fd, bts, <span class="keyword">sizeof</span>(bts));
-        <span class="keyword">if</span>(write_length &lt;= <span class="number">0</span> )
-            oops(<span class="string">"error: write ..."</span>);
-
-
-        <span class="keyword">char</span> buf[<span class="number">512</span>];
-        bzero(buf, <span class="number">0</span>);
-        ssize_t read_length = read(socket_fd, buf, <span class="keyword">sizeof</span>(buf));
-        <span class="keyword">if</span>(read_length == -<span class="number">1</span>)
-            oops(<span class="string">"error: read data from socket..."</span>);
-
-        <span class="built_in">printf</span>(<span class="string">"the ret msg is: %s\n"</span>, buf);
-    close(socket_fd);
-    <span class="keyword">return</span> EXIT_SUCCESS;
-}
-</code></pre><p>最后介绍我看到过的一个架构吧：<br><img src="/images/c++/libevent.png" alt="Alt text"></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/c-学习/">c++学习</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/18/libevent-c-2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/18/libevent-c-2/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -1436,19 +1357,11 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+				<li><a href="/tags/JAVA/" title="JAVA">JAVA<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
 			
 		
 			
@@ -1457,6 +1370,26 @@ message EchoResponse
 		
 			
 				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/J2EE/" title="J2EE">J2EE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SpringMVC/" title="SpringMVC">SpringMVC<sup>1</sup></a></li>
 			
 		
 			

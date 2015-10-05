@@ -4,37 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>MySQL触发器学习 | Jackie&#39;s Blog</title>
+    <title>SpringMvc学习 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="MySQL触发器学习mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：触发器：修改 分隔符delimiter $…create trigger triggerName 
-before /after 
-insert/update/delete 
-on tableName #待监视表
-for each row #监视每一行变化
-begi">
+    <meta name="description" content="由于开发需要所以重新学习使用SpringMVC,以前本科的时候倒是真的看过Spring3和Structs2，不过但是Struct2有着很舒服，Spring也做过简单的了解了下AOP和IOC的知识，但是当时真没有使用过SpringMVC开发项目，SpringMVC目前发展很好，注解功能也完善很多，所以J2EE中SpringMVC的流行程度貌似也不错！   J2EE的比较蛋疼的东西就是环境的搭建，所以">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL触发器学习">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/mysql-learn/index.html">
+<meta property="og:title" content="SpringMvc学习">
+<meta property="og:url" content="http://yoursite.com/2015/10/05/springmvc/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="MySQL触发器学习mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：触发器：修改 分隔符delimiter $…create trigger triggerName 
-before /after 
-insert/update/delete 
-on tableName #待监视表
-for each row #监视每一行变化
-begi">
+<meta property="og:description" content="由于开发需要所以重新学习使用SpringMVC,以前本科的时候倒是真的看过Spring3和Structs2，不过但是Struct2有着很舒服，Spring也做过简单的了解了下AOP和IOC的知识，但是当时真没有使用过SpringMVC开发项目，SpringMVC目前发展很好，注解功能也完善很多，所以J2EE中SpringMVC的流行程度貌似也不错！   J2EE的比较蛋疼的东西就是环境的搭建，所以">
+<meta property="og:image" content="/images/java/spring-mvc.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL触发器学习">
-<meta name="twitter:description" content="MySQL触发器学习mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：触发器：修改 分隔符delimiter $…create trigger triggerName 
-before /after 
-insert/update/delete 
-on tableName #待监视表
-for each row #监视每一行变化
-begi">
+<meta name="twitter:title" content="SpringMvc学习">
+<meta name="twitter:description" content="由于开发需要所以重新学习使用SpringMVC,以前本科的时候倒是真的看过Spring3和Structs2，不过但是Struct2有着很舒服，Spring也做过简单的了解了下AOP和IOC的知识，但是当时真没有使用过SpringMVC开发项目，SpringMVC目前发展很好，注解功能也完善很多，所以J2EE中SpringMVC的流行程度貌似也不错！   J2EE的比较蛋疼的东西就是环境的搭建，所以">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -94,14 +80,14 @@ begi">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/mysql-learn/" title="MySQL触发器学习" itemprop="url">MySQL触发器学习</a>
+      <a href="/2015/10/05/springmvc/" title="SpringMvc学习" itemprop="url">SpringMvc学习</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T12:39:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    <time datetime="2015-10-05T08:24:34.000Z" itemprop="datePublished"> 发表于 2015-10-05</time>
     
   </p>
 </header>
@@ -110,25 +96,16 @@ begi">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL触发器学习"><span class="toc-number">1.</span> <span class="toc-text">MySQL触发器学习</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#进行相关的触发事件的操作的处理"><span class="toc-number">2.</span> <span class="toc-text">进行相关的触发事件的操作的处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#insert_使用new取得插入新行元素"><span class="toc-number">3.</span> <span class="toc-text">insert 使用new取得插入新行元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#delete_使用old取得待删除行元素"><span class="toc-number">4.</span> <span class="toc-text">delete 使用old取得待删除行元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看触发器："><span class="toc-number">5.</span> <span class="toc-text">查看触发器：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除触发器"><span class="toc-number">6.</span> <span class="toc-text">删除触发器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL存储过程学习"><span class="toc-number"></span> <span class="toc-text">MySQL存储过程学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。"><span class="toc-number">1.</span> <span class="toc-text">存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建："><span class="toc-number">2.</span> <span class="toc-text">创建：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引入变量"><span class="toc-number">3.</span> <span class="toc-text">引入变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#变量运算"><span class="toc-number">4.</span> <span class="toc-text">变量运算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#if_age_>70_then"><span class="toc-number">5.</span> <span class="toc-text">if age >70 then</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程传递参数语法：[in/out/inout]_参数名_参数类型"><span class="toc-number">6.</span> <span class="toc-text">存储过程传递参数语法：[in/out/inout] 参数名 参数类型</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#Java环境搭建"><span class="toc-number">1.</span> <span class="toc-text">Java环境搭建</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#下载安装Eclipse_luna地址"><span class="toc-number">2.</span> <span class="toc-text">下载安装Eclipse luna地址</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#遇到的问题："><span class="toc-number">3.</span> <span class="toc-text">遇到的问题：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#SpringMVC"><span class="toc-number">3.1.</span> <span class="toc-text">SpringMVC</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h4 id="MySQL触发器学习">MySQL触发器学习</h4><p>mysql创建触发器，意在监视数据库中表的插入、更新或者删除操作的时候，自动调用触发器所定义的事件进行数据库的操作：<br>触发器：<br>修改 分隔符<br>delimiter $…<br>create trigger triggerName </p>
-<p>before /after </p>
-<p>insert/update/delete </p>
-<p>on tableName #待监视表</p>
-<p>for each row #监视每一行变化</p>
-<p>begin </p>
-<h4 id="进行相关的触发事件的操作的处理">进行相关的触发事件的操作的处理</h4><p>declare rnum<br>set rnum </p>
-<h4 id="insert_使用new取得插入新行元素">insert 使用new取得插入新行元素</h4><h4 id="delete_使用old取得待删除行元素">delete 使用old取得待删除行元素</h4><p>end $</p>
-<h4 id="查看触发器：">查看触发器：</h4><p>show triggers;</p>
-<h4 id="删除触发器">删除触发器</h4><h3 id="MySQL存储过程学习">MySQL存储过程学习</h3><h4 id="存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。">存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。</h4><h4 id="创建：">创建：</h4><p>create procedure name()</p>
-<p>begin </p>
-<h4 id="引入变量">引入变量</h4><p>declare age int default 80;</p>
-<h4 id="变量运算">变量运算</h4><p>select age from dual;<br>set age := age+20;<br>select concat(‘20年后年龄’,age) from dual </p>
-<h4 id="if_age_&gt;70_then">if age &gt;70 then</h4><p>select ‘古稀之年’<br>end$</p>
-<h4 id="存储过程传递参数语法：[in/out/inout]_参数名_参数类型">存储过程传递参数语法：[in/out/inout] 参数名 参数类型</h4><p>create procedure p2(width int , height int )<br>begin </p>
+		<p> 由于开发需要所以重新学习使用SpringMVC,以前本科的时候倒是真的看过Spring3和Structs2，不过但是Struct2有着很舒服，Spring也做过简单的了解了下AOP和IOC的知识，但是当时真没有使用过SpringMVC开发项目，SpringMVC目前发展很好，注解功能也完善很多，所以J2EE中SpringMVC的流行程度貌似也不错！<br>   J2EE的比较蛋疼的东西就是环境的搭建，所以免不了会有各种的问题。IDE也是不断的在演化和完善，以前使用MyEclipse感觉很好用，唯一的不足是这个东西有点太重了，基本上开着就不能使用其他的程序，所以考虑使用Eclipse和Maven来进行环境搭建。</p>
+<h5 id="Java环境搭建">Java环境搭建</h5><h5 id="下载安装Eclipse_luna地址">下载安装Eclipse luna<a href="https://eclipse.org/luna/" target="_blank" rel="external">地址</a></h5><pre><code>选择这个版本是因为这个版本很好的支持Web项目的开发，并且内置了maven所以不需要再安装maven插件，
+</code></pre><p>之后内容<a href="http://arloz.me/spring/2014/12/30/eclipse_maven_springmvc.html" target="_blank" rel="external">参考文章</a>,其他的版本我也试了下，网上没找到合适的教程或者可能自己没有配置好，总之是各种问题，网上的很多的教程也是选择这个版本的，所以照着做的时候会发现如果版本不对根本没法继续做下去！。。。教程也挖坑啊！</p>
+<h5 id="遇到的问题：">遇到的问题：</h5><p>参考上面教程，但是页面的变量显示不出来一直显示${comman}解决方法在jsp页面添加<br><figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span>&lt;%<span class="ruby"><span class="variable">@page</span> isELIgnored=<span class="string">"false"</span> </span>%&gt;<span class="xml"></span></span><br></pre></td></tr></table></figure></p>
+<h6 id="SpringMVC">SpringMVC</h6><p>太坑了。。有木有，搞个环境搞了一天了有木有…话不多说了。。直接把demo放在github上吧。。以后就用来作为一个模板来创建项目，只是使用SpringMVC，不整合Mybiats和Hibernate这些orm的东西会更繁琐。。哎！真是伤啊……说多了都是泪啊<br>结果：<br>  <img src="/images/java/spring-mvc.png" alt="Alt text"></p>
+<p>  Github<a href="https://github.com/wujindou/SpringMVC" target="_blank" rel="external">地址</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -137,7 +114,7 @@ begi">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/数据库/">数据库</a>
+  <span></span> <a href="/tags/J2EE/">J2EE</a><a href="/tags/JAVA/">JAVA</a><a href="/tags/SpringMVC/">SpringMVC</a>
   </div>
 
 </div>
@@ -146,7 +123,7 @@ begi">
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/mysql-learn/" data-title="MySQL触发器学习 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/10/05/springmvc/" data-title="SpringMvc学习 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -159,19 +136,11 @@ begi">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/18/libevent-c-1/" title="Libevent整合protobuf（一)">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Libevent整合protobuf（一)</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/17/php-learn/"  title="php单引号与双引号区别">
+<a href="/2015/10/04/elasticsearch/"  title="elasticsearch学习">
  <strong>下一篇：</strong><br/> 
- <span>php单引号与双引号区别
+ <span>elasticsearch学习
 </span>
 </a>
 </div>
@@ -180,7 +149,7 @@ begi">
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/mysql-learn/" data-title="MySQL触发器学习" data-url="http://yoursite.com/2015/04/17/mysql-learn/"></div>
+	<div class="ds-thread" data-thread-key="2015/10/05/springmvc/" data-title="SpringMvc学习" data-url="http://yoursite.com/2015/10/05/springmvc/"></div>
 </section>
 
 
@@ -190,7 +159,7 @@ begi">
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL触发器学习"><span class="toc-number">1.</span> <span class="toc-text">MySQL触发器学习</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#进行相关的触发事件的操作的处理"><span class="toc-number">2.</span> <span class="toc-text">进行相关的触发事件的操作的处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#insert_使用new取得插入新行元素"><span class="toc-number">3.</span> <span class="toc-text">insert 使用new取得插入新行元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#delete_使用old取得待删除行元素"><span class="toc-number">4.</span> <span class="toc-text">delete 使用old取得待删除行元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看触发器："><span class="toc-number">5.</span> <span class="toc-text">查看触发器：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除触发器"><span class="toc-number">6.</span> <span class="toc-text">删除触发器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL存储过程学习"><span class="toc-number"></span> <span class="toc-text">MySQL存储过程学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。"><span class="toc-number">1.</span> <span class="toc-text">存储过程：封装了若干条SQL语句,起个名字保存在数据库中。存储过程可以编程完成复杂的功能。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建："><span class="toc-number">2.</span> <span class="toc-text">创建：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引入变量"><span class="toc-number">3.</span> <span class="toc-text">引入变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#变量运算"><span class="toc-number">4.</span> <span class="toc-text">变量运算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#if_age_>70_then"><span class="toc-number">5.</span> <span class="toc-text">if age >70 then</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储过程传递参数语法：[in/out/inout]_参数名_参数类型"><span class="toc-number">6.</span> <span class="toc-text">存储过程传递参数语法：[in/out/inout] 参数名 参数类型</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#Java环境搭建"><span class="toc-number">1.</span> <span class="toc-text">Java环境搭建</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#下载安装Eclipse_luna地址"><span class="toc-number">2.</span> <span class="toc-text">下载安装Eclipse luna地址</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#遇到的问题："><span class="toc-number">3.</span> <span class="toc-text">遇到的问题：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#SpringMVC"><span class="toc-number">3.1.</span> <span class="toc-text">SpringMVC</span></a></li></ol></li></ol>
  
   </div>
 

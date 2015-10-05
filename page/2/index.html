@@ -81,6 +81,148 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/18/libevent-c-2/" title="Libevent整合protobuf （二）" itemprop="url">Libevent整合protobuf （二）</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-18T02:01:47.000Z" itemprop="datePublished"> 发表于 2015-04-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Protobuf已经下载好了，现在就开始封装一个简单的例子吧,参考官方的协议处理和封装以及编译成所需要的语言的<a href="https://developers.google.com/protocol-buffers/docs/cpptutorial?hl=zh-cn" target="_blank" rel="external">代码</a><br>定义一个简单的EchoMessage.proto<br>内容如下： </p>
+<pre><code>message EchoRequest
+{
+    <span class="keyword">required</span> <span class="built_in">string</span> message = <span class="number">1</span>; <span class="comment">//请求字符串</span>
+};
+message EchoResponse
+{
+    <span class="keyword">required</span> <span class="built_in">string</span> response = <span class="number">1</span>; <span class="comment">//回应字符串</span>
+};
+</code></pre><p>测试：<br>test.cpp </p>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;string&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>
+</span>{
+    <span class="built_in">string</span> s=<span class="string">"hello request"</span>;
+    EchoRequest request ;
+    request.set_message(s);
+    <span class="built_in">cout</span>&lt;&lt;request.message()&lt;&lt;endl;
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+</code></pre><p>编译：<br> g++ echo.pb.cc testecho.cpp -o testecho -lprotobuf<br>问题：<br>./testecho: error while loading shared libraries: libprotobuf.so.8: cannot open shared object file: No such file or directory<br>export<br>LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib<br>最后：<br>client.cpp </p>
+<pre><code>    <span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;string.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;unistd.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;iostream&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/types.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;sys/socket.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;netinet/in.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;arpa/inet.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> "echo.pb.h"</span>
+
+<span class="preprocessor">#<span class="keyword">define</span> oops(msg) {\
+    perror(msg); \
+    exit(1); \
+}  </span>
+<span class="preprocessor">#<span class="keyword">define</span> SIZE 256  </span>
+
+<span class="preprocessor">#<span class="keyword">define</span> LISTEN_PORT 9999  </span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span>
+</span>{
+
+
+    <span class="keyword">int</span> socket_fd = socket(PF_INET, SOCK_STREAM, <span class="number">0</span>);
+    <span class="keyword">if</span>(socket_fd == -<span class="number">1</span>)
+        oops(<span class="string">"socket initiating error..."</span>);
+
+
+    <span class="keyword">struct</span> sockaddr_in address;
+    bzero(&amp;address, <span class="keyword">sizeof</span>(address));
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);
+    address.sin_port =  htons(LISTEN_PORT);
+
+    <span class="keyword">int</span> connect_result = connect(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;address, <span class="keyword">sizeof</span>(address));
+    <span class="keyword">if</span>(connect_result == -<span class="number">1</span>)
+        oops(<span class="string">"connect error..."</span>);
+
+
+         <span class="built_in">string</span> data;
+         EchoRequest req;
+         req.set_message(<span class="string">"wwwww"</span>);
+         req.SerializeToString(&amp;data);
+        <span class="keyword">char</span> bts[data.length()];
+        <span class="built_in">strcpy</span>(bts, data.c_str());
+        ssize_t write_length = write(socket_fd, bts, <span class="keyword">sizeof</span>(bts));
+        <span class="keyword">if</span>(write_length &lt;= <span class="number">0</span> )
+            oops(<span class="string">"error: write ..."</span>);
+
+
+        <span class="keyword">char</span> buf[<span class="number">512</span>];
+        bzero(buf, <span class="number">0</span>);
+        ssize_t read_length = read(socket_fd, buf, <span class="keyword">sizeof</span>(buf));
+        <span class="keyword">if</span>(read_length == -<span class="number">1</span>)
+            oops(<span class="string">"error: read data from socket..."</span>);
+
+        <span class="built_in">printf</span>(<span class="string">"the ret msg is: %s\n"</span>, buf);
+    close(socket_fd);
+    <span class="keyword">return</span> EXIT_SUCCESS;
+}
+</code></pre><p>最后介绍我看到过的一个架构吧：<br><img src="/images/c++/libevent.png" alt="Alt text"></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/c-学习/">c++学习</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/18/libevent-c-2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/18/libevent-c-2/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/18/libevent-c-1/" title="Libevent整合protobuf（一)" itemprop="url">Libevent整合protobuf（一)</a>
   </h1>
   <p class="article-author">By
@@ -1193,144 +1335,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-log/" title="日志收集系统环境整合" itemprop="url">日志收集系统环境整合</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:34:18.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>=========</p>
-<ul>
-<li>首先创建数据表：</li>
-</ul>
-<pre><code>     <span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> kpilog(
-remote_addr <span class="keyword">STRING</span>, 
-remote_user <span class="keyword">STRING</span>,
-time_local <span class="keyword">STRING</span>,
-request <span class="keyword">STRING</span>,
-<span class="keyword">status</span> <span class="built_in">INT</span>,
-<span class="keyword">size</span> <span class="built_in">INT</span>,
-referer <span class="keyword">STRING</span>,
-http_user_agent <span class="keyword">STRING</span>)<span class="keyword">ROW</span> <span class="keyword">FORMAT</span> DELIMITED <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span> STORED <span class="keyword">AS</span> INPUTFORMAT <span class="string">'com.test.NginxLogInputFormat'</span> OUTPUTFORMAT <span class="string">'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'</span>;</span>
-</code></pre><ul>
-<li>导入测试数据看下是否成功</li>
-</ul>
-<pre><code><span class="operator"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> INPATH <span class="string">'/root/hadoop/nginx.log'</span> OVERWRITE <span class="keyword">INTO</span> <span class="keyword">TABLE</span> kpilog;</span>
-</code></pre><ul>
-<li>截图,还好原来的jar文件环境都没有问题.<br>  <img src="/images/hadoop/log.png" alt="Alt text"></li>
-</ul>
-<pre><code><span class="operator"><span class="keyword">drop</span> <span class="keyword">table</span> kpilog;</span>(删除测试数据)
-</code></pre><p>首先写一个脚本把生成的日志定时清理出来到要收集的目录下面，然后flume会把文件收集到hdfs中，<br>接着定义hive命令脚本把新收集文件的信息中的内容load到数据库表中。Flume这里需要把上次改掉的salve01的文件重新改回spooldir类型的。把Nginx.log文件复制到监听的目录下面，可以看到hdfs中新增加了很多文件是因为flume会把大的文件拆分成效的文件，所以load的时候只要指定目录就行了。</p>
-<pre><code><span class="operator"><span class="keyword">load</span> <span class="keyword">data</span> inpath <span class="string">'hdfs://master:9000/hmbbs/14-05-07/112500'</span>  overwrite <span class="keyword">into</span> <span class="keyword">table</span> kpilog ;</span>
-</code></pre><p>清除数据保留表结构：</p>
-<pre><code>dfs rm -r <span class="regexp">/user/</span>hive<span class="regexp">/warehouse/</span>kpilog;
-</code></pre><p>这里还需要改点东西。就是复制的时候创建的是以日为单位，这里改到时间下。<br> master</p>
-<pre><code>agent<span class="class">.sources</span> = source1
-agent<span class="class">.channels</span> = memoryChannel
-agent<span class="class">.sinks</span> = sink1
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> = avro
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.bind</span> = master 
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.port</span> = <span class="number">23004</span>
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">100</span> 
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">100</span> 
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span>=hdfs
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.path</span>=hdfs:<span class="comment">//master:9000/hmbbs/%y-%m-%d/%H%M%S/</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.fileType</span>=DataStream
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.writeFormat</span>=TEXT
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.round</span>=true
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.roundValue</span>=<span class="number">5</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.roundUnit</span>=minute
-<span class="id">#agent</span><span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.rollInterval</span>=<span class="number">1</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.useLocalTimeStamp</span>=true
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hdfs</span><span class="class">.filePrefix</span>=events-
-</code></pre><p>slave01:</p>
-<pre><code>agent<span class="class">.sources</span> =source1
-agent<span class="class">.channels</span> =memoryChannel
-agent<span class="class">.sinks</span> =sink1
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.type</span> =spooldir
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.spoolDir</span>=/root/hmbbs
-agent<span class="class">.sources</span><span class="class">.source1</span><span class="class">.channels</span> = memoryChannel
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span> = memory
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.capacity</span> = <span class="number">1000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.keep-alive</span> = <span class="number">1000</span>
-agent<span class="class">.channels</span><span class="class">.memoryChannel</span><span class="class">.type</span>=file
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.type</span> = avro
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.hostname</span> =master 
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.port</span> = <span class="number">23004</span>
-agent<span class="class">.sinks</span><span class="class">.sink1</span><span class="class">.channel</span> = memoryChannel
-</code></pre><p>文件命名： agent.sinks.sink1.hdfs.roundValue=5这句话表示使用的是5分钟的约束，即如果是51…54都会粗处到50分的时间里面56…59都会存储到55分的时间里面.</p>
-<p>master主机：load_data.sh (该脚本负责把收集的日志信息load到hive的数据库表中)</p>
-<pre><code><span class="shebang">#!/bin/sh</span>
-hive <span class="operator">-e</span> <span class="string">"load data inpath 'hdfs://master:9000/hmbbs/14-05-07/130500'  overwrite into table kpilog "</span>;
-</code></pre><p>slave01主机：mv_file.sh (脚本功能：发日志收集到flume监听的文件夹中)</p>
-<pre><code><span class="shebang">#!/bin/sh</span>
-cp  /root/hadoop/nginx.log /root/hmbbs/
-</code></pre><p>清空原来的数据来建立数据定时任务：</p>
-<p><code>注意</code><br> crontab的脚本运行的时候由于环境变量的问题有可能不能运行，所以可以通过把错误信息输出到文件中进行调试，另外flume在移动文件的过程中如果文件名字相同会出现报错的情况。使用load file后原来的文件就会被删除掉，所以注意不要多次运行同一个目录下的文件会提示找不到的。<br> 　　　　　　　<br> 最后的load脚本：</p>
-<pre><code>    #!<span class="regexp">/bin/</span>sh
-export JAVA_HOME=<span class="regexp">/usr/</span>local<span class="regexp">/java/</span>jdk1.<span class="number">8.0</span>_05
-export HADOOP_HOME=~<span class="regexp">/hadoop/</span>hadoop-<span class="number">2.2</span>.<span class="number">0</span>
-<span class="regexp">/root/</span>hadoop<span class="regexp">/hive/</span>bin<span class="regexp">/hive -e "load data inpath 'hdfs:/</span><span class="regexp">/master:9000/</span>hmbbs<span class="regexp">/14-05-07/</span><span class="number">152500</span><span class="string">'  overwrite into table kpilog " &gt; /root/hadoop/test/test.txt  2&gt;&amp;1</span>
-</code></pre><p>crontab </p>
-<pre><code>30 15 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span>  /root/hadoop/load_data.sh
-</code></pre><p>最后的资源：<a href="http://pan.baidu.com/s/1eQeNXrs" target="_blank" rel="external">nginx.jar</a>和测试的<a href="http://pan.baidu.com/s/1mgJnr2g" target="_blank" rel="external">log</a>文件，有个参考的文章也记下吧<a href="http://m.blog.csdn.net/blog/xueliang1029/24039459" target="_blank" rel="external">文章</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-log/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-log/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
 </div>
@@ -1364,19 +1371,11 @@ export HADOOP_HOME=~<span class="regexp">/hadoop/</span>hadoop-<span class="numb
 			
 		
 			
-				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+				<li><a href="/tags/JAVA/" title="JAVA">JAVA<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
 			
 		
 			
@@ -1385,6 +1384,26 @@ export HADOOP_HOME=~<span class="regexp">/hadoop/</span>hadoop-<span class="numb
 		
 			
 				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/J2EE/" title="J2EE">J2EE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git使用/" title="git使用">git使用<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SpringMVC/" title="SpringMVC">SpringMVC<sup>1</sup></a></li>
 			
 		
 			
