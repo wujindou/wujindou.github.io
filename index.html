@@ -81,6 +81,140 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/07/sklearn-chi2/" title="sklearn文本特征选择" itemprop="url">sklearn文本特征选择</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T01:58:19.000Z" itemprop="datePublished"> 发表于 2015-10-07</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>首先，为什么进行特征的选择？<br>   特征选择(排序)对于数据科学家、机器学习从业者来说非常重要。好的特征选择能够提升模型的性能，更能帮助我们理解数据的特点、底层结构，这对进一步改善模型、算法都有着重要作用。</p>
+<p>特征选择主要有两个功能：</p>
+<pre><code>减少特征数量、降维，使模型泛化能力更强，减少过拟合
+增强对特征和特征值之间的理解
+</code></pre><p>文本特征使用最简单的bag of words 或者 tfidf选择特征的时候由于tfidf只是考虑到文本和单词出现的频率，所以用来做特征并不能十分好的反应分类的特征情况，所以使用特征选择来选择一些重要和代表分类信息的特征也就显得很有必要，特征选择方法很多。这里简单以<br>sklearn的卡方检验来简单使用进行特征的选择。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> chi2</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> pylab <span class="keyword">import</span> barh,plot,yticks,show,grid,xlabel,figure</span><br><span class="line"><span class="keyword">from</span> pylab <span class="keyword">import</span> *</span><br><span class="line">X = []</span><br><span class="line">categories = []</span><br><span class="line"><span class="keyword">with</span> open( <span class="string">'data.csv'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    reader = csv.reader(f)</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> reader:</span><br><span class="line">        X.append(row[<span class="number">0</span>])</span><br><span class="line">        categories.append(row[<span class="number">1</span>])</span><br><span class="line">dataset = []</span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> X:</span><br><span class="line">    dataset.append(<span class="string">" "</span>.join(jieba.cut(data.split(<span class="string">','</span>)[<span class="number">0</span>], cut_all=<span class="keyword">False</span>)))</span><br><span class="line">vectorizer = TfidfVectorizer()</span><br><span class="line">X = vectorizer.fit_transform(dataset)</span><br><span class="line">ch2 =  SelectKBest(chi2,k=<span class="number">200</span>)</span><br><span class="line">x_new  =ch2.fit_transform(X,categories) //简单选择<span class="number">200</span>个特征</span><br></pre></td></tr></table></figure></p>
+<p>提取特征和使用pylab结果可视化：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mpl.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'Microsoft YaHei'</span>]</span><br><span class="line">chi2score = chi2(X,categories)[<span class="number">0</span>]</span><br><span class="line">figure(figsize=(<span class="number">6</span>,<span class="number">6</span>))</span><br><span class="line">wscores = zip(vectorizer.get_feature_names(),chi2score)</span><br><span class="line">wchi2 = sorted(wscores,key=<span class="keyword">lambda</span> x:x[<span class="number">1</span>])</span><br><span class="line">topchi2 = zip(*wchi2[-<span class="number">25</span>:])</span><br><span class="line">x = range(len(topchi2[<span class="number">1</span>]))</span><br><span class="line">labels = topchi2[<span class="number">0</span>]</span><br><span class="line">barh(x,topchi2[<span class="number">1</span>],align=<span class="string">'center'</span>,alpha=.<span class="number">2</span>,color=<span class="string">'g'</span>)</span><br><span class="line">plot(topchi2[<span class="number">1</span>],x,<span class="string">'-o'</span>,markersize=<span class="number">2</span>,alpha=.<span class="number">8</span>,color=<span class="string">'g'</span>)</span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span>  labels:</span><br><span class="line">    <span class="keyword">print</span> data</span><br><span class="line">yticks(x,labels)</span><br><span class="line">xlabel(<span class="string">'$\chi^2$'</span>)</span><br><span class="line">show()</span><br></pre></td></tr></table></figure></p>
+<p>效果图：<br> <img src="/images/python/sklearn/chi2.png" alt="Alt text"></p>
+<p>参考文档： </p>
+<pre><code><span class="string">http:</span><span class="comment">//glowingpython.blogspot.com/2014/02/terms-selection-with-chi-square.html</span>
+<span class="string">http:</span><span class="comment">//www.cnblogs.com/wangbogong/p/3251132.html</span>
+<span class="string">http:</span><span class="comment">//www.blogjava.net/zhenandaci/archive/2008/08/31/225966.html</span>
+<span class="string">http:</span><span class="comment">//dataunion.org/14072.html</span>
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/07/sklearn-chi2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/07/sklearn-chi2/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/07/springmvc-rest/" title="SpringMVC Restful请求" itemprop="url">SpringMVC Restful请求</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T01:51:13.000Z" itemprop="datePublished"> 发表于 2015-10-07</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>由于对Restful风格的服务比较中意，所以考虑使用SpringMVC返回json数据。简单记录下:</p>
+<h6 id="Spring4-x_添加依赖">Spring4.x 添加依赖</h6><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jackson-databind<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.4.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>修改webdemoDispatcher-servlet.xml配置文件添加bean<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">bean</span></span><br><span class="line">		<span class="attribute">class</span>=<span class="value">"org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"messageConverters"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">list</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">ref</span> <span class="attribute">bean</span>=<span class="value">"mappingJackson2HttpMessageConverter"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">list</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"mappingJackson2HttpMessageConverter"</span></span><br><span class="line">		<span class="attribute">class</span>=<span class="value">"org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"supportedMediaTypes"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">list</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">value</span>&gt;</span>text/html;charset=UTF-8<span class="tag">&lt;/<span class="title">value</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">value</span>&gt;</span>text/json;charset=UTF-8<span class="tag">&lt;/<span class="title">value</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">value</span>&gt;</span>application/json;charset=UTF-8<span class="tag">&lt;/<span class="title">value</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">list</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="添加Model">添加Model</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.demo.model;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Message</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> String name;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Message</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="使用">使用</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Index</span> </span>&#123;</span><br><span class="line">    <span class="annotation">@RequestMapping</span>(value=<span class="string">"/getUserName"</span>,method=RequestMethod.GET)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Message <span class="title">getUserName</span><span class="params">(@RequestParam(value=<span class="string">"name"</span>)</span> String name)</span>&#123;</span><br><span class="line">    	Message msg = <span class="keyword">new</span> Message(name);</span><br><span class="line">    	<span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>访问地址就可以看到返回的json格式数据</p>
+<pre><code><span class="string">http:</span><span class="comment">//localhost:8080/test.springmvc/getUserName?name=fccc</span>
+</code></pre><p>结果:</p>
+<pre><code>{<span class="string">'name'</span>:<span class="string">'fccc'</span>}
+</code></pre><h6 id="自定义json类型，实际的使用中不能构造所有的对象，所以自定义返回类型是很有必要的。">自定义json类型，实际的使用中不能构造所有的对象，所以自定义返回类型是很有必要的。</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Index</span> </span>&#123;</span><br><span class="line">    <span class="annotation">@RequestMapping</span>(value=<span class="string">"/bar"</span>,method=RequestMethod.GET,produces = <span class="string">"application/json"</span>)</span><br><span class="line">    <span class="annotation">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> Map&lt;String, Object&gt; bar() &#123;</span><br><span class="line">        HashMap&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        map.put(<span class="string">"test"</span>, <span class="string">"jsonRestExample"</span>);</span><br><span class="line">        <span class="keyword">return</span> map;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还是不够灵活，试试把两者结合起来吧。。。哈哈！<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HashMap&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">map.put(<span class="string">"test"</span>, <span class="string">"jsonRestExample"</span>);</span><br><span class="line">map.put(<span class="string">"msg"</span>, <span class="keyword">new</span> Message(<span class="string">"zhang3"</span>));</span><br><span class="line"><span class="keyword">return</span> map;</span><br></pre></td></tr></table></figure></p>
+<p>SpringMVC其中@RequestParam(value=”name”) String name可以获得无论是Get或者post过来的数据<br>配置404 error page !<br>首先在web.xml配置404错误及显示页面<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">error-page</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">error-code</span>&gt;</span>404<span class="tag">&lt;/<span class="title">error-code</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">location</span>&gt;</span>/jsp/404.jsp<span class="tag">&lt;/<span class="title">location</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">error-page</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后在WEB-INF下添加jsp文件夹，配置404.jsp页面显示错误！</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/J2EE/">J2EE</a><a href="/tags/JAVA/">JAVA</a><a href="/tags/SpringMVC/">SpringMVC</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/07/springmvc-rest/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/07/springmvc-rest/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/05/springmvc/" title="SpringMvc学习" itemprop="url">SpringMvc学习</a>
   </h1>
   <p class="article-author">By
@@ -840,487 +974,6 @@ public <span class="class"><span class="keyword">class</span> <span class="title
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/19/android-blog-2/" title="Android应用开发二" itemprop="url">Android应用开发二</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-19T06:39:52.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h3 id="了解Activity">了解Activity</h3><p><img src="/images/android/android_blog_2.png" alt="Alt text"></p>
-<h3 id="了解Intent">了解Intent</h3><p>  在一个项目之中，会由多个Activity程序所组成，那么此时，这多个Activity程序之间就需要进行通讯，而这之间的通讯就依靠Intent完成。<br><img src="/images/android/android_blog_2_2.png" alt="Alt text"><br>示例： </p>
-<ul>
-<li>MainActivity.java</li>
-</ul>
-<pre><code><span class="keyword">package</span> com.example.blogapp;
-<span class="keyword">import</span> java.util.ArrayList;
-<span class="keyword">import</span> java.util.List;
-<span class="keyword">import</span> android.app.Activity;
-<span class="keyword">import</span> android.content.Intent;
-<span class="keyword">import</span> android.os.Bundle;
-<span class="keyword">import</span> android.view.Menu;
-<span class="keyword">import</span> android.view.View;
-<span class="keyword">import</span> android.view.View.OnClickListener;
-<span class="keyword">import</span> android.widget.Button;
-<span class="keyword">import</span> android.widget.ListView;
-
-<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>{
-
-    <span class="keyword">private</span> Item item ;
-    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;Item&gt; newsDataList = <span class="keyword">new</span> ArrayList&lt;Item&gt;();
-    <span class="keyword">private</span> ListView listView ;
-    <span class="keyword">private</span> MySimpleAdapter myadapter ;
-    <span class="keyword">private</span> Button btn ;
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>{
-        <span class="keyword">super</span>.onCreate(savedInstanceState);
-
-        setContentView(R.layout.main);
-        <span class="keyword">this</span>.initNewsData();
-        myadapter = <span class="keyword">new</span> MySimpleAdapter(MainActivity.<span class="keyword">this</span>, newsDataList,R.layout.data_list);  
-        listView =(ListView) findViewById(R.id.listview);
-        listView.setAdapter(myadapter);
-        btn = (Button)<span class="keyword">this</span>.findViewById(R.id.btn);
-        btn.setOnClickListener(<span class="keyword">new</span> OnClickListener(){
-            <span class="annotation">@Override</span>
-            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>{
-                Intent it = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>,ItemDetail.class) ;
-                MainActivity.<span class="keyword">this</span>.startActivity(it) ;    
-            }
-
-
-        });
-
-    }
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>{
-        getMenuInflater().inflate(R.menu.main, menu);
-        <span class="keyword">return</span> <span class="keyword">true</span>;
-    }
-    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initNewsData</span><span class="params">()</span> </span>{
-        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">20</span>; i++) {
-            item = <span class="keyword">new</span> Item(<span class="string">"ID:"</span>+i,<span class="string">"标题"</span>+ i);
-            newsDataList.add(item);
-        }
-    }
-
-}
-</code></pre><ul>
-<li><p>AndroidManifest.xml添加Activity信息</p>
-  <activity android:name="com.example.blogapp.ItemDetail" android:label="@string/app_name"><br>  </activity></li>
-<li>ItemDetail.java</li>
-</ul>
-<pre><code><span class="keyword">package</span> com.example.blogapp;
-<span class="keyword">import</span> android.app.<span class="type">Activity</span>;
-<span class="keyword">import</span> android.content.<span class="type">Intent</span>;
-<span class="keyword">import</span> android.os.<span class="type">Bundle</span>;
-<span class="keyword">import</span> android.view.<span class="type">View</span>;
-<span class="keyword">import</span> android.view.<span class="type">View</span>.<span class="type">OnClickListener</span>;
-<span class="keyword">import</span> android.widget.<span class="type">Button</span>;
-public <span class="class"><span class="keyword">class</span> <span class="title">ItemDetail</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Activity</span> {</span>
-<span class="keyword">private</span> <span class="type">Button</span> btn ;
-<span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) {
-    <span class="keyword">super</span>.onCreate(savedInstanceState);
-    setContentView(<span class="type">R</span>.layout.detail_main);
-    btn = (<span class="type">Button</span>)<span class="keyword">this</span>.findViewById(<span class="type">R</span>.id.back);
-    btn.setOnClickListener(<span class="keyword">new</span> <span class="type">OnClickListener</span>(){
-        <span class="annotation">@Override</span>
-        public void onClick(<span class="type">View</span> v) {
-            <span class="type">Intent</span> it = <span class="keyword">new</span> <span class="type">Intent</span>(<span class="type">ItemDetail</span>.<span class="keyword">this</span>,<span class="type">MainActivity</span>.<span class="keyword">class</span>);
-            <span class="type">ItemDetail</span>.<span class="keyword">this</span>.startActivity(it);
-            <span class="type">ItemDetail</span>.<span class="keyword">this</span>.finish();
-        }});
-};
-}
-</code></pre><p>配置文件就是添加了2个按钮来获取点击事件跳转Activity。</p>
-<h3 id="实现Activity通信，传递信息">实现Activity通信，传递信息</h3><ul>
-<li>MainActivity.java修改onCreate方法如下:</li>
-</ul>
-<pre><code><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>{
-        <span class="keyword">super</span>.onCreate(savedInstanceState);
-
-        setContentView(R.layout.main);
-        <span class="keyword">this</span>.initNewsData();
-        myadapter = <span class="keyword">new</span>   
-        MySimpleAdapter(MainActivity.<span class="keyword">this</span>,newsDataList,R.layout.data_list);  
-        listView =(ListView) findViewById(R.id.listview);
-        listView.setAdapter(myadapter);
-        listView.setOnItemClickListener(<span class="keyword">new</span> OnItemClickListener(){
-            <span class="annotation">@Override</span>
-            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(AdapterView&lt;?&gt; adapter, View v, <span class="keyword">int</span> position,
-                    <span class="keyword">long</span> id)</span> </span>{
-                System.out.println(v);
-                Item t = (Item)newsDataList.get(position);
-                Intent it = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>,ItemDetail.class) ;
-                it.putExtra(<span class="string">"blog_id"</span>, t.getId());
-                MainActivity.<span class="keyword">this</span>.startActivity(it) ;
-            }
-
-        });
-
-}
-</code></pre><ul>
-<li>ItemDetail.java修改onCreate方法如下:</li>
-</ul>
-<pre><code><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>{
-    <span class="keyword">super</span>.onCreate(savedInstanceState);
-    setContentView(R.layout.detail_main);
-    Intent intent = getIntent();
-    intent.getExtras();
-    Bundle data = intent.getExtras();
-    String id = data.getString(<span class="string">"blog_id"</span>);
-    tv = (TextView) <span class="keyword">this</span>.findViewById(R.id.info);
-    tv.setText(<span class="string">"接收到信息"</span>+id);
-    btn = (Button)<span class="keyword">this</span>.findViewById(R.id.back);
-    btn.setOnClickListener(<span class="keyword">new</span> OnClickListener(){
-
-        <span class="annotation">@Override</span>
-        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>{
-            Intent it = <span class="keyword">new</span> Intent(ItemDetail.<span class="keyword">this</span>,MainActivity.class);
-            ItemDetail.<span class="keyword">this</span>.startActivity(it);
-            ItemDetail.<span class="keyword">this</span>.finish();
-        }});
-}
-</code></pre><ul>
-<li>图示：</li>
-</ul>
-<p><img src="/images/android/android_blog_2_3.png" alt="Alt text"></p>
-<ul>
-<li>详情页：</li>
-</ul>
-<p><img src="/images/android/android_blog_2_4.png" alt="Alt text"></p>
-<p>至此准备工作已经差不多了下面开始整合吧.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android开发/">Android开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/19/android-blog-2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/19/android-blog-2/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/19/android-blog-1/" title="Android应用开发一" itemprop="url">Android应用开发一</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-19T06:35:46.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>   学习Android已经有一段时间了，可是一直没有动手开发实际的应用，今天就简单的实践下使用android来抓取自己的博客在手机上查看。</p>
-<h3 id="知识准备">知识准备</h3><ol>
-<li>使用Jsoup抓取网页<br> Jsoup是一个很好用的java的库可以使用jsoup来抓取网页进行解析，jsoup提供了类似于jquery的元素查找的方法可以很方便解析HTML元素或者内容。详情请参考<a href="http://jsoup.org/" target="_blank" rel="external">jsoup</a>中内容进行参考。简单示例:</li>
-</ol>
-<pre><code>String blog_url = <span class="string">"http://blog.csdn.net/wujindou"</span>;
-Document doc = Jsoup.connect(blog_url).
-userAgent(<span class="string">"Mozilla"</span>).followRedirects(<span class="constant">true</span>).<span class="keyword">timeout</span>(<span class="number">10000</span>).<span class="keyword">get</span>();
-Elements news = doc.select(<span class="string">"#article_list span.link_title a"</span>);
-<span class="keyword">for</span>(Element link: news){
-    String href = link.attr(<span class="string">"href"</span>);
-    String <span class="property">id</span> = href.substring(href.<span class="property">length</span>()-<span class="number">8</span>,href.<span class="property">length</span>());
-    System.out.println(<span class="property">id</span>);
-    System.out.println(link.<span class="type">text</span>());
-}
-</code></pre><ol>
-<li>编写自定义Adapter<br>使用ListView显示列表最简单的方法就是：定义item布局文件,然后使用Map建立组件之间的对应关系<br>比如:</li>
-</ol>
-<ul>
-<li>定义各个item的布局文件data_list.xml<br><img src="/images/android/android_blog_1.png" alt="Alt text"></li>
-<li>定义全局的布局文件main.xml<br><img src="/images/android/android_blog_2.jpg" alt="Alt text"></li>
-<li>使用<br><img src="/images/android/android_blog_3.png" alt="Alt text"><br>这样写虽然可以但是结构不清晰而且如果数据的内容过多也不方便进行扩展了，所以考虑使用自定的Adapter来封装原始的SimpleAdapter类方便程序的扩展和实现。</li>
-<li>首先编写Item类： </li>
-</ul>
-<pre><code><span class="keyword">public</span> <span class="keyword">class</span> Item {
-    <span class="keyword">private</span> <span class="built_in">String</span> id;
-    <span class="keyword">private</span> <span class="built_in">String</span> title;
-    <span class="keyword">public</span> Item(<span class="built_in">String</span> id,<span class="built_in">String</span> title){
-        <span class="keyword">this</span>.id = id ;
-        <span class="keyword">this</span>.title = title;
-    }
-    <span class="keyword">public</span> <span class="built_in">String</span> getId() {
-        <span class="keyword">return</span> id;
-    }
-    <span class="keyword">public</span> <span class="built_in">void</span> setId(<span class="built_in">String</span> id) {
-        <span class="keyword">this</span>.id = id;
-    }
-    <span class="keyword">public</span> <span class="built_in">String</span> getTitle() {
-        <span class="keyword">return</span> title;
-    }
-    <span class="keyword">public</span> <span class="built_in">void</span> setTitle(<span class="built_in">String</span> title) {
-        <span class="keyword">this</span>.title = title;
-    }
-</code></pre><p>}</p>
-<ul>
-<li>自定义Adapter</li>
-</ul>
-<pre><code><span class="keyword">package</span> com.example.blogapp;
-<span class="keyword">import</span> java.util.List;
-<span class="keyword">import</span> android.content.Context;
-<span class="keyword">import</span> android.view.LayoutInflater;
-<span class="keyword">import</span> android.view.View;
-<span class="keyword">import</span> android.view.ViewGroup;
-<span class="keyword">import</span> android.widget.BaseAdapter;
-<span class="keyword">import</span> android.widget.TextView;
-<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MySimpleAdapter</span> <span class="keyword">extends</span> <span class="title">BaseAdapter</span></span>{
-<span class="keyword">private</span> Context context;
-<span class="comment">// 父列表视图容器</span>
-<span class="keyword">private</span> LayoutInflater listContainer;
-<span class="comment">// 新闻数据集合</span>
-<span class="keyword">private</span> List&lt;Item&gt; newsDataList;
-<span class="comment">// 列表项布局</span>
-<span class="keyword">private</span> <span class="keyword">int</span> itemViewResource;
-<span class="comment">// 列表项组件集合(title、author、count、date、flag)</span>
-<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ListItemView</span> </span>{ 
-    <span class="keyword">public</span> TextView title;
-    <span class="keyword">public</span> TextView id;
-}
-
-<span class="javadoc">/**
- * 根据父列表构造列表项适配器，加载列表项界面、读取并设置列表项数据
- *<span class="javadoctag"> @param</span> context 父列表
- *<span class="javadoctag"> @param</span> newsDataList 列表项数据
- *<span class="javadoctag"> @param</span> itemViewResource 列表项界面布局
- */</span>
-<span class="function"><span class="keyword">public</span> <span class="title">MySimpleAdapter</span><span class="params">(Context context, List&lt;Item&gt; newsDataList, <span class="keyword">int</span> itemViewResource)</span> </span>{
-    <span class="keyword">this</span>.context = context;
-    <span class="keyword">this</span>.listContainer = LayoutInflater.from(context);
-    <span class="keyword">this</span>.itemViewResource = itemViewResource;
-    <span class="keyword">this</span>.newsDataList = newsDataList;
-}
-
-<span class="javadoc">/**
- * 根据数据条目返回列表项数目
- */</span>
-<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>{
-    <span class="keyword">return</span> newsDataList.size();
-}
-
-<span class="function"><span class="keyword">public</span> Object <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> arg0)</span> </span>{
-    <span class="keyword">return</span> <span class="keyword">null</span>;
-}
-
-<span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getItemId</span><span class="params">(<span class="keyword">int</span> arg0)</span> </span>{
-    <span class="keyword">return</span> <span class="number">0</span>;
-}
-
-<span class="javadoc">/**
- * 根据位置和相关设定返回列表项
- *<span class="javadoctag"> @param</span> position 列表项起始位置
- *<span class="javadoctag"> @param</span> convertView 返回的每一个列表项
- *<span class="javadoctag"> @param</span> parent 列表项父容器
- */</span>
-
-<span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>{
-
-    <span class="comment">// 创建自定义列表项组件</span>
-    ListItemView listItemView = <span class="keyword">null</span>;
-
-    <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) {
-
-        <span class="comment">// 获取列表项布局（this.itemViewResource--）</span>
-        convertView = listContainer.inflate(<span class="keyword">this</span>.itemViewResource, <span class="keyword">null</span>);
-        <span class="comment">//初始化列表项各组件(title、author、count、date、flag)</span>
-        listItemView = <span class="keyword">new</span> ListItemView();
-        listItemView.title = (TextView) convertView
-                .findViewById(R.id<span class="number">._</span>title);
-        listItemView.id = (TextView) convertView
-                .findViewById(R.id<span class="number">._</span>id);
-        convertView.setTag(listItemView);
-
-    } <span class="keyword">else</span> {
-        listItemView = (ListItemView) convertView.getTag();
-    }
-
-    <span class="comment">//依次读取列表项数据中的第position项数据赋于news对象</span>
-    Item news = newsDataList.get(position);
-    listItemView.title.setText(news.getTitle());
-    listItemView.id.setText(news.getId());
-    <span class="keyword">return</span> convertView;
-}
-</code></pre><p>}</p>
-<ul>
-<li>data_list.xml</li>
-</ul>
-<pre><code>&lt;?xml <span class="variable">version=</span><span class="string">"1.0"</span> <span class="variable">encoding=</span><span class="string">"utf-8"</span>?&gt;
-    &lt;TableLayout
-        xmlns:<span class="variable">android=</span><span class="string">"http://schemas.android.com/apk/res/android"</span>
-        android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>
-        android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>&gt;
-    &lt;TableRow&gt;
-        &lt;TextView
-            android:<span class="variable">id=</span><span class="string">"@+id/_id"</span>
-            android:<span class="variable">textSize=</span><span class="string">"12px"</span>    
-            android:<span class="variable">gravity=</span><span class="string">"center_vertical"</span>
-            android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
-            android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>/&gt;
-        &lt;TextView
-            android:<span class="variable">id=</span><span class="string">"@+id/_title"</span>
-            android:<span class="variable">textSize=</span><span class="string">"12px"</span>
-            android:<span class="variable">gravity=</span><span class="string">"center_vertical"</span>
-            android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
-            android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>/&gt;
-    &lt;/TableRow&gt;
-&lt;/TableLayout&gt;
-</code></pre><ul>
-<li>main.xml文件</li>
-</ul>
-<pre><code>&lt;LinearLayout xmlns:<span class="variable">android=</span><span class="string">"http://schemas.android.com/apk/res/android"</span>  
-    xmlns:<span class="variable">tools=</span><span class="string">"http://schemas.android.com/tools"</span>
-    android:<span class="variable">orientation=</span><span class="string">"vertical"</span>
-    android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>  
-    android:<span class="variable">layout_height=</span><span class="string">"fill_parent"</span>  
-    tools:<span class="variable">context=</span><span class="string">".MainActivity"</span> &gt;  
-    &lt;TextView 
-        android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>
-        android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
-        android:<span class="variable">text=</span><span class="string">"@string/head"</span>
-        /&gt;
-    &lt;ListView  
-        android:<span class="variable">id=</span><span class="string">"@+id/listview"</span>  
-        android:<span class="variable">layout_width=</span><span class="string">"match_parent"</span>  
-        android:<span class="variable">layout_height=</span><span class="string">"match_parent"</span> &gt;  
-    &lt;/ListView&gt;  
-&lt;/LinearLayout&gt;  
-</code></pre><ul>
-<li>使用MainActivity</li>
-</ul>
-<pre><code><span class="keyword">package</span> com.example.blogapp;
-
-<span class="keyword">import</span> java.util.ArrayList;
-
-<span class="keyword">import</span> java.util.List;
-
-<span class="keyword">import</span> android.app.Activity;
-<span class="keyword">import</span> android.os.Bundle;
-<span class="keyword">import</span> android.view.Menu;
-<span class="keyword">import</span> android.widget.ArrayAdapter;
-<span class="keyword">import</span> android.widget.ListView;
-
-<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>{
-
-    <span class="keyword">private</span> Item item ;
-    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;Item&gt; newsDataList = <span class="keyword">new</span> ArrayList&lt;Item&gt;();
-    <span class="keyword">private</span> ListView listView ;
-    <span class="keyword">private</span> MySimpleAdapter myadapter ;
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>{
-        <span class="keyword">super</span>.onCreate(savedInstanceState);
-
-        setContentView(R.layout.main);
-        <span class="keyword">this</span>.initNewsData();
-        myadapter = <span class="keyword">new</span> MySimpleAdapter(MainActivity.<span class="keyword">this</span>, newsDataList,R.layout.data_list);  
-      <span class="comment">//  listView.setAdapter(adapter);  </span>
-        listView =(ListView) findViewById(R.id.listview);
-        listView.setAdapter(myadapter);
-
-    }
-
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>{
-        <span class="comment">// Inflate the menu; this adds items to the action bar if it is present.</span>
-        getMenuInflater().inflate(R.menu.main, menu);
-        <span class="keyword">return</span> <span class="keyword">true</span>;
-    }
-    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initNewsData</span><span class="params">()</span> </span>{
-        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">20</span>; i++) {
-            item = <span class="keyword">new</span> Item(<span class="string">"ID:"</span>+i,<span class="string">"标题"</span>+ i);
-            newsDataList.add(item);
-        }
-    }
-
-}
-</code></pre><p>效果：</p>
-<p><img src="/images/android/android_blog_result.png" alt="Alt text"></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android开发/">Android开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/19/android-blog-1/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/19/android-blog-1/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -1353,11 +1006,19 @@ Elements news = doc.select(<span class="string">"#article_list span.link_title a
 			
 		
 			
+				<li><a href="/tags/SpringMVC/" title="SpringMVC">SpringMVC<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JAVA/" title="JAVA">JAVA<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/JAVA/" title="JAVA">JAVA<sup>1</sup></a></li>
+				<li><a href="/tags/J2EE/" title="J2EE">J2EE<sup>2</sup></a></li>
 			
 		
 			
@@ -1365,15 +1026,7 @@ Elements news = doc.select(<span class="string">"#article_list span.link_title a
 			
 		
 			
-				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			
@@ -1381,7 +1034,7 @@ Elements news = doc.select(<span class="string">"#article_list span.link_title a
 			
 		
 			
-				<li><a href="/tags/J2EE/" title="J2EE">J2EE<sup>1</sup></a></li>
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
 			
 		
 			
@@ -1389,7 +1042,7 @@ Elements news = doc.select(<span class="string">"#article_list span.link_title a
 			
 		
 			
-				<li><a href="/tags/SpringMVC/" title="SpringMVC">SpringMVC<sup>1</sup></a></li>
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			

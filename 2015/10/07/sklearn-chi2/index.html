@@ -4,22 +4,35 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Hadoop线上环境整合须知：&#39; | Jackie&#39;s Blog</title>
+    <title>sklearn文本特征选择 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。调整系统时间安装新版jdk打通master和slave的ssh连接。修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)启动测试访问，线上环境注意防火墙是否关闭。">
+    <meta name="description" content="首先，为什么进行特征的选择？   特征选择(排序)对于数据科学家、机器学习从业者来说非常重要。好的特征选择能够提升模型的性能，更能帮助我们理解数据的特点、底层结构，这对进一步改善模型、算法都有着重要作用。
+特征选择主要有两个功能：
+减少特征数量、降维，使模型泛化能力更强，减少过拟合
+增强对特征和特征值之间的理解
+文本特征使用最简单的bag of words 或者 tfidf选择特征的时候由于tfi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hadoop线上环境整合须知：'">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/big-data-hadoop-advice/index.html">
+<meta property="og:title" content="sklearn文本特征选择">
+<meta property="og:url" content="http://yoursite.com/2015/10/07/sklearn-chi2/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。调整系统时间安装新版jdk打通master和slave的ssh连接。修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)启动测试访问，线上环境注意防火墙是否关闭。">
+<meta property="og:description" content="首先，为什么进行特征的选择？   特征选择(排序)对于数据科学家、机器学习从业者来说非常重要。好的特征选择能够提升模型的性能，更能帮助我们理解数据的特点、底层结构，这对进一步改善模型、算法都有着重要作用。
+特征选择主要有两个功能：
+减少特征数量、降维，使模型泛化能力更强，减少过拟合
+增强对特征和特征值之间的理解
+文本特征使用最简单的bag of words 或者 tfidf选择特征的时候由于tfi">
+<meta property="og:image" content="/images/python/sklearn/chi2.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hadoop线上环境整合须知：'">
-<meta name="twitter:description" content="由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。调整系统时间安装新版jdk打通master和slave的ssh连接。修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)启动测试访问，线上环境注意防火墙是否关闭。">
+<meta name="twitter:title" content="sklearn文本特征选择">
+<meta name="twitter:description" content="首先，为什么进行特征的选择？   特征选择(排序)对于数据科学家、机器学习从业者来说非常重要。好的特征选择能够提升模型的性能，更能帮助我们理解数据的特点、底层结构，这对进一步改善模型、算法都有着重要作用。
+特征选择主要有两个功能：
+减少特征数量、降维，使模型泛化能力更强，减少过拟合
+增强对特征和特征值之间的理解
+文本特征使用最简单的bag of words 或者 tfidf选择特征的时候由于tfi">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -79,14 +92,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/big-data-hadoop-advice/" title="Hadoop线上环境整合须知：&#39;" itemprop="url">Hadoop线上环境整合须知：&#39;</a>
+      <a href="/2015/10/07/sklearn-chi2/" title="sklearn文本特征选择" itemprop="url">sklearn文本特征选择</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T08:41:22.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    <time datetime="2015-10-07T01:58:19.000Z" itemprop="datePublished"> 发表于 2015-10-07</time>
     
   </p>
 </header>
@@ -99,17 +112,23 @@
 		
 		</div>
 		
-		<p>﻿由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。<br>调整系统时间<br>安装新版jdk<br>打通master和slave的ssh连接。<br>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)<br>启动测试访问，线上环境注意防火墙是否关闭。<br>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja<br>load数据计划任务：2,12,22,32,42,52 <em>  </em> <em> </em>  /root/hadoop/exec_jar.sh  &gt; /root/hadoop/test/test.txt  2&gt;&amp;1<br>mv日志文件移动任务</p>
-  
+		<p>首先，为什么进行特征的选择？<br>   特征选择(排序)对于数据科学家、机器学习从业者来说非常重要。好的特征选择能够提升模型的性能，更能帮助我们理解数据的特点、底层结构，这对进一步改善模型、算法都有着重要作用。</p>
+<p>特征选择主要有两个功能：</p>
+<pre><code>减少特征数量、降维，使模型泛化能力更强，减少过拟合
+增强对特征和特征值之间的理解
+</code></pre><p>文本特征使用最简单的bag of words 或者 tfidf选择特征的时候由于tfidf只是考虑到文本和单词出现的频率，所以用来做特征并不能十分好的反应分类的特征情况，所以使用特征选择来选择一些重要和代表分类信息的特征也就显得很有必要，特征选择方法很多。这里简单以<br>sklearn的卡方检验来简单使用进行特征的选择。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> chi2</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> pylab <span class="keyword">import</span> barh,plot,yticks,show,grid,xlabel,figure</span><br><span class="line"><span class="keyword">from</span> pylab <span class="keyword">import</span> *</span><br><span class="line">X = []</span><br><span class="line">categories = []</span><br><span class="line"><span class="keyword">with</span> open( <span class="string">'data.csv'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    reader = csv.reader(f)</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> reader:</span><br><span class="line">        X.append(row[<span class="number">0</span>])</span><br><span class="line">        categories.append(row[<span class="number">1</span>])</span><br><span class="line">dataset = []</span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> X:</span><br><span class="line">    dataset.append(<span class="string">" "</span>.join(jieba.cut(data.split(<span class="string">','</span>)[<span class="number">0</span>], cut_all=<span class="keyword">False</span>)))</span><br><span class="line">vectorizer = TfidfVectorizer()</span><br><span class="line">X = vectorizer.fit_transform(dataset)</span><br><span class="line">ch2 =  SelectKBest(chi2,k=<span class="number">200</span>)</span><br><span class="line">x_new  =ch2.fit_transform(X,categories) //简单选择<span class="number">200</span>个特征</span><br></pre></td></tr></table></figure></p>
+<p>提取特征和使用pylab结果可视化：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mpl.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'Microsoft YaHei'</span>]</span><br><span class="line">chi2score = chi2(X,categories)[<span class="number">0</span>]</span><br><span class="line">figure(figsize=(<span class="number">6</span>,<span class="number">6</span>))</span><br><span class="line">wscores = zip(vectorizer.get_feature_names(),chi2score)</span><br><span class="line">wchi2 = sorted(wscores,key=<span class="keyword">lambda</span> x:x[<span class="number">1</span>])</span><br><span class="line">topchi2 = zip(*wchi2[-<span class="number">25</span>:])</span><br><span class="line">x = range(len(topchi2[<span class="number">1</span>]))</span><br><span class="line">labels = topchi2[<span class="number">0</span>]</span><br><span class="line">barh(x,topchi2[<span class="number">1</span>],align=<span class="string">'center'</span>,alpha=.<span class="number">2</span>,color=<span class="string">'g'</span>)</span><br><span class="line">plot(topchi2[<span class="number">1</span>],x,<span class="string">'-o'</span>,markersize=<span class="number">2</span>,alpha=.<span class="number">8</span>,color=<span class="string">'g'</span>)</span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span>  labels:</span><br><span class="line">    <span class="keyword">print</span> data</span><br><span class="line">yticks(x,labels)</span><br><span class="line">xlabel(<span class="string">'$\chi^2$'</span>)</span><br><span class="line">show()</span><br></pre></td></tr></table></figure></p>
+<p>效果图：<br> <img src="/images/python/sklearn/chi2.png" alt="Alt text"></p>
+<p>参考文档： </p>
+<pre><code><span class="string">http:</span><span class="comment">//glowingpython.blogspot.com/2014/02/terms-selection-with-chi-square.html</span>
+<span class="string">http:</span><span class="comment">//www.cnblogs.com/wangbogong/p/3251132.html</span>
+<span class="string">http:</span><span class="comment">//www.blogjava.net/zhenandaci/archive/2008/08/31/225966.html</span>
+<span class="string">http:</span><span class="comment">//dataunion.org/14072.html</span>
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
 
 </div>
 
@@ -117,7 +136,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/big-data-hadoop-advice/" data-title="Hadoop线上环境整合须知：&#39; | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/10/07/sklearn-chi2/" data-title="sklearn文本特征选择 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -130,19 +149,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/17/big-data-hadoop-online/" title="hadoop线上环境搭建">
-  <strong>上一篇：</strong><br/>
-  <span>
-  hadoop线上环境搭建</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/17/big-data-hive-java/"  title="Hive连接java">
+<a href="/2015/10/07/springmvc-rest/"  title="SpringMVC Restful请求">
  <strong>下一篇：</strong><br/> 
- <span>Hive连接java
+ <span>SpringMVC Restful请求
 </span>
 </a>
 </div>
@@ -151,7 +162,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/big-data-hadoop-advice/" data-title="Hadoop线上环境整合须知：'" data-url="http://yoursite.com/2015/04/17/big-data-hadoop-advice/"></div>
+	<div class="ds-thread" data-thread-key="2015/10/07/sklearn-chi2/" data-title="sklearn文本特征选择" data-url="http://yoursite.com/2015/10/07/sklearn-chi2/"></div>
 </section>
 
 

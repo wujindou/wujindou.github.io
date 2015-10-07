@@ -81,6 +81,203 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/17/jquery-tool/" title="Jquery简单封装插件" itemprop="url">Jquery简单封装插件</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T07:13:17.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>由于开发过程是需要使用fancybox，但是已有的结构需要每次都把html代码如下copy到需要添加文档，然后需要每次复制函数。重复早轮子，<br>于是考虑通过jquery进行简单的封装以避免重复的造轮子工作。<br>新建fancybox-widget.js </p>
+<pre><code>$(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
+        <span class="keyword">var</span> tbox =$(
+        <span class="string">'&lt;div id="show-message" style = "display:none"&gt;&lt;div class = "cb50" &gt;&lt;/div&gt;&lt;p class = "t_center ml_25 mr_25 f14 f_red"&gt;&lt;/p&gt;&lt;div class = "cb20" &gt;&lt;/div&gt;&lt;a href = "javascript:$.fancybox.close();" class = "f14 f_white fc t_center" style = "width:100px; height:30px; line-height:30px; display:block; background:#eb2f7b; border-radius:4px;" &gt; 确认 &lt;/a&gt; &lt;/div &gt;&lt;/div&gt;'</span>);
+    $(<span class="string">'body'</span>).prepend(tbox);
+
+    });
+    jQuery.showbox = <span class="function"><span class="keyword">function</span><span class="params">(data,that )</span></span>{
+
+    <span class="keyword">if</span> (data &amp;&amp; data.code == <span class="number">1</span>) {
+    $(<span class="string">"#show-message p"</span>).removeClass(<span class="string">'f_red'</span>);
+    $(<span class="string">"#show-message p"</span>).addClass(<span class="string">'f_green'</span>);
+    } <span class="keyword">else</span> {
+    $(<span class="string">"#show-message p"</span>).removeClass(<span class="string">'f_green'</span>);
+    $(<span class="string">"#show-message p"</span>).addClass(<span class="string">'f_red'</span>);
+    }
+    $(<span class="string">"#show-message p"</span>).html(data.message);
+    <span class="keyword">if</span> (data &amp;&amp; data.code == <span class="number">1</span>) {
+    $.fancybox.open({
+    <span class="string">'href'</span>: <span class="string">"#show-message"</span>,
+    <span class="string">'scrolling'</span>: <span class="string">'no'</span>,
+    <span class="string">'modal'</span>: <span class="literal">true</span>,
+    <span class="string">'closeBtn'</span>: <span class="literal">true</span>,
+    <span class="string">'afterClose'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+    <span class="built_in">window</span>.location.reload();
+    <span class="keyword">return</span>;
+    },
+    <span class="string">'autoSize'</span>: <span class="literal">false</span>,
+    <span class="string">'fitToView'</span>: <span class="literal">false</span>,
+    <span class="string">'width'</span>: <span class="number">300</span>,
+    <span class="string">'height'</span>: <span class="number">200</span>,
+    <span class="string">'padding'</span>: <span class="number">0</span>
+    });
+
+    } <span class="keyword">else</span> {
+    $.fancybox.open({
+    <span class="string">'href'</span>: <span class="string">"#show-message"</span>,
+    <span class="string">'scrolling'</span>: <span class="string">'no'</span>,
+    <span class="string">'modal'</span>: <span class="literal">true</span>,
+    <span class="string">'closeBtn'</span>: <span class="literal">true</span>,
+    <span class="string">'afterClose'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+    <span class="keyword">if</span> (that) {
+    $(that).attr(<span class="string">"data-tag"</span>, <span class="string">'0'</span>);
+    }
+    <span class="keyword">return</span>;
+    },
+    <span class="string">'autoSize'</span>: <span class="literal">false</span>,
+    <span class="string">'fitToView'</span>: <span class="literal">false</span>,
+    <span class="string">'width'</span>: <span class="number">300</span>,
+    <span class="string">'height'</span>: <span class="number">200</span>,
+    <span class="string">'padding'</span>: <span class="number">0</span>
+    });
+    }
+    }
+    在需要使用该插件的页面通过引入该js文件，然后调用也非常的简单： 
+    $(<span class="string">'#show'</span>).click(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+    <span class="keyword">var</span> data = { code: <span class="number">1</span>, message: <span class="string">'hello'</span> };
+    $.showbox(data);
+
+    });
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/js学习笔记/">js学习笔记</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/jquery-tool/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/jquery-tool/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/17/python-auto-tool/" title="python自动化工具" itemprop="url">python自动化工具</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T07:09:39.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>公司有些业务不断的重复复制和黏贴实在让人头疼，于是乎考虑使用python自动的生成文件，并且替换文件中的一些内容，把需要复制和黏贴的内容制作成</p>
+<p>模版，以后的开发工作可以根据模版来自动生成文件，自己以后就不用那么麻烦的复制和黏贴的重复制造轮子了。同时也让自己慢慢的熟悉和使用python！</p>
+<pre><code><span class="comment">#! /usr/bin/python </span>
+ <span class="comment">#coding:utf-8</span>
+<span class="keyword">import</span> os,sys,re
+project_dir = <span class="string">"d:/project/aushop/application/views/show/ringsign"</span>
+php_dir =<span class="string">"d:/project/aushop/application/library/Active/RingSign"</span>
+<span class="function"><span class="keyword">def</span> <span class="title">replaceFile</span><span class="params">(infile,name)</span>:</span>
+<span class="keyword">if</span> os.path.isfile(project_dir+name+<span class="string">".phtml"</span>):
+<span class="keyword">print</span> <span class="string">u'文件已经存在'</span>
+sys.exit(<span class="number">1</span>)
+<span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(infile):
+<span class="keyword">print</span> <span class="string">u'文件不存在'</span>
+sys.exit(<span class="number">1</span>)
+<span class="keyword">try</span>:
+infile = open(infile, <span class="string">"r"</span>)
+outfile = open(project_dir+name+<span class="string">".phtml"</span>, <span class="string">"wb"</span>)
+<span class="keyword">except</span> IOError:
+<span class="keyword">print</span> <span class="string">"The file don't exist, Please double check!"</span>
+exit()
+all_the_lines = infile.readlines()
+infile.seek(<span class="number">0</span>)
+<span class="keyword">for</span> line <span class="keyword">in</span> all_the_lines:
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Python/">Python</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/python-auto-tool/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/python-auto-tool/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/17/my-new-post/" title="Git重新上手" itemprop="url">Git重新上手</a>
   </h1>
   <p class="article-author">By
@@ -177,11 +374,19 @@
 			
 		
 			
+				<li><a href="/tags/SpringMVC/" title="SpringMVC">SpringMVC<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JAVA/" title="JAVA">JAVA<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/JAVA/" title="JAVA">JAVA<sup>1</sup></a></li>
+				<li><a href="/tags/J2EE/" title="J2EE">J2EE<sup>2</sup></a></li>
 			
 		
 			
@@ -189,15 +394,7 @@
 			
 		
 			
-				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			
@@ -205,7 +402,7 @@
 			
 		
 			
-				<li><a href="/tags/J2EE/" title="J2EE">J2EE<sup>1</sup></a></li>
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
 			
 		
 			
@@ -213,7 +410,7 @@
 			
 		
 			
-				<li><a href="/tags/SpringMVC/" title="SpringMVC">SpringMVC<sup>1</sup></a></li>
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			
