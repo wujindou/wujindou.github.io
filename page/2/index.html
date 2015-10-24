@@ -81,6 +81,162 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/19/android-blog-3/" title="Android应用开发三" itemprop="url">Android应用开发三</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-19T06:44:53.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="使用webview">使用webview</h3><p> 由于需要浏览网页内容所以，所以考虑使用webView直接加载原来网页中的内容来显示。<br> 网络因素所以使用本地的html文件加速文件的显示。<br> 一个小的技巧，使用顶部导航栏时，图标点击和不点击显示不同颜色可以设置一个html文件比如<br>main.xml文件</p>
+<pre><code>&lt;ImageView
+      android:<span class="variable">id=</span><span class="string">"@+id/news_detail_home"</span>
+      android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>
+      android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+      android:<span class="variable">layout_gravity=</span><span class="string">"left|center"</span>
+      android:<span class="variable">background=</span><span class="string">"@drawable/head_home"</span>
+      android:<span class="variable">clickable=</span><span class="string">"true"</span> /&gt;
+</code></pre><p>在drawable下建立home.xml文件和选择和正常的样式图片：</p>
+<pre><code><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;<span class="title">selector</span>
+  <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_focused</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/head_home_selected"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_selected</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/head_home_selected"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_pressed</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/head_home_selected"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:drawable</span>=<span class="value">"@drawable/head_home_normal"</span> /&gt;</span>
+<span class="tag">&lt;/<span class="title">selector</span>&gt;</span>
+</code></pre><p>最后代码：</p>
+<pre><code>&lt;LinearLayout xmlns:<span class="variable">android=</span><span class="string">"http://schemas.android.com/apk/res/android"</span>  
+    xmlns:<span class="variable">tools=</span><span class="string">"http://schemas.android.com/tools"</span>
+    android:<span class="variable">orientation=</span><span class="string">"vertical"</span>
+    android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>  
+    android:<span class="variable">layout_height=</span><span class="string">"fill_parent"</span>  
+    tools:<span class="variable">context=</span><span class="string">".MainActivity"</span> &gt;  
+   &lt;FrameLayout
+        android:<span class="variable">id=</span><span class="string">"@+id/news_detail_header"</span>
+        android:<span class="variable">layout_width=</span><span class="string">"fill_parent"</span>
+        android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+        android:<span class="variable">background=</span><span class="string">"@drawable/head_bg"</span>
+        android:<span class="variable">gravity=</span><span class="string">"center_vertical"</span>
+        android:<span class="variable">orientation=</span><span class="string">"horizontal"</span>
+        android:<span class="variable">paddingLeft=</span><span class="string">"2dip"</span>
+        android:<span class="variable">paddingRight=</span><span class="string">"2dip"</span> &gt;
+
+        &lt;ImageView
+            android:<span class="variable">id=</span><span class="string">"@+id/news_detail_home"</span>
+            android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>
+            android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+            android:<span class="variable">layout_gravity=</span><span class="string">"left|center"</span>
+            android:<span class="variable">background=</span><span class="string">"@drawable/head_home"</span>
+            android:<span class="variable">clickable=</span><span class="string">"true"</span> /&gt;
+
+    &lt;/FrameLayout&gt;
+     &lt;WebView 
+         android:<span class="variable">id=</span><span class="string">"@+id/webview"</span>
+         android:<span class="variable">layout_width=</span><span class="string">"wrap_content"</span>
+         android:<span class="variable">layout_height=</span><span class="string">"wrap_content"</span>
+         /&gt;
+&lt;/LinearLayout&gt;  
+</code></pre><ul>
+<li>ItemDetai.java文件</li>
+</ul>
+<pre><code><span class="keyword">package</span> com.example.blogapp;
+<span class="keyword">import</span> android.app.<span class="type">Activity</span>;
+<span class="keyword">import</span> android.content.<span class="type">Intent</span>;
+<span class="keyword">import</span> android.os.<span class="type">Bundle</span>;
+<span class="keyword">import</span> android.view.<span class="type">View</span>;
+<span class="keyword">import</span> android.view.<span class="type">View</span>.<span class="type">OnClickListener</span>;
+<span class="keyword">import</span> android.webkit.<span class="type">WebView</span>;
+<span class="keyword">import</span> android.webkit.<span class="type">WebViewClient</span>;
+<span class="keyword">import</span> android.widget.<span class="type">Button</span>;
+<span class="keyword">import</span> android.widget.<span class="type">ImageView</span>;
+<span class="keyword">import</span> android.widget.<span class="type">TextView</span>;
+public <span class="class"><span class="keyword">class</span> <span class="title">ItemDetail</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Activity</span> {</span>
+    <span class="keyword">private</span> <span class="type">ImageView</span> <span class="type">Iv</span> ;
+    <span class="keyword">private</span> <span class="type">TextView</span> tv ;
+    <span class="keyword">private</span> <span class="type">WebView</span> wv ;
+    <span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(<span class="type">R</span>.layout.detail_main);
+        <span class="type">Intent</span> intent = getIntent();
+        intent.getExtras();
+        <span class="type">Bundle</span> data = intent.getExtras();
+        <span class="type">String</span> id = data.getString(<span class="string">"blog_id"</span>);
+        wv = (<span class="type">WebView</span>) <span class="keyword">this</span>.findViewById(<span class="type">R</span>.id.webview);
+        wv.getSettings().setJavaScriptEnabled(<span class="literal">true</span>);  
+        wv.loadUrl(<span class="string">"file:///android_asset/index.html"</span>);  
+        wv.setWebViewClient(<span class="keyword">new</span> <span class="type">HelloWebViewClient</span> ()); 
+        <span class="type">Iv</span> = (<span class="type">ImageView</span>)<span class="keyword">this</span>.findViewById(<span class="type">R</span>.id.news_detail_home);
+        <span class="type">Iv</span>.setOnClickListener(<span class="keyword">new</span> <span class="type">OnClickListener</span>(){
+            <span class="annotation">@Override</span>
+            public void onClick(<span class="type">View</span> v) {
+                <span class="type">Intent</span> it = <span class="keyword">new</span> <span class="type">Intent</span>(<span class="type">ItemDetail</span>.<span class="keyword">this</span>,<span class="type">MainActivity</span>.<span class="keyword">class</span>);
+                <span class="type">ItemDetail</span>.<span class="keyword">this</span>.startActivity(it);
+                <span class="type">ItemDetail</span>.<span class="keyword">this</span>.finish();
+            }});
+    }
+
+     <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWebViewClient</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">WebViewClient</span> {</span>  
+            public boolean shouldOverrideUrlLoading(<span class="type">WebView</span> view, <span class="type">String</span> url) {  
+                view.loadUrl(url);  
+                <span class="keyword">return</span> <span class="literal">true</span>;  
+            }  
+        }  
+
+}
+</code></pre><p>效果图：</p>
+<p><img src="/images/android/android_blog_3_1.png" alt="Alt text"></p>
+<p>完整代码下载：<a href="http://pan.baidu.com/s/13rJ8E" target="_blank" rel="external">百度云盘</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android开发/">Android开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/19/android-blog-3/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/19/android-blog-3/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/19/android-blog-2/" title="Android应用开发二" itemprop="url">Android应用开发二</a>
   </h1>
   <p class="article-author">By
@@ -1276,64 +1432,6 @@ message EchoResponse
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hadoop-advice/" title="Hadoop线上环境整合须知：&#39;" itemprop="url">Hadoop线上环境整合须知：&#39;</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:41:22.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>﻿由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。<br>调整系统时间<br>安装新版jdk<br>打通master和slave的ssh连接。<br>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)<br>启动测试访问，线上环境注意防火墙是否关闭。<br>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja<br>load数据计划任务：2,12,22,32,42,52 <em>  </em> <em> </em>  /root/hadoop/exec_jar.sh  &gt; /root/hadoop/test/test.txt  2&gt;&amp;1<br>mv日志文件移动任务</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hadoop-advice/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-advice/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -1362,7 +1460,7 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>3</sup></a></li>
+				<li><a href="/tags/php/" title="php">php<sup>4</sup></a></li>
 			
 		
 			
@@ -1374,6 +1472,10 @@ message EchoResponse
 			
 		
 			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
 			
 		
@@ -1382,11 +1484,7 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			
@@ -1394,7 +1492,7 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
+				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
 			
 		
 			
@@ -1402,7 +1500,7 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
 			
 		
 			
@@ -1418,7 +1516,7 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>1</sup></a></li>
+				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
 			
 		
 			

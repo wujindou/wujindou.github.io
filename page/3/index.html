@@ -81,6 +81,64 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/17/big-data-hadoop-advice/" title="Hadoop线上环境整合须知：&#39;" itemprop="url">Hadoop线上环境整合须知：&#39;</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:41:22.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>﻿由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。<br>调整系统时间<br>安装新版jdk<br>打通master和slave的ssh连接。<br>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)<br>启动测试访问，线上环境注意防火墙是否关闭。<br>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja<br>load数据计划任务：2,12,22,32,42,52 <em>  </em> <em> </em>  /root/hadoop/exec_jar.sh  &gt; /root/hadoop/test/test.txt  2&gt;&amp;1<br>mv日志文件移动任务</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-hadoop-advice/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-advice/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/17/big-data-hive-java/" title="Hive连接java" itemprop="url">Hive连接java</a>
   </h1>
   <p class="article-author">By
@@ -1936,149 +1994,6 @@ hive-site.xml
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hadoop/" title="Hadoop2.2安装使用" itemprop="url">Hadoop2.2安装使用</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T07:53:44.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h3 id="配置ssh">配置ssh</h3><ul>
-<li><p>生成ssh-key 在</p>
-<pre><code>ssh-keygen -t rsa -P <span class="string">""</span>
-<span class="keyword">cd</span> ~/.ssh
-<span class="keyword">cat</span> id_rsa.pub&gt;&gt; authorized_keys
-</code></pre><h3 id="Jdk环境配置">Jdk环境配置</h3><p>Linux开发环境，可以删除系统原来的jdk,查找下载安装最新版本的jdk</p>
-<ul>
-<li>rpm -qa |grep jdk ,rpm -qa | grep gcj,</li>
-<li>删除执行：rpm -e —nodeps xxx</li>
-<li>下载最新版本的JDK.gz解压后放到/usr/local/java目录下</li>
-<li><p>修改配置/etc/profile文件</p>
-<pre><code>JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
-CLASSPATH=.:<span class="variable">$JAVA_HOME</span>/lib/tools.jar
- PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin
-<span class="built_in">export</span> JAVA_HOME CLASSPATH PATH
-</code></pre></li>
-<li>配置生效后执行java -version 看是否和安装的java版本匹配<h3 id="Hadoop环境配置">Hadoop环境配置</h3></li>
-<li>配置~/.bashrc文件</li>
-</ul>
-</li>
-</ul>
-<pre><code><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/java/jdk1.<span class="number">8.0</span>_05
-<span class="built_in">export</span> HADOOP_INSTALL=~/hadoop/hadoop-<span class="number">2.2</span>.<span class="number">0</span>
-<span class="built_in">export</span> HADOOP_MAPRED_HOME=<span class="variable">$HADOOP_INSTALL</span>
-<span class="built_in">export</span> HADOOP_COMMON_HOME=<span class="variable">$HADOOP_INSTALL</span>
-<span class="built_in">export</span> HADOOP_HDFS_HOME=<span class="variable">$HADOOP_INSTALL</span>
-<span class="built_in">export</span> YARN_HOME=<span class="variable">$HADOOP_INSTALL</span>
-<span class="built_in">export</span> HADOOP_COMMON_LIB_NATIVE_DIR=<span class="variable">$HADOOP_INSTALL</span>/lib/native
-<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/sbin
-<span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$HADOOP_INSTALL</span>/bin
-</code></pre><ul>
-<li>配置core-site.xml </li>
-</ul>
-<pre><code><span class="variable">&lt;configuration&gt;</span>
-   <span class="variable">&lt;property&gt;</span>
-    <span class="variable">&lt;name&gt;</span>fs.<span class="keyword">default</span>.name<span class="variable">&lt;/name&gt;</span>
-    <span class="variable">&lt;value&gt;</span>hdfs://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9000</span><span class="variable">&lt;/value&gt;</span>
-    <span class="variable">&lt;final&gt;</span>true<span class="variable">&lt;/final&gt;</span>
-    <span class="variable">&lt;/property&gt;</span>
-    <span class="variable">&lt;property&gt;</span>
-    <span class="variable">&lt;name&gt;</span>hadoop.tmp.dir<span class="variable">&lt;/name&gt;</span>
-    <span class="variable">&lt;value&gt;</span>/home/hadoop/hadoop_tmp<span class="variable">&lt;/value&gt;</span>
-  <span class="variable">&lt;/property&gt;</span>
-<span class="variable">&lt;/configuration&gt;</span>
-</code></pre><ul>
-<li>配置mapred.xml文件</li>
-</ul>
-<pre><code><span class="tag">&lt;<span class="title">configuration</span>&gt;</span>
-<span class="tag">&lt;<span class="title">property</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span>
-</code></pre><ul>
-<li>配置hdfs-site.xml文件</li>
-</ul>
-<pre><code><span class="tag">&lt;<span class="title">configuration</span>&gt;</span>
-<span class="tag">&lt;<span class="title">property</span>&gt;</span>
-       <span class="tag">&lt;<span class="title">property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="title">name</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">value</span>&gt;</span>1<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">property</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span>
-</code></pre><ul>
-<li>配置Yarn-site.xml文件（默认就行了）</li>
-<li>启动</li>
-</ul>
-<pre><code>bin/hdfs namenode -format
-显示 ：SHUTDOWN_MSG: Shutting down NameNode at xxx表示成功
-启动namenode:
-sbin/hadoop-daemon<span class="class">.sh</span> start namenode
-sbin/hadoop-daemon<span class="class">.sh</span> start datanode
-启动Manage管理
-sbin/yarn-daemon<span class="class">.sh</span> start resourcemanager
-sbin/yarn-daemon<span class="class">.sh</span> start nodemanager
-测试：jps 通过：ip:<span class="number">50070</span>查看
-测试hdfs:
-mkdir <span class="tag">input</span>
-cd <span class="tag">input</span>
-echo <span class="string">"hello world"</span> &gt; test1<span class="class">.txt</span>
-echo <span class="string">"hello hadoop"</span> &gt; test2<span class="class">.txt</span>
-cd ..
-把input目录中的文件拷贝到dnfs上，并保存在<span class="keyword">in</span>目录中
-bin/hadoop dfs -put input/ /<span class="keyword">in</span>
-bin/hadoop dfs -ls /<span class="keyword">in</span>
-</code></pre><p>一个奇葩的问题<br>测试过程中有个问题让我很是头疼：<br><img src="/images/hadoop/hadoop_1.png" alt="Alt text"><br>最后发现竟然是hostname的问题，无奈不适用localhost之后问题就解决了,还有如果出现了Safe mode的话就使用： bin/hadoop dfsadmin -safemode leave 关闭就可以了。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hadoop/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
@@ -2107,7 +2022,7 @@ bin/hadoop dfs -ls /<span class="keyword">in</span>
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>3</sup></a></li>
+				<li><a href="/tags/php/" title="php">php<sup>4</sup></a></li>
 			
 		
 			
@@ -2119,6 +2034,10 @@ bin/hadoop dfs -ls /<span class="keyword">in</span>
 			
 		
 			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
 			
 		
@@ -2127,11 +2046,7 @@ bin/hadoop dfs -ls /<span class="keyword">in</span>
 			
 		
 			
-				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			
@@ -2139,7 +2054,7 @@ bin/hadoop dfs -ls /<span class="keyword">in</span>
 			
 		
 			
-				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
+				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
 			
 		
 			
@@ -2147,7 +2062,7 @@ bin/hadoop dfs -ls /<span class="keyword">in</span>
 			
 		
 			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
 			
 		
 			
@@ -2163,7 +2078,7 @@ bin/hadoop dfs -ls /<span class="keyword">in</span>
 			
 		
 			
-				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>1</sup></a></li>
+				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
 			
 		
 			
