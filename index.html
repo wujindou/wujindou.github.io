@@ -81,6 +81,65 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/16/mongodb-export/" title="mongodb-export" itemprop="url">mongodb-export</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-16T12:55:07.000Z" itemprop="datePublished"> 发表于 2015-11-16</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p> 已经很多次尝试从mongodb里面导出几亿条的数据，但是每次都是导出了36million 的时候，数据导出就会被<br>终止掉，而且没有任何的报错，查了很多也试过很多次，但是一直没有找到很适合的方法。最后考虑使用脚本导出<br>找到了个<a href="http://www.tothenew.com/blog/export-very-large-data-from-a-mongodb-collection-using-script/" target="_blank" rel="external">参考文件</a>通过,mongo调用外部的脚本文件，终于解决了这个困扰很久的问题了。</p>
+<h5 id="导出方法">导出方法</h5><h6 id="编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行">编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var size = <span class="number">1000000</span>; //每次导出量</span><br><span class="line">var maxCount = <span class="number">640</span>; //导出量 maxCount * size</span><br><span class="line"><span class="keyword">for</span> (x=<span class="number">0</span>;x&lt;maxCount;x=x+<span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">	var recToSkip = x*size;</span><br><span class="line">	db.microblogs.find().skip(recToSkip).limit(size).forEach( function(record)&#123;</span><br><span class="line">		print(record.user_id,<span class="string">','</span>,record.created_at,<span class="string">','</span>,record.reposts_count,<span class="string">','</span>,record.comments_count,<span class="string">','</span>,record.source,<span class="string">','</span>,record.text);</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="执行">执行</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9200</span>/test test.js &gt; microblogs.csv</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Mongodb/">Mongodb</a><a href="/tags/数据库/">数据库</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/16/mongodb-export/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/16/mongodb-export/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/24/elastic-cluster/" title="ElasticSearch集群及HttpBasic配置" itemprop="url">ElasticSearch集群及HttpBasic配置</a>
   </h1>
   <p class="article-author">By
@@ -783,116 +842,6 @@ print data
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/19/android-blog-4/" title="Android应用开发四" itemprop="url">Android应用开发四</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-19T06:46:10.000Z" itemprop="datePublished"> 发表于 2015-04-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>首先关于上次遇到的问题，就是使用jsoup抓取网页时候一直报错，后来查找发现<br>不能直接在Android的MainActivity线程中直接调用http请求，所以可以通过重新启动一个线程<br>来完成，同时需要进行多线程之间的通讯使用Message和Handler类实现进程之间的通信传送数据。代码参考</p>
-<pre><code>mHandler = <span class="keyword">new</span> Handler() {    
-            @Override    
-            <span class="keyword">public</span> <span class="keyword">void</span> handleMessage(Message msg) {    
-                myadapter=<span class="keyword">new</span>  MySimpleAdapter(MainActivity.<span class="keyword">this</span>,newsDataList,R.layout.data_list);
-                listView.setAdapter(myadapter);  
-
-                listView.setOnItemClickListener(<span class="keyword">new</span> OnItemClickListener(){
-
-                    @Override
-                    <span class="keyword">public</span> <span class="keyword">void</span> onItemClick(AdapterView&lt;?&gt; adapter, View v, <span class="built_in">int</span> position,
-                            <span class="keyword">long</span> id) {
-                        System.out.<span class="built_in">println</span>(v);
-                        Item t = (Item)newsDataList.<span class="built_in">get</span>(position);
-                        Intent it = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>,ItemDetail.class) ;
-                        it.putExtra(<span class="string">"blog_id"</span>, t.getId());
-                        MainActivity.<span class="keyword">this</span>.startActivity(it) ;
-
-                    }
-
-                });
-            }    
-        };    
-        <span class="keyword">new</span> Thread(runnable).start();
-Runnable runnable = <span class="keyword">new</span> Runnable(){
-@Override
-<span class="keyword">public</span> <span class="keyword">void</span> run() {
-    <span class="keyword">String</span> blog_url = <span class="string">"http://blog.csdn.net/xxxx"</span>;
-    Document doc =<span class="keyword">null</span>;
-    <span class="keyword">try</span> {
-        doc = Jsoup.connect(blog_url).userAgent(<span class="string">"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36"</span>).timeout(<span class="number">5000</span>).<span class="built_in">get</span>();
-    } <span class="keyword">catch</span> (IOException e) {
-        e.printStackTrace();
-    }
-    <span class="keyword">if</span>(doc !=<span class="keyword">null</span>){
-        Elements news = doc.select(<span class="string">"#article_list span.link_title a"</span>);
-        List&lt;Item&gt; blogs = <span class="keyword">new</span> ArrayList&lt;Item&gt;();
-        <span class="keyword">for</span>(Element link: news){
-            <span class="keyword">String</span> href = link.attr(<span class="string">"href"</span>);
-
-            <span class="keyword">String</span> id = href.substring(href.length()-<span class="number">8</span>,href.length());
-            Log.i(<span class="string">"id="</span>,id);
-            Item item = <span class="keyword">new</span> Item(id,link.<span class="built_in">text</span>());
-            newsDataList.<span class="built_in">add</span>(item);
-        }
-         mHandler.sendEmptyMessage(<span class="number">0</span>); 
-    }<span class="keyword">else</span>{
-        Log.i(<span class="string">"data="</span>, <span class="keyword">String</span>.valueOf(<span class="number">1234124</span>));
-    }
-}
-};
-</code></pre><p>然后把以前的进入主页面的Splash程序和使用ActionBar创建下拉菜单的操作也加进去,这个练手程序就到此为止了。上张图片吧。。<br><img src="/images/android/android_blog_4_1.png" alt="Alt text"></p>
-<p><a href="http://pan.baidu.com/s/1jGA3oSA" target="_blank" rel="external">代码下载</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android开发/">Android开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/19/android-blog-4/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/19/android-blog-4/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -945,11 +894,11 @@ Runnable runnable = <span class="keyword">new</span> Runnable(){
 			
 		
 			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			
@@ -961,7 +910,11 @@ Runnable runnable = <span class="keyword">new</span> Runnable(){
 			
 		
 			
-				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
+				<li><a href="/tags/Mongodb/" title="Mongodb">Mongodb<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
 			
 		
 			
@@ -981,7 +934,7 @@ Runnable runnable = <span class="keyword">new</span> Runnable(){
 			
 		
 			
-				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
 			
 		
 		</ul>

@@ -4,44 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Git重新上手 | Jackie&#39;s Blog</title>
+    <title>mongodb-export | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。直接图示吧：
-
-生成public key ,然后添加到ssh key中
-测试问题出来了：网上找到了参考
-建立config文件添加以下内容：
- Host github.com User git Hostname ssh.gi">
+    <meta name="description" content="已经很多次尝试从mongodb里面导出几亿条的数据，但是每次都是导出了36million 的时候，数据导出就会被终止掉，而且没有任何的报错，查了很多也试过很多次，但是一直没有找到很适合的方法。最后考虑使用脚本导出找到了个参考文件通过,mongo调用外部的脚本文件，终于解决了这个困扰很久的问题了。
+导出方法编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行1234567">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Git重新上手">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/my-new-post/index.html">
+<meta property="og:title" content="mongodb-export">
+<meta property="og:url" content="http://yoursite.com/2015/11/16/mongodb-export/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。直接图示吧：
-
-生成public key ,然后添加到ssh key中
-测试问题出来了：网上找到了参考
-建立config文件添加以下内容：
- Host github.com User git Hostname ssh.gi">
-<meta property="og:image" content="images/20150417/1429236487575.png">
-<meta property="og:image" content="images/20150417/1429236515744.png">
-<meta property="og:image" content="images/20150417/1429236571491.png">
-<meta property="og:image" content="images/20150417/1429236671134.png">
-<meta property="og:image" content="images/20150417/1429236711991.png">
-<meta property="og:image" content="images/20150417/1429236767833.png">
-<meta property="og:image" content="images/20150417/1429236830303.png">
+<meta property="og:description" content="已经很多次尝试从mongodb里面导出几亿条的数据，但是每次都是导出了36million 的时候，数据导出就会被终止掉，而且没有任何的报错，查了很多也试过很多次，但是一直没有找到很适合的方法。最后考虑使用脚本导出找到了个参考文件通过,mongo调用外部的脚本文件，终于解决了这个困扰很久的问题了。
+导出方法编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行1234567">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Git重新上手">
-<meta name="twitter:description" content="好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。直接图示吧：
-
-生成public key ,然后添加到ssh key中
-测试问题出来了：网上找到了参考
-建立config文件添加以下内容：
- Host github.com User git Hostname ssh.gi">
+<meta name="twitter:title" content="mongodb-export">
+<meta name="twitter:description" content="已经很多次尝试从mongodb里面导出几亿条的数据，但是每次都是导出了36million 的时候，数据导出就会被终止掉，而且没有任何的报错，查了很多也试过很多次，但是一直没有找到很适合的方法。最后考虑使用脚本导出找到了个参考文件通过,mongo调用外部的脚本文件，终于解决了这个困扰很久的问题了。
+导出方法编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行1234567">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -101,14 +82,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/my-new-post/" title="Git重新上手" itemprop="url">Git重新上手</a>
+      <a href="/2015/11/16/mongodb-export/" title="mongodb-export" itemprop="url">mongodb-export</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T05:36:10.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    <time datetime="2015-11-16T12:55:07.000Z" itemprop="datePublished"> 发表于 2015-11-16</time>
     
   </p>
 </header>
@@ -117,24 +98,13 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#导出方法"><span class="toc-number">1.</span> <span class="toc-text">导出方法</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行"><span class="toc-number">1.1.</span> <span class="toc-text">编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#执行"><span class="toc-number">1.2.</span> <span class="toc-text">执行</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p> 好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。<br>直接图示吧：</p>
-<ol>
-<li>生成public key ,然后添加到ssh key中<br><img src="images/20150417/1429236487575.png" alt="图片"></li>
-<li>测试<br><img src="images/20150417/1429236515744.png" alt="Alt text"><br>问题出来了：网上找到了<a href="http://stackoverflow.com/questions/7144811/git-ssh-error-connect-to-host-bad-file-number" target="_blank" rel="external">参考</a><br><img src="images/20150417/1429236571491.png" alt="Alt text"></li>
-<li><p>建立config文件添加以下内容：</p>
-<p> Host github.com<br> User git<br> Hostname ssh.github.com<br> PreferredAuthentications publickey<br> IdentityFile C:\Users\wujindou.ssh\id_rsa<br> Port 443</p>
-</li>
-<li><p>查看config设置,简单的设置下,user.name,user.email </p>
-<p> <img src="images/20150417/1429236671134.png" alt="Alt text"><br> <img src="images/20150417/1429236711991.png" alt="Alt text"></p>
-</li>
-<li>再项目中添加deploy key授权发布权限<br><img src="images/20150417/1429236767833.png" alt="Alt text"></li>
-</ol>
-<p>done！！！！<br>        <img src="images/20150417/1429236830303.png" alt="Alt text"></p>
-  
+		<p> 已经很多次尝试从mongodb里面导出几亿条的数据，但是每次都是导出了36million 的时候，数据导出就会被<br>终止掉，而且没有任何的报错，查了很多也试过很多次，但是一直没有找到很适合的方法。最后考虑使用脚本导出<br>找到了个<a href="http://www.tothenew.com/blog/export-very-large-data-from-a-mongodb-collection-using-script/" target="_blank" rel="external">参考文件</a>通过,mongo调用外部的脚本文件，终于解决了这个困扰很久的问题了。</p>
+<h5 id="导出方法">导出方法</h5><h6 id="编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行">编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var size = <span class="number">1000000</span>; //每次导出量</span><br><span class="line">var maxCount = <span class="number">640</span>; //导出量 maxCount * size</span><br><span class="line"><span class="keyword">for</span> (x=<span class="number">0</span>;x&lt;maxCount;x=x+<span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">	var recToSkip = x*size;</span><br><span class="line">	db.microblogs.find().skip(recToSkip).limit(size).forEach( function(record)&#123;</span><br><span class="line">		print(record.user_id,<span class="string">','</span>,record.created_at,<span class="string">','</span>,record.reposts_count,<span class="string">','</span>,record.comments_count,<span class="string">','</span>,record.source,<span class="string">','</span>,record.text);</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="执行">执行</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9200</span>/test test.js &gt; microblogs.csv</span><br></pre></td></tr></table></figure>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -142,7 +112,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/git使用/">git使用</a>
+  <span></span> <a href="/tags/Mongodb/">Mongodb</a><a href="/tags/数据库/">数据库</a>
   </div>
 
 </div>
@@ -151,7 +121,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/my-new-post/" data-title="Git重新上手 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/11/16/mongodb-export/" data-title="mongodb-export | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -164,20 +134,20 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/17/python-auto-tool/" title="python自动化工具">
-  <strong>上一篇：</strong><br/>
-  <span>
-  python自动化工具</span>
+
+<div class="next">
+<a href="/2015/10/24/elastic-cluster/"  title="ElasticSearch集群及HttpBasic配置">
+ <strong>下一篇：</strong><br/> 
+ <span>ElasticSearch集群及HttpBasic配置
+</span>
 </a>
 </div>
-
 
 </nav>
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/my-new-post/" data-title="Git重新上手" data-url="http://yoursite.com/2015/04/17/my-new-post/"></div>
+	<div class="ds-thread" data-thread-key="2015/11/16/mongodb-export/" data-title="mongodb-export" data-url="http://yoursite.com/2015/11/16/mongodb-export/"></div>
 </section>
 
 
@@ -187,7 +157,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#导出方法"><span class="toc-number">1.</span> <span class="toc-text">导出方法</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行"><span class="toc-number">1.1.</span> <span class="toc-text">编写脚本文件,脚本文件也可以放入像Robomongo的工具里面调试好后然后再运行</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#执行"><span class="toc-number">1.2.</span> <span class="toc-text">执行</span></a></li></ol></li></ol>
  
   </div>
 

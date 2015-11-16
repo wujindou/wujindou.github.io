@@ -81,6 +81,79 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/17/big-data-hadoop-online/" title="hadoop线上环境搭建" itemprop="url">hadoop线上环境搭建</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:43:29.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>由于原来的环境在搭建的时候，指定了目录或者文件的所有者和所属组的信息所以，如果直接复制里面的原来的目录进行替换可能会出现错误，所以最好复制原来的压缩包重新解压，复制里面的配置文件信息即可。</p>
+<ul>
+<li>调整系统时间</li>
+<li>安装新版jdk</li>
+<li>打通master和slave的ssh连接。</li>
+<li>修改配置文件hadoop/hadoop-2.2.0/etc/haoop下的文件(可以从原来的目录复制)</li>
+<li>启动测试访问，线上环境注意防火墙是否关闭。</li>
+<li>配置hive(由于需要使用mysql,所以先安装mysql)，然后复制配置文件到hive/conf下即可，配置mysql-connector.ja</li>
+<li>计划任务<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#load&#25968;&#25454;&#35745;&#21010;&#20219;&#21153;&#65306;2,12,22,32,42,52 *  * * *  /root/hadoop/exec_jar.sh  &#62; /root/hadoop/test/test.txt  2&#62;&#38;1&#10;//exec_jar.sh&#10;#!/bin/sh&#10;JAVA_HOME=/usr/local/java/jdk1.8.0_05&#10;CLASSPATH=.:$JAVA_HOME/lib/tools.jar&#10;PATH=$PATH:$JAVA_HOME/bin&#10;export PATH&#10;java -jar load_file1.jar &#62; /root/hadoop/test/test.txt  2&#62;&#38;1&#10;#mv&#26085;&#24535;&#25991;&#20214;&#31227;&#21160;&#20219;&#21153;:&#10;#0,10,20,30,40,50 * * * * /root/hadoop/mv_file.sh&#10;#!/bin/sh&#10;cp  /root/hadoop/access.log /root/hadoop/access_bak.log&#10;mv  /root/hadoop/access_bak.log /root/hmbbs/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其中jar文件是使用java来load数据进hive数据表的,代码参考如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.ResultSet;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"><span class="keyword">import</span> java.sql.Statement;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Calendar;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HiveServer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String driverName =  <span class="string">"org.apache.hadoop.hive.jdbc.HiveDriver"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> SQLException</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class.forName(driverName);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            System.exit(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        java.sql.Connection con =  DriverManager.getConnection( <span class="string">"jdbc:hive://172.16.86.38:10002/default"</span>, <span class="string">"root"</span>, <span class="string">""</span>);</span><br><span class="line">        Statement stmt = con.createStatement();</span><br><span class="line">        Calendar cal = Calendar.getInstance();</span><br><span class="line">        Date d = <span class="keyword">new</span> Date();</span><br><span class="line">        SimpleDateFormat df=<span class="keyword">new</span> SimpleDateFormat(<span class="string">"yy-MM-dd HHmm"</span>);</span><br><span class="line">        String time=df.format(d);</span><br><span class="line">        String arr[]=time.split(<span class="string">" "</span>);</span><br><span class="line">        String date = arr[<span class="number">0</span>];</span><br><span class="line">        String time_now = arr[<span class="number">1</span>];</span><br><span class="line">        System.out.println(time_now);</span><br><span class="line">        String temp = time_now.substring(<span class="number">3</span>,<span class="number">4</span>);</span><br><span class="line">        <span class="keyword">int</span> m = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(Integer.parseInt(temp)&gt;<span class="number">5</span>)&#123;</span><br><span class="line">        	m = <span class="number">5</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">        String sql =<span class="string">"LOAD DATA inpath '"</span>+<span class="string">"hdfs://master:9000/hmbbs/"</span>+date+<span class="string">"/"</span>+time_now.substring(<span class="number">0</span>,<span class="number">3</span>)+m+<span class="string">"00"</span>+<span class="string">"' into table test "</span>;</span><br><span class="line">        ResultSet res = stmt.executeQuery(sql);</span><br><span class="line">       <span class="keyword">while</span> (res.next()) &#123;       </span><br><span class="line">      &#125;	</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下一步来安装flume文件同步<br>flume的配置稍微有点坑爹，注意复制的时候不要漏了什么字母或者符号了，而且需要配置protobuf2.5也就是删除  rm -f lib/protobuf-java-2.4.1.jar lib/guava-10.0.1.jar(<strong>注意只删除master上的不要删除slave上的</strong>),设置监听目录的权限为777可能也么关系保险起见吧。<br>之后检查配置文件：<br>flume-ng agent -n agent -c conf -f example-conf.properties -Dflume.root.logger=DEBUG,console<br>刚开始一直停顿在:log4j….上解决方法修改/etc/profile加入如下内容：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JAVA_HOME=/usr/local/java/jdk1.8.0_05&#10;export HADOOP_HOME=~/hadoop/hadoop-2.2.0&#10;CLASSPATH=.:$JAVA_HOME/lib/tools.jar&#10;PATH=$PATH:$JAVA_HOME/bin:/usr/local/mysql/bin&#10;export PATH&#10;export JAVA_HOME CLASSPATH PATH</span><br></pre></td></tr></table></figure></p>
+<p>当两边都看到这样的画面的时候表示基本成功了！<br><img src="/images/hadoop/hadoop_online.png" alt="Alt text"><br>下面修改日志收集脚本，需要重新启动nginx.log日志文件<br>在测试的时候发现job老是执行不成功，后来才发现datenode的ResourceManager没有启动成功，无奈重启！<br>start-dfs.sh和star-yarn.sh,<br>鉴于flume的性能问题，所以考虑使用脚本来同步复制文件。<br>问题：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Execution log at: /tmp/root/root_20140526202626_cc12ee2f-<span class="number">81</span>ab-<span class="number">47f</span>2-<span class="number">9</span>d9a-d4f4d1f4b137.log</span><br><span class="line">java.io.FileNotFoundException: File does not exist: hdfs:<span class="comment">//master:9000/root/hadoop/hive/lib/test_kpi.jar</span></span><br></pre></td></tr></table></figure></p>
+<p>问题原因hadoop2.2采用依赖jar，所以应该吧jar文件放到hdfs上去解决方法：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> ./bin/hdfs dfs -mkdir -p /root/hadoop/hive/lib/&#10;./bin/hdfs dfs  -copyFromLocal /root/hadoop/hive/lib/test_kpi.jar /root/hadoop/hive/lib/&#10;./bin/hdfs dfs  -copyFromLocal /root/hadoop/hive/lib/IP2Location.jar /root/hadoop/hive/lib/</span><br></pre></td></tr></table></figure></p>
+<p>原来的由于输入文件数量太少，所以mapreduce使用本地模式来执行，所以当线上环境的时候，老是提示NginxInputFormat.java和IPSeeker找不到，几次尝试发现只有通过绝对路径加进去才可以。。。坑爹到家了<br>```java<br>    String sql1=”add jar /root/hadoop/hadoop-2.2.0/lib/test_kpi.jar”;<br>            String sql2=”add jar /root/hadoop/hadoop-2.2.0/lib/IP2Location.jar”;<br>            String sql=”select sum(dis_url),count(ip),sum(dis_domain) from (select ip,count(distinct url) as dis_url,count(distinct request_domain) as dis_domain from nginx_log where time&gt;=”+start_time+” and time&lt;=”+end_time+”  group by ip) temp”;<br>            //System.out.println(sql1);<br>            System.out.println(sql);<br>            stmt.execute(sql1);<br>            stmt.execute(sql2);</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-hadoop-online/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-online/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/17/big-data-hadoop-advice/" title="Hadoop线上环境整合须知：&#39;" itemprop="url">Hadoop线上环境整合须知：&#39;</a>
   </h1>
   <p class="article-author">By
@@ -1887,113 +1960,6 @@ class NginxLogInputFormat extends TextInputFormat {
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-hive/" title="Hive配置信息" itemprop="url">Hive配置信息</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T07:59:50.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <ol>
-<li>首先修改/etc/profile加入HADOOP_HOME参数设置</li>
-<li>修改~/.bashrc文件加入HIVE_HOME参数 </li>
-</ol>
-<pre><code><span class="built_in">export</span> HIVE_HOME=<span class="string">"/usr/local/share/hive"</span>
-<span class="built_in">export</span> PATH=<span class="variable">$HIVE_HOME</span>/bin:<span class="variable">$PATH</span>
-</code></pre><ol>
-<li>使用直接运行Hive即可以连接到数据库了….感觉so easy!</li>
-<li>使用</li>
-</ol>
-<pre><code><span class="operator"><span class="keyword">show</span> <span class="keyword">tables</span>;</span>
-#创建表
-<span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> test(id <span class="built_in">int</span>,name <span class="keyword">string</span>);</span>
-quit;
-#查看
-hdfs dfs -ls / #可以看到dfs中增加了/usr/hive/warehouse/test
-</code></pre><p>5.配置mysql存储元数据</p>
-<ul>
-<li>mysql的安装参考这里<a href="http://www.cnblogs.com/xiongpq/p/3384681.html" target="_blank" rel="external">mysql编译安装</a>的文章</li>
-<li>创建hive和授权</li>
-</ul>
-<pre><code>create database hive;
-grant <span class="literal">all</span> <span class="keyword">on</span> hive.* <span class="keyword">to</span> hive@'%'  identified by 'hive';
-flush privileges;
-hive-site.xml
-<span class="variable">&lt;property&gt;</span>
-  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionURL<span class="variable">&lt;/name&gt;</span>
-  <span class="variable">&lt;value&gt;</span>jdbc:mysql://localhost:<span class="number">3306</span>/hive<span class="variable">&lt;/value&gt;</span>
-  <span class="variable">&lt;description&gt;</span>JDBC connect string <span class="keyword">for</span> a JDBC metastore<span class="variable">&lt;/description&gt;</span>
-<span class="variable">&lt;/property&gt;</span>
-
-<span class="variable">&lt;property&gt;</span>
-  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionDriverName<span class="variable">&lt;/name&gt;</span>
-  <span class="variable">&lt;value&gt;</span>com.mysql.jdbc.Driver<span class="variable">&lt;/value&gt;</span>
-  <span class="variable">&lt;description&gt;</span>Driver class name <span class="keyword">for</span> a JDBC metastore<span class="variable">&lt;/description&gt;</span>
-<span class="variable">&lt;/property&gt;</span>
-<span class="variable">&lt;property&gt;</span>
-  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionUserName<span class="variable">&lt;/name&gt;</span>
-  <span class="variable">&lt;value&gt;</span>hive<span class="variable">&lt;/value&gt;</span>
-  <span class="variable">&lt;description&gt;</span>username <span class="keyword">to</span> use against metastore database<span class="variable">&lt;/description&gt;</span>
-<span class="variable">&lt;/property&gt;</span>
-
-<span class="variable">&lt;property&gt;</span>
-  <span class="variable">&lt;name&gt;</span>javax.jdo.option.ConnectionPassword<span class="variable">&lt;/name&gt;</span>
-  <span class="variable">&lt;value&gt;</span>hive<span class="variable">&lt;/value&gt;</span>
-  <span class="variable">&lt;description&gt;</span>password <span class="keyword">to</span> use against metastore database<span class="variable">&lt;/description&gt;</span>
-<span class="variable">&lt;/property&gt;</span>
-</code></pre><ul>
-<li>由于mysql的源代码安装所以需要修改下my.cnf文件,修改/usr/local/mysql/下的my.cnf添加bind-address= 0.0.0.0之后重启mysql<br>运行创建table命令: create table test (key string);发现报错了<br><img src="/images/hadoop/hive_1.png" alt="Alt text"><br>需要修改hive字符集，alter database hive character set latin1;即可</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-hive/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hive/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
@@ -2046,11 +2012,11 @@ hive-site.xml
 			
 		
 			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			
@@ -2062,7 +2028,11 @@ hive-site.xml
 			
 		
 			
-				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
+				<li><a href="/tags/Mongodb/" title="Mongodb">Mongodb<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
 			
 		
 			
@@ -2082,7 +2052,7 @@ hive-site.xml
 			
 		
 			
-				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
 			
 		
 		</ul>
