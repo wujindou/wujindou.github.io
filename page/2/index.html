@@ -81,6 +81,147 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/06/23/storm/" title="Storm伪分布式单机环境" itemprop="url">Storm伪分布式单机环境</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-23T14:25:47.000Z" itemprop="datePublished"> 发表于 2015-06-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Storm伪分布式单机环境安装，内容参考<em>Storm分布式实时计算模式</em>书中内容，进行搭建环境CentosZookeeper安装很简单参考官网进行下载：<a href="http://www.apache.org/dyn/closer.cgi/zookeeper/" target="_blank" rel="external">官网</a>Zookeeper的使用也很简单参考个<a href="http://zookeeper.apache.org/doc/r3.4.6/zookeeperStarted.html#sc_InstallingSingleMode" target="_blank" rel="external">官网文档</a>进行单机的Standalone配置。</p>
+<ol>
+<li><p>安装依赖包</p>
+<p> yum install uuid*<br> yum install libtool<br> yum install libuuid<br> yum install libuuid-devel  </p>
+</li>
+<li><p>安装Git和Maven更新安装数据源</p>
+<p> [root@git ~]# cd src/<br> [root@git src]# wget <a href="http://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm" target="_blank" rel="external">http://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm</a><br> [root@git src]# rpm -ivh epel-release-5-4.noarch.rpm<br> Preparing…                ########################################### [100%]</p>
+<pre><code><span class="keyword">package</span> epel-<span class="keyword">release</span>-<span class="number">5</span>-<span class="number">4</span>.noarch <span class="keyword">is</span> already installed
+</code></pre><p> [root@git ~]# yum list<br> [root@git ~]# yum install -y git<br>maven的yum安装参考Stackoverflow<a href="http://stackoverflow.com/questions/7532928/how-do-i-install-maven-with-yum" target="_blank" rel="external">问题</a></p>
+<p> wget <a href="http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo" target="_blank" rel="external">http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo</a> -O /etc/yum.repos.d/epel-apache-maven.repo<br> yum install apache-maven<br>安装后发现mvn并没有加入到环境变量： </p>
+<p> rpm -ql  apache（查找rpm包的安装路径）<br>export PATH=$PATH:/user/share/apache-maven/bin<br>启动Storm出现问题：<br>(注意yaml格式的要求,空格tab,:和-前后都有空格) 下面都是由于配置文件没有正确设置造成的</p>
+<p>  in ‘reader’, line 27, column 1:<br> 　　- 6701<br>Storm运行：</p>
+<ol>
+<li>启动zookeeper<br> ./zkServer.sh start </li>
+<li>启动nimbus 和Supervisor<br> storm nimbus &amp;<br> storm supervisor &amp; </li>
+</ol>
+</li>
+<li><p>日志查看<br>zookeeper日志文件：　bin/ cat zookeeper.out 查看错误日志<br>storm错误日志：storm/logs 下面有nimbus和supervisor日志错误信息<br>但看到如下信息时nimbus就已经启动成功 </p>
+<p> 3534 nimbus<br> 3514 QuorumPeerMain<br> 3591 Jps<br>试着访问本地地址： localhost:8080<br>发现不能访问，但是 netstat -ano |grep 8080看到8080端口正在运行中，所以怀疑是防火墙<br>问题iptables -F（关闭防火墙）重新访问,一切正常访问！搭建成功！</p>
+</li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/storm/">storm</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/23/storm/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/23/storm/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/24/scrapy/" title="scrapy学习" itemprop="url">scrapy学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-24T13:07:20.000Z" itemprop="datePublished"> 发表于 2015-05-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>   由于数据分析需要使用twitter进行数据分析，于是考虑使用python的爬虫框架搭建Twitter的数据抓取功能，关于scrapy的使用和教程<a href="http://doc.scrapy.org/en/latest/intro/tutorial.html" target="_blank" rel="external">参考</a><br>  Scrapy的环境搭建参考教程使用</p>
+<pre><code>pip <span class="keyword">install</span> scrapy 
+</code></pre><p> 搭建好之后参考教程建立一个startup的项目，中间却出现</p>
+<pre><code><span class="constant">ImportError</span><span class="symbol">:</span> <span class="constant">Error</span> loading object <span class="string">'scrapy.core.downloader.handlers.s3.S3DownloadHandler'</span><span class="symbol">:</span> <span class="constant">No</span> <span class="class"><span class="keyword">module</span> <span class="title">named</span> <span class="title">win32api</span></span>
+分析确实pywin32找了半天资料最好解决方法：
+</code></pre><p>　在下面地址下载相应的pywin32的win32包，发到python安装目录的Scripts下执行:<br>　  easy_install.exe  easy_install.exe pywin32-219.win32-py2.7.exe<br>完成后再议运行scrapy crawl dmoz运行成功！</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/网络爬虫/">网络爬虫</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/24/scrapy/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/24/scrapy/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/19/android-blog-4/" title="Android应用开发四" itemprop="url">Android应用开发四</a>
   </h1>
   <p class="article-author">By
@@ -1347,128 +1488,6 @@ message EchoResponse
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/php-yaf/" title="yaf学习笔记" itemprop="url">yaf学习笔记</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:48:57.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>1.按照官网给的信息搭建环境，总是报告404错误后来修改<br>default.conf<br>if (!-e $request_filename) {<br>rewrite ^/(.*)  /public/index.php/$1 last;<br>}<br>总算可以访问了。yaf文件找不到问题：<br> 参考官方文档有很多问题：<br>首先：nginx.conf设置路径,我这边配置的是项目的根目录：/sample<br>设置： index.php</p>
-<p>&lt;?php<br>define(“APP<em>PATH”, realpath(dirname(<em>_FILE</em></em>) . ‘/../‘)); /<em> 指向public的上一级 </em>/<br>$app = new Yaf_Application(APP_PATH . “/application/conf/application.ini”);<br>$app-&gt;run();<br>设置：application.ini<br>application.directory=APP_PATH “/application/“</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/php/">php</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/php-yaf/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/php-yaf/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/big-data-flume-kafaka/" title="Flume 1.4整合kafka消息系统" itemprop="url">Flume 1.4整合kafka消息系统</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:45:58.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Flume可以用来进行日志收集工作，通过使用tail -f 监听文件，然后通过flume发送给kafka消息系统,关于kafka的安装参见官网即可：<br>简单记录下自己整合的过程吧：参考<a href="http://www.tuicool.com/articles/mMrQnu7" target="_blank" rel="external">文章</a>里面的整合已经讲的很清楚了。。不过，在flume-kafka-plugin整合的时候发现缺少：flumeng-kafka-plugin.jar不在插件的lib下面找了下原来在package下面。</p>
-<ul>
-<li>复制插件下的lib下的所有jar文件到flume/lib下</li>
-<li>复制插件下的package下的flumeng-kafka-plugin.jar文件到flume/lib下</li>
-<li>修改插件下的flume-conf.properties文件，并复制到flume/conf下<br>启动：<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/flume-ng agent --conf conf --conf-file conf/flume-conf<span class="class">.properties</span> --name producer -Dflume<span class="class">.root</span><span class="class">.logger</span>=INFO,console</span><br><span class="line"><span class="comment">//启动zookeeper</span></span><br><span class="line">bin/zookeeper-server-start<span class="class">.sh</span> config/zookeeper<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动kafka</span></span><br><span class="line">bin/kafka-server-start<span class="class">.sh</span> config/server<span class="class">.properties</span></span><br><span class="line"><span class="comment">//启动consumer</span></span><br><span class="line">bin/kafka-console-consumer<span class="class">.sh</span> --zookeeper localhost:<span class="number">2181</span> --topic test2 --from-beginning</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/大数据/">大数据</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/big-data-flume-kafaka/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-flume-kafaka/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -1505,19 +1524,15 @@ message EchoResponse
 			
 		
 			
+				<li><a href="/tags/J2EE/" title="J2EE">J2EE<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/JAVA/" title="JAVA">JAVA<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/J2EE/" title="J2EE">J2EE<sup>2</sup></a></li>
+				<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
 			
 		
 			
@@ -1525,11 +1540,27 @@ message EchoResponse
 			
 		
 			
+				<li><a href="/tags/c-学习/" title="c++学习">c++学习<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
+				<li><a href="/tags/wordvector/" title="wordvector">wordvector<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nlp/" title="nlp">nlp<sup>1</sup></a></li>
 			
 		
 			
@@ -1541,7 +1572,7 @@ message EchoResponse
 			
 		
 			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
 			
 		
 			
@@ -1554,14 +1585,6 @@ message EchoResponse
 		
 			
 				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
 			
 		
 		</ul>
