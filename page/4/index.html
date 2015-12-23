@@ -81,6 +81,78 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/17/big-data-hadoop-cluster/" title="Hadoop完全分布式集群安装" itemprop="url">Hadoop完全分布式集群安装</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-17T08:18:54.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <ol>
+<li>首先定义master 和 slave 我这里只有2台vim/etc/hosts</li>
+</ol>
+<pre><code>172.16.86.38 master
+172.16.86.39 slave01
+</code></pre><ol>
+<li>打通各自的ssh和相互的ssh</li>
+</ol>
+<pre><code>#相互之间的ssh打通命令
+scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
+scp authorized_keys <span class="string">slave01:</span><span class="regexp">/root/</span>.ssh/
+</code></pre><ol>
+<li>以上次设置的为分布式机子为主机，需要复制一些文件到slave集群中设置。</li>
+<li>配置JDK</li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/大数据/">大数据</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/17/big-data-hadoop-cluster/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/big-data-hadoop-cluster/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/17/big-data-sqoop/" title="Sqoop配置" itemprop="url">Sqoop配置</a>
   </h1>
   <p class="article-author">By
@@ -1300,6 +1372,10 @@ infile.seek(<span class="number">0</span>)
 			
 		
 			
+				<li><a href="/tags/python/" title="python">python<sup>3</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/SpringMVC/" title="SpringMVC">SpringMVC<sup>2</sup></a></li>
 			
 		
@@ -1309,10 +1385,6 @@ infile.seek(<span class="number">0</span>)
 		
 			
 				<li><a href="/tags/JAVA/" title="JAVA">JAVA<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
 			
 		
 			
@@ -1328,7 +1400,11 @@ infile.seek(<span class="number">0</span>)
 			
 		
 			
-				<li><a href="/tags/Python/" title="Python">Python<sup>1</sup></a></li>
+				<li><a href="/tags/nlp/" title="nlp">nlp<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/网络爬虫/" title="网络爬虫">网络爬虫<sup>1</sup></a></li>
 			
 		
 			
@@ -1336,11 +1412,15 @@ infile.seek(<span class="number">0</span>)
 			
 		
 			
-				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
+				<li><a href="/tags/theano/" title="theano">theano<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/nlp/" title="nlp">nlp<sup>1</sup></a></li>
+				<li><a href="/tags/opencv/" title="opencv">opencv<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cnn/" title="cnn">cnn<sup>1</sup></a></li>
 			
 		
 			
@@ -1352,19 +1432,11 @@ infile.seek(<span class="number">0</span>)
 			
 		
 			
-				<li><a href="/tags/sklearn/" title="sklearn">sklearn<sup>1</sup></a></li>
+				<li><a href="/tags/storm/" title="storm">storm<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/js学习笔记/" title="js学习笔记">js学习笔记<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/fitleupload/" title="fitleupload">fitleupload<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
 			
 		
 		</ul>

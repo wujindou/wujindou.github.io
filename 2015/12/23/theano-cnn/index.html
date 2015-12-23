@@ -4,44 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Git重新上手 | Jackie&#39;s Blog</title>
+    <title>theano-cnn图像分类实验 | Jackie&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jackie wu">
     
 
     
-    <meta name="description" content="好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。直接图示吧：
-
-生成public key ,然后添加到ssh key中
-测试问题出来了：网上找到了参考
-建立config文件添加以下内容：
- Host github.com User git Hostname ssh.gi">
+    <meta name="description" content="图像识别和分类过程中，CNN以在手写体识别上的准确性而广为大家熟知。所以在使用图像分类过程中想看看使用CNN进行特征提取之后进行分类的效果，不过实验结果并不理想，CNN在数据量很小或者数据特征不明显的特征学习过程中，效果并不是很好。以我的分类任务，从很多张酱油货架进行分类的结果来看，最好的效果也只有75%，所以在数据量小或者特征不明显的图像中提取CNN特征进行分类效果就不太理想
+数据准备Thean">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Git重新上手">
-<meta property="og:url" content="http://yoursite.com/2015/04/17/my-new-post/index.html">
+<meta property="og:title" content="theano-cnn图像分类实验">
+<meta property="og:url" content="http://yoursite.com/2015/12/23/theano-cnn/index.html">
 <meta property="og:site_name" content="Jackie's Blog">
-<meta property="og:description" content="好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。直接图示吧：
-
-生成public key ,然后添加到ssh key中
-测试问题出来了：网上找到了参考
-建立config文件添加以下内容：
- Host github.com User git Hostname ssh.gi">
-<meta property="og:image" content="images/20150417/1429236487575.png">
-<meta property="og:image" content="images/20150417/1429236515744.png">
-<meta property="og:image" content="images/20150417/1429236571491.png">
-<meta property="og:image" content="images/20150417/1429236671134.png">
-<meta property="og:image" content="images/20150417/1429236711991.png">
-<meta property="og:image" content="images/20150417/1429236767833.png">
-<meta property="og:image" content="images/20150417/1429236830303.png">
+<meta property="og:description" content="图像识别和分类过程中，CNN以在手写体识别上的准确性而广为大家熟知。所以在使用图像分类过程中想看看使用CNN进行特征提取之后进行分类的效果，不过实验结果并不理想，CNN在数据量很小或者数据特征不明显的特征学习过程中，效果并不是很好。以我的分类任务，从很多张酱油货架进行分类的结果来看，最好的效果也只有75%，所以在数据量小或者特征不明显的图像中提取CNN特征进行分类效果就不太理想
+数据准备Thean">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Git重新上手">
-<meta name="twitter:description" content="好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。直接图示吧：
-
-生成public key ,然后添加到ssh key中
-测试问题出来了：网上找到了参考
-建立config文件添加以下内容：
- Host github.com User git Hostname ssh.gi">
+<meta name="twitter:title" content="theano-cnn图像分类实验">
+<meta name="twitter:description" content="图像识别和分类过程中，CNN以在手写体识别上的准确性而广为大家熟知。所以在使用图像分类过程中想看看使用CNN进行特征提取之后进行分类的效果，不过实验结果并不理想，CNN在数据量很小或者数据特征不明显的特征学习过程中，效果并不是很好。以我的分类任务，从很多张酱油货架进行分类的结果来看，最好的效果也只有75%，所以在数据量小或者特征不明显的图像中提取CNN特征进行分类效果就不太理想
+数据准备Thean">
 
     
     <link rel="alternative" href="/atom.xml" title="Jackie&#39;s Blog" type="application/atom+xml">
@@ -101,14 +82,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/17/my-new-post/" title="Git重新上手" itemprop="url">Git重新上手</a>
+      <a href="/2015/12/23/theano-cnn/" title="theano-cnn图像分类实验" itemprop="url">theano-cnn图像分类实验</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jackie wu" target="_blank" itemprop="author">Jackie wu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-17T05:36:10.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
+    <time datetime="2015-12-23T13:57:35.000Z" itemprop="datePublished"> 发表于 2015-12-23</time>
     
   </p>
 </header>
@@ -117,23 +98,19 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#数据准备"><span class="toc-number">1.</span> <span class="toc-text">数据准备</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#修改logistic_sgd-py的load方法为自己定义的数据集"><span class="toc-number">2.</span> <span class="toc-text">修改logistic_sgd.py的load方法为自己定义的数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#修改batch_size"><span class="toc-number">2.1.</span> <span class="toc-text">修改batch_size</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#注意分类的label从0开始"><span class="toc-number">2.2.</span> <span class="toc-text">注意分类的label从0开始</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p> 好久没有使用github了，今天决定把blog的东西整理一下，以前写的一些文章也决定放到blog上去，另外发现blog的主题有点太low了，顺便把主题给换下，然后整理文章放上去。<br>直接图示吧：</p>
-<ol>
-<li>生成public key ,然后添加到ssh key中<br><img src="images/20150417/1429236487575.png" alt="图片"></li>
-<li>测试<br><img src="images/20150417/1429236515744.png" alt="Alt text"><br>问题出来了：网上找到了<a href="http://stackoverflow.com/questions/7144811/git-ssh-error-connect-to-host-bad-file-number" target="_blank" rel="external">参考</a><br><img src="images/20150417/1429236571491.png" alt="Alt text"></li>
-<li><p>建立config文件添加以下内容：</p>
-<p> Host github.com<br> User git<br> Hostname ssh.github.com<br> PreferredAuthentications publickey<br> IdentityFile C:\Users\wujindou.ssh\id_rsa<br> Port 443</p>
-</li>
-<li><p>查看config设置,简单的设置下,user.name,user.email </p>
-<p> <img src="images/20150417/1429236671134.png" alt="Alt text"><br> <img src="images/20150417/1429236711991.png" alt="Alt text"></p>
-</li>
-<li>再项目中添加deploy key授权发布权限<br><img src="images/20150417/1429236767833.png" alt="Alt text"></li>
-</ol>
-<p>done！！！！<br>        <img src="images/20150417/1429236830303.png" alt="Alt text"></p>
+		<p>  图像识别和分类过程中，CNN以在手写体识别上的准确性而广为大家熟知。所以在使用图像分类过程中想看看使用CNN进行特征提取之后进行分类的效果，不过实验结果并不理想，CNN在数据量很小或者数据特征不明显的特征学习过程中，效果并不是很好。以我的分类任务，从很多张酱油货架进行分类的结果来看，最好的效果也只有75%，所以在数据量小或者特征不明显的图像中提取CNN特征进行分类效果就不太理想</p>
+<h5 id="数据准备">数据准备</h5><pre><code><span class="title">Theano</span> 官方的示例中使用的是MNIST手写体识别所以在进行自己的图像库训练使用，首先需要进行图像的转换，统一图像的维度，作为输入的数据需要满足同样的格式。可以使用PCA、LDA、SVD进行图片的数据降维。我这里使用
+</code></pre><p>opencv的img的resize方法进行数据的降维。</p>
+<h5 id="修改logistic_sgd-py的load方法为自己定义的数据集">修改logistic_sgd.py的load方法为自己定义的数据集</h5><p>这边说下我在训练的时候遇到的几个小问题</p>
+<pre><code>1. 使用numpy.<span class="keyword">reshape</span>将图片的输入处理成二维的matric格式例如有图片：20张,resize进行尺寸压缩为128*128
+那么在输入使用调整为(20,16384)的结构进行数据。
+2. 使用numpy.<span class="keyword">reshape</span>将<span class="keyword">label</span>的训练或者测试结果<span class="keyword">reshape</span>(train_y,(len(train_y))进行输入，否则会有matric错误。
+</code></pre><h6 id="修改batch_size">修改batch_size</h6><p>根据自己数据集的大小调整数据的batch_size，由于我的数量量比较小所以按原来的batch_size=500,一次也没有运行，郁闷了好久。</p>
+<h6 id="注意分类的label从0开始">注意分类的label从0开始</h6><p>分类的标签从0开始，否则会报out of bound的错误，具体的也可以看代码进行修改。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -142,7 +119,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/git使用/">git使用</a>
+  <span></span> <a href="/tags/cnn/">cnn</a><a href="/tags/python/">python</a><a href="/tags/theano/">theano</a>
   </div>
 
 </div>
@@ -151,7 +128,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/17/my-new-post/" data-title="Git重新上手 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/12/23/theano-cnn/" data-title="theano-cnn图像分类实验 | Jackie&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -164,20 +141,20 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/17/python-auto-tool/" title="python自动化工具">
-  <strong>上一篇：</strong><br/>
-  <span>
-  python自动化工具</span>
+
+<div class="next">
+<a href="/2015/11/30/word-vector/"  title="维基百科word2vector训练">
+ <strong>下一篇：</strong><br/> 
+ <span>维基百科word2vector训练
+</span>
 </a>
 </div>
-
 
 </nav>
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/17/my-new-post/" data-title="Git重新上手" data-url="http://yoursite.com/2015/04/17/my-new-post/"></div>
+	<div class="ds-thread" data-thread-key="2015/12/23/theano-cnn/" data-title="theano-cnn图像分类实验" data-url="http://yoursite.com/2015/12/23/theano-cnn/"></div>
 </section>
 
 
@@ -187,7 +164,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#数据准备"><span class="toc-number">1.</span> <span class="toc-text">数据准备</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#修改logistic_sgd-py的load方法为自己定义的数据集"><span class="toc-number">2.</span> <span class="toc-text">修改logistic_sgd.py的load方法为自己定义的数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#修改batch_size"><span class="toc-number">2.1.</span> <span class="toc-text">修改batch_size</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#注意分类的label从0开始"><span class="toc-number">2.2.</span> <span class="toc-text">注意分类的label从0开始</span></a></li></ol></li></ol>
  
   </div>
 
